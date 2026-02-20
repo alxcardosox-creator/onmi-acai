@@ -3,98 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onmi Açaí | Delivery</title>
+    <title>Onmi Açaí | Premium Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         :root {
-            --roxo-principal: #5b0f73;
-            --verde-sucesso: #27ae60;
-            --vermelho-erro: #e74c3c;
-            --cinza-fundo: #f4f4f4;
-            --branco: #ffffff;
+            --primary: #5b0f73;
+            --primary-light: #7b1fa2;
+            --accent: #ffc107;
+            --success: #27ae60;
+            --bg: #f8f9fa;
+            --text: #2d3436;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
 
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--cinza-fundo); padding-bottom: 100px; color: #333; }
-        header { background: var(--roxo-principal); padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .logo-img { max-width: 90px; border-radius: 50%; border: 2px solid white; background: white; }
-        .status-badge { display: block; background: var(--branco); font-size: 11px; font-weight: bold; width: fit-content; margin: 8px auto 0; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }
-        .status-aberto { color: var(--verde-sucesso); }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
-        .container { max-width: 600px; margin: auto; }
-        .categoria-titulo { padding: 25px 15px 10px; font-size: 16px; font-weight: 900; color: var(--roxo-principal); text-transform: uppercase; letter-spacing: 1.5px; }
+        body { 
+            margin: 0; 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--bg); 
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Header Profissional */
+        header { 
+            background: var(--primary); 
+            padding: 30px 20px; 
+            text-align: center; 
+            border-radius: 0 0 30px 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container { position: relative; display: inline-block; }
+        .logo-img { 
+            width: 100px; 
+            height: 100px; 
+            border-radius: 50%; 
+            border: 4px solid var(--white);
+            background: var(--white);
+            object-fit: cover;
+        }
+
+        .status-badge {
+            background: var(--white);
+            color: var(--success);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        /* Container Principal */
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
         
-        .produto-card { display: flex; background: var(--branco); margin: 10px 15px; padding: 12px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); align-items: center; cursor: pointer; border: 1px solid transparent; }
-        .produto-info { flex: 1; padding-right: 10px; }
-        .produto-info h3 { margin: 0 0 4px 0; font-size: 15px; }
-        .preco { font-weight: 800; color: var(--roxo-principal); }
+        .categoria-titulo { 
+            font-weight: 800; 
+            font-size: 1.2rem; 
+            color: var(--primary); 
+            margin: 30px 0 15px 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .categoria-titulo::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(to right, var(--primary), transparent);
+        }
+
+        /* Cards de Produto */
+        .produto-card { 
+            display: flex; 
+            background: var(--white); 
+            margin-bottom: 15px; 
+            padding: 15px; 
+            border-radius: 20px; 
+            box-shadow: var(--shadow);
+            transition: transform 0.2s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .produto-card:active { transform: scale(0.98); }
+
+        .produto-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .produto-info h3 { margin: 0; font-size: 16px; color: var(--text); }
+        .preco { color: var(--primary); font-weight: 700; font-size: 18px; margin-top: 5px; }
         
-        .img-container { width: 80px; height: 80px; border-radius: 12px; overflow: hidden; background: #eee; flex-shrink: 0; }
+        .img-container { 
+            width: 90px; height: 90px; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            margin-left: 15px;
+            background: #f0f0f0;
+        }
         .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; align-items: flex-end; }
-        .modal-content { background: var(--branco); width: 100%; border-radius: 30px 30px 0 0; padding: 20px; max-height: 90vh; overflow-y: auto; }
-        
-        .secao-titulo { background: #f0f0f0; padding: 8px 15px; margin: 15px 0 10px; border-radius: 8px; font-size: 14px; font-weight: bold; color: #555; }
-        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; }
+        /* Modais Modernos */
+        .modal { 
+            display: none; 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0,0,0,0.6); 
+            z-index: 2000; 
+            align-items: flex-end; 
+            backdrop-filter: blur(5px);
+        }
 
-        .btn-acao { background: var(--roxo-principal); color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        
-        .footer-carrinho { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: var(--roxo-principal); color: white; padding: 15px 25px; border-radius: 25px; display: none; justify-content: space-between; align-items: center; z-index: 150; }
-        
-        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; }
+        .modal-content { 
+            background: var(--white); 
+            width: 100%; 
+            border-radius: 30px 30px 0 0; 
+            padding: 25px; 
+            max-height: 85vh; 
+            overflow-y: auto; 
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        .secao-titulo { 
+            background: #f8f1fa; 
+            padding: 10px 15px; 
+            margin: 20px 0 10px; 
+            border-radius: 12px; 
+            font-size: 13px; 
+            font-weight: 600; 
+            color: var(--primary);
+            text-transform: uppercase;
+        }
+
+        .opcao-item { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px; 
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        /* Inputs e Botões Profissionais */
+        input, select { 
+            width: 100%; 
+            padding: 15px; 
+            margin-bottom: 12px; 
+            border: 2px solid #eee; 
+            border-radius: 15px; 
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+
+        .btn-acao { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            width: 100%; 
+            padding: 18px; 
+            border-radius: 18px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(91, 15, 115, 0.3);
+        }
+
+        .btn-acao:active { transform: scale(0.99); opacity: 0.9; }
+
+        /* Carrinho Flutuante */
+        .footer-carrinho { 
+            position: fixed; 
+            bottom: 25px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 90%; 
+            max-width: 500px; 
+            background: var(--primary); 
+            color: white; 
+            padding: 18px 25px; 
+            border-radius: 50px; 
+            display: none; 
+            justify-content: space-between; 
+            align-items: center; 
+            z-index: 1500;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .remover-btn { color: #ff7675; font-size: 12px; font-weight: 600; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <header>
-    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" alt="Onmi Açaí">
-    <span id="statusLoja" class="status-badge status-aberto">● Aberto Agora</span>
+    <div class="logo-container">
+        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" alt="Onmi Açaí">
+    </div><br>
+    <span class="status-badge"><i class="fas fa-circle"></i> Aberto Agora</span>
 </header>
 
 <div class="container" id="cardapio-container"></div>
 
 <div id="modalOpcionais" class="modal">
     <div class="modal-content">
-        <h2 id="nomeProdModal" style="color:var(--roxo-principal); margin: 0 0 10px 0;">Escolha seus itens</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 id="nomeProdModal" style="margin:0; font-size:20px; color:var(--primary);">Personalizar</h2>
+            <i class="fas fa-times" onclick="fecharModal('modalOpcionais')" style="font-size:20px; color:#ccc;"></i>
+        </div>
         <div id="lista-adicionais"></div>
-        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
-        <button class="btn-acao" style="background:#f4f4f4; color:#666;" onclick="fecharModal('modalOpcionais')">Cancelar</button>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()" style="margin-top:20px;">Adicionar ao Pedido</button>
     </div>
 </div>
 
 <div id="modalCarrinho" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--roxo-principal)">Meu Pedido</h2>
+        <h2 style="color:var(--primary); margin-bottom:20px;"><i class="fas fa-shopping-cart"></i> Finalizar Pedido</h2>
         <div id="itensNoCarrinho"></div>
         
-        <div style="margin-top:20px;">
-            <input type="text" id="nomeCliente" placeholder="Seu nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço Completo">
+        <div style="margin-top:25px; background:#f9f9f9; padding:20px; border-radius:20px;">
+            <p style="margin:0 0 15px 0; font-weight:600; color:#666;">Dados de Entrega</p>
+            <input type="text" id="nomeCliente" placeholder="Qual seu nome?">
+            <input type="text" id="enderecoCliente" placeholder="Endereço de entrega (Rua, Nº, Bairro)">
             
             <select id="formaPagamento" onchange="togglePagamento()">
                 <option value="">Forma de Pagamento</option>
                 <option value="Pix">Pix</option>
-                <option value="Cartão">Cartão</option>
+                <option value="Cartão">Cartão (Entregador leva a máquina)</option>
                 <option value="Dinheiro">Dinheiro</option>
             </select>
 
-            <div id="areaPix" style="display:none; background:#e1f5fe; padding:15px; border-radius:10px; margin-bottom:10px;">
-                <strong>Pix: 20076905780 (CPF)</strong><br>Alex Cardoso
+            <div id="areaPix" style="display:none; background:#e3f2fd; padding:15px; border-radius:15px; margin-bottom:15px; border-left:5px solid #2196f3;">
+                <p style="margin:0; font-size:14px;"><strong>Chave Pix (CPF):</strong> 20076905780</p>
+                <p style="margin:5px 0 0 0; font-size:14px;"><strong>Favorecido:</strong> Alex Cardoso</p>
             </div>
 
             <div id="areaTroco" style="display:none;">
-                <input type="text" id="trocoPara" placeholder="Troco para quanto?">
+                <input type="number" id="trocoPara" placeholder="Troco para quanto?">
             </div>
         </div>
 
-        <button class="btn-acao" onclick="finalizarPedido()">Finalizar no WhatsApp</button>
-        <button class="btn-acao" style="background:none; color:#999;" onclick="fecharModal('modalCarrinho')">Voltar</button>
+        <button class="btn-acao" onclick="finalizarPedido()" style="margin-top:20px; background:var(--success);">Confirmar no WhatsApp</button>
+        <p onclick="fecharModal('modalCarrinho')" style="text-align:center; color:#999; margin-top:15px; font-size:14px;">Continuar Comprando</p>
     </div>
 </div>
 
 <div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
-    <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
-    <span id="totalFlutuante">R$ 0,00</span>
+    <span style="font-weight:600;"><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
+    <span id="totalFlutuante" style="background:rgba(255,255,255,0.2); padding:5px 15px; border-radius:20px; font-weight:800;">R$ 0,00</span>
 </div>
 
 <script>
@@ -123,12 +289,12 @@
 
     const ESTRUTURA_COPO = [
         { titulo: "Onde deseja os Complementos?", limite: 1, opcoes: [{n: "Em cima", p: 0}, {n: "Meio a Meio", p: 0}, {n: "Só no meio", p: 0}, {n: "Sem complementos", p: 0}] },
-        { titulo: "Escolha até 3 Complementos", limite: 3, opcoes: [{n: "Granola", p: 0}, {n: "Aveia", p: 0}, {n: "Chocoboll", p: 0}, {n: "Leite em pó", p: 0}, {n: "Paçoca", p: 0}, {n: "Jujuba", p: 0}, {n: "Amendoim", p: 0}] },
+        { titulo: "Escolha até 3 Complementos (Grátis)", limite: 3, opcoes: [{n: "Granola", p: 0}, {n: "Aveia", p: 0}, {n: "Chocoboll", p: 0}, {n: "Leite em pó", p: 0}, {n: "Paçoca", p: 0}, {n: "Jujuba", p: 0}, {n: "Amendoim", p: 0}] },
         { titulo: "Caldas", limite: 1, opcoes: [{n: "Uva", p: 0}, {n: "Morango", p: 0}, {n: "Leite condensado", p: 0}] }
     ];
 
     const ESTRUTURA_GARRAFA = [
-        { titulo: "Adicionais (Até 2)", limite: 2, opcoes: [{ n: "Leite Condensado", p: 0 }, { n: "Mousse de maracuja", p: 2.00 }, { n: "Mousse de Morango", p: 2.00 }, { n: "Nutella", p: 2.00 }, { n: "Ninho", p: 2.00 }] }
+        { titulo: "Escolha até 2 Adicionais", limite: 2, opcoes: [{ n: "Leite Condensado", p: 0 }, { n: "Mousse de Maracujá", p: 2.00 }, { n: "Mousse de Morango", p: 2.00 }, { n: "Nutella", p: 2.00 }, { n: "Ninho", p: 2.00 }] }
     ];
 
     let carrinho = [];
@@ -142,10 +308,10 @@
                 <div class="produto-card" onclick='abrirOpcionais(${JSON.stringify(prod)})'>
                     <div class="produto-info">
                         <h3>${prod.nome}</h3>
-                        <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
+                        <span class="preco">R$ ${prod.preco.toFixed(2).replace('.',',')}</span>
                     </div>
                     <div class="img-container">
-                        <img src="${GITHUB_BASE}${prod.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
+                        <img src="${GITHUB_BASE}${prod.img}" class="produto-img" onerror="this.src='https://images.unsplash.com/photo-1590301157890-4810ed352733?auto=format&fit=crop&q=80&w=100'">
                     </div>
                 </div>
             `).join('')}
@@ -157,11 +323,12 @@
         document.getElementById('nomeProdModal').innerText = produto.nome;
         const lista = document.getElementById('lista-adicionais');
         const estrutura = produto.tipo === 'garrafa' ? ESTRUTURA_GARRAFA : ESTRUTURA_COPO;
+        
         lista.innerHTML = estrutura.map((secao, idx) => `
-            <div class="secao-titulo">${secao.titulo}</div>
+            <div class="secao-titulo">${secao.titulo} (Máx: ${secao.limite})</div>
             ${secao.opcoes.map(opt => `
                 <label class="opcao-item">
-                    <span>${opt.n} ${opt.p > 0 ? `<small style="color:green">+ R$ ${opt.p.toFixed(2)}</small>` : ''}</span>
+                    <span>${opt.n} ${opt.p > 0 ? `<small style="color:var(--success)">+ R$ ${opt.p.toFixed(2)}</small>` : ''}</span>
                     <input type="checkbox" class="extra-item" data-secao="${idx}" data-preco="${opt.p}" value="${opt.n}" onclick="validarLimite(this, ${secao.limite})">
                 </label>
             `).join('')}
@@ -174,7 +341,8 @@
         const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
         if (selecionados.length > limite) {
             input.checked = false;
-            alert(`Você pode escolher no máximo ${limite} opções nesta seção.`);
+            // Feedback vibratório simples (opcional)
+            if (navigator.vibrate) navigator.vibrate(50);
         }
     }
 
@@ -186,7 +354,7 @@
         carrinho.push({
             nome: itemSelecionado.nome,
             precoFinal: itemSelecionado.preco + precoExtra,
-            detalhes: nomesAdicionais.join(', ') || 'Puro'
+            detalhes: nomesAdicionais.join(', ') || 'Tradicional (Puro)'
         });
         
         atualizarBarra();
@@ -197,18 +365,19 @@
         const total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0) + (carrinho.length > 0 ? TAXA_ENTREGA : 0);
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2)}`;
+        document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
     }
 
     function abrirCarrinho() {
         const lista = document.getElementById('itensNoCarrinho');
         lista.innerHTML = carrinho.map((i, idx) => `
-            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small></div>
-                <div style="text-align:right;">
-                    R$ ${i.precoFinal.toFixed(2)} <br>
-                    <span onclick="removerItem(${idx})" style="color:red; cursor:pointer; font-size:12px;">Remover</span>
+            <div style="padding:15px 0; border-bottom:1px solid #f1f1f1; display:flex; justify-content:space-between; align-items:flex-start;">
+                <div style="flex:1;">
+                    <strong style="font-size:14px;">${i.nome}</strong><br>
+                    <small style="color:#888; display:block; margin-top:2px;">${i.detalhes}</small>
+                    <span class="remover-btn" onclick="removerItem(${idx})">Excluir</span>
                 </div>
+                <div style="font-weight:600; font-size:14px; color:var(--primary);">R$ ${i.precoFinal.toFixed(2).replace('.',',')}</div>
             </div>
         `).join('');
         document.getElementById('modalCarrinho').style.display = 'flex';
@@ -216,11 +385,7 @@
 
     function removerItem(idx) {
         carrinho.splice(idx, 1);
-        if(carrinho.length > 0) {
-            abrirCarrinho();
-        } else {
-            fecharModal('modalCarrinho');
-        }
+        carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho');
         atualizarBarra();
     }
 
@@ -236,37 +401,44 @@
         const pag = document.getElementById('formaPagamento').value;
         const troco = document.getElementById('trocoPara').value;
         
-        if(!nome || !endereco || !pag) return alert("Por favor, preencha nome, endereço e forma de pagamento!");
-
-        let total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0) + TAXA_ENTREGA;
-        
-        // Lógica de texto de pagamento (Pix e Dinheiro)
-        let pagTexto = pag;
-        if(pag === 'Pix') {
-            pagTexto = `Pix (20076905780 - Alex Cardoso)%0A⚠️ *Favor enviar o comprovante após a mensagem!*`;
-        } else if (pag === 'Dinheiro' && troco) {
-            pagTexto = `Dinheiro (Troco para R$ ${troco})`;
+        if(!nome || !endereco || !pag) {
+            alert("⚠️ Por favor, preencha nome, endereço e forma de pagamento!");
+            return;
         }
 
-        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A`;
-        msg += `*Cliente:* ${nome}%0A`;
-        msg += `*Endereço:* ${endereco}%0A`;
-        msg += `*Pagamento:* ${pagTexto}%0A%0A`;
-        msg += `*ITENS:*%0A`;
+        let totalProdutos = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        let totalGeral = totalProdutos + TAXA_ENTREGA;
+        
+        let pagTexto = pag;
+        if(pag === 'Pix') {
+            pagTexto = `Pix (Chave: 20076905780 - Alex Cardoso)%0A⚠️ *Favor enviar o comprovante aqui no chat!*`;
+        } else if (pag === 'Dinheiro') {
+            pagTexto = troco ? `Dinheiro (Troco para R$ ${parseFloat(troco).toFixed(2)})` : `Dinheiro (Sem troco)`;
+        }
+
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A`;
+        msg += `------------------------------------------%0A`;
+        msg += `*👤 Cliente:* ${nome}%0A`;
+        msg += `*📍 Endereço:* ${endereco}%0A`;
+        msg += `*💳 Pagamento:* ${pagTexto}%0A`;
+        msg += `------------------------------------------%0A`;
+        msg += `*📦 ITENS DO PEDIDO:*%0A`;
         
         carrinho.forEach(i => {
-            msg += `✅ *${i.nome}*%0A   _${i.detalhes}_%0A`;
+            msg += `%0A✅ *${i.nome}* - R$ ${i.precoFinal.toFixed(2)}%0A   _Adicionais: ${i.detalhes}_%0A`;
         });
 
-        msg += `%0A*Total c/ Entrega: R$ ${total.toFixed(2)}*`;
+        msg += `%0A------------------------------------------%0A`;
+        msg += `*Produtos:* R$ ${totalProdutos.toFixed(2)}%0A`;
+        msg += `*Taxa Entrega:* R$ ${TAXA_ENTREGA.toFixed(2)}%0A`;
+        msg += `*💰 TOTAL: R$ ${totalGeral.toFixed(2)}*`;
         
-        // Abre o WhatsApp com a mensagem formatada
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
     function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+    window.onclick = function(event) { if (event.target.className === 'modal') fecharModal(event.target.id); }
     
-    // Inicia o cardápio
     renderizarCardapio();
 </script>
 
