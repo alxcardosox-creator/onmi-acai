@@ -10,6 +10,7 @@
             --roxo-principal: #5b0f73;
             --verde-sucesso: #27ae60;
             --cinza-fundo: #f4f4f4;
+            --branco: #ffffff;
         }
 
         body {
@@ -17,6 +18,7 @@
             font-family: 'Segoe UI', sans-serif;
             background: var(--cinza-fundo);
             padding-bottom: 100px;
+            color: #333;
         }
 
         header {
@@ -27,59 +29,71 @@
             top: 0;
             z-index: 100;
             transition: 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         header.scrolled { padding: 10px; }
-        header.scrolled .logo-img { max-width: 60px; }
+        header.scrolled .logo-img { max-width: 50px; }
 
-        .logo-img { max-width: 100px; transition: 0.3s; border-radius: 50%; }
+        .logo-img { max-width: 90px; transition: 0.3s; border-radius: 50%; border: 2px solid white; }
 
         .status-badge {
             display: block;
-            background: white;
+            background: var(--branco);
             color: var(--verde-sucesso);
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             width: fit-content;
             margin: 8px auto 0;
-            padding: 3px 12px;
+            padding: 4px 12px;
             border-radius: 20px;
+            text-transform: uppercase;
         }
 
         .container { max-width: 600px; margin: auto; }
 
         .categoria-titulo {
             padding: 25px 15px 10px;
-            font-size: 18px;
-            font-weight: 800;
+            font-size: 16px;
+            font-weight: 900;
             color: var(--roxo-principal);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
         }
 
         .produto-card {
             display: flex;
-            background: white;
+            background: var(--branco);
             margin: 10px 15px;
-            padding: 15px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 12px;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
             align-items: center;
             transition: 0.2s;
+            border: 1px solid rgba(0,0,0,0.03);
         }
 
-        .produto-card:active { transform: scale(0.98); }
+        .produto-card:active { transform: scale(0.96); }
 
-        .produto-info { flex: 1; }
-        .produto-info h3 { margin: 0 0 5px 0; font-size: 16px; }
-        .preco { font-weight: bold; color: #444; }
+        .produto-info { flex: 1; padding-right: 10px; }
+        .produto-info h3 { margin: 0 0 4px 0; font-size: 15px; color: #111; }
+        .preco { font-weight: 800; color: var(--roxo-principal); font-size: 14px; }
+
+        .img-container {
+            width: 85px;
+            height: 85px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
         .produto-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 12px;
+            width: 100%;
+            height: 100%;
             object-fit: cover;
-            background: #eee;
         }
 
         /* Modais */
@@ -93,9 +107,9 @@
         }
 
         .modal-content {
-            background: white;
+            background: var(--branco);
             width: 100%;
-            border-radius: 25px 25px 0 0;
+            border-radius: 30px 30px 0 0;
             padding: 25px;
             max-height: 85vh;
             overflow-y: auto;
@@ -107,11 +121,21 @@
             color: white;
             border: none;
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             border-radius: 15px;
             font-size: 16px;
             font-weight: bold;
-            margin-top: 15px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 14px;
         }
 
         .footer-carrinho {
@@ -123,13 +147,14 @@
             max-width: 500px;
             background: var(--roxo-principal);
             color: white;
-            padding: 15px 20px;
-            border-radius: 20px;
+            padding: 15px 25px;
+            border-radius: 25px;
             display: none;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(91, 15, 115, 0.4);
             cursor: pointer;
+            z-index: 150;
         }
     </style>
 </head>
@@ -145,40 +170,49 @@
 
 <div id="modalOpcionais" class="modal">
     <div class="modal-content">
-        <h2 id="nomeProdModal">Adicionais</h2>
-        <div id="lista-adicionais">
-            </div>
-        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar à Sacola</button>
-        <button class="btn-acao" style="background:#eee; color:#666;" onclick="fecharModal('modalOpcionais')">Cancelar</button>
+        <h2 id="nomeProdModal" style="color:var(--roxo-principal); margin-bottom:20px;">Adicionais</h2>
+        <div id="lista-adicionais"></div>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()">Confirmar e Adicionar</button>
+        <button class="btn-acao" style="background:#f8f8f8; color:#999;" onclick="fecharModal('modalOpcionais')">Voltar</button>
     </div>
 </div>
 
 <div id="modalCarrinho" class="modal">
     <div class="modal-content">
-        <h2>Sua Sacola</h2>
+        <h2 style="color:var(--roxo-principal)">Sua Sacola</h2>
         <div id="itensNoCarrinho"></div>
-        <hr>
-        <input type="text" id="nomeCliente" placeholder="Seu Nome">
-        <input type="text" id="enderecoCliente" placeholder="Endereço Completo">
-        <select id="formaPagamento">
-            <option value="">Forma de Pagamento</option>
-            <option value="Pix">Pix</option>
-            <option value="Cartão">Cartão de Crédito/Débito</option>
-            <option value="Dinheiro">Dinheiro</option>
-        </select>
-        <button class="btn-acao" onclick="finalizarPedido()">Finalizar Pedido via WhatsApp</button>
+        <div style="margin-top:20px; padding:15px; background:#f9f9f9; border-radius:15px">
+            <input type="text" id="nomeCliente" placeholder="Qual seu nome?">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Número, Bairro)">
+            <select id="formaPagamento">
+                <option value="">Como prefere pagar?</option>
+                <option value="Pix">Pix (Mais rápido)</option>
+                <option value="Cartão">Cartão na entrega</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+        </div>
+        <button class="btn-acao" onclick="finalizarPedido()">Enviar via WhatsApp</button>
     </div>
 </div>
 
 <div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
-    <span><i class="fas fa-shopping-basket"></i> <span id="qtdItens">0</span> itens</span>
-    <span id="totalFlutuante">R$ 0,00</span>
+    <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
+    <span id="totalFlutuante" style="font-weight:800">R$ 0,00</span>
 </div>
 
 <script>
-    // ==========================================
-    // MODO CRIADOR: Edite aqui seus produtos!
-    // ==========================================
+    /* ===========================================================
+       MODO CRIADOR - AJUSTE TUDO AQUI!
+       ===========================================================
+    */
+
+    // 1. Caminho base das fotos no GitHub (confira se o final tem a /)
+    const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
+
+    // 2. Taxa de entrega fixa
+    const TAXA_ENTREGA = 3.00;
+
+    // 3. Suas categorias e produtos
     const CARDAPIO = [
         {
             categoria: "Açaí na Garrafa",
@@ -194,17 +228,26 @@
                 { id: 4, nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
                 { id: 5, nome: "Copo 400ml", preco: 12.00, img: "copo400.jpg" }
             ]
+        },
+        {
+            categoria: "Especiais da Casa",
+            itens: [
+                { id: 6, nome: "Super Onmi 700ml", preco: 22.00, img: "copo700.jpg" }
+            ]
         }
     ];
 
-    const ADICIONAIS = ["Leite em Pó", "Granola", "Paçoca", "Banana", "Leite Condensado", "Morango"];
-    const TAXA_ENTREGA = 3.00;
-    const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
+    // 4. Lista de Adicionais (Checkboxes)
+    const ADICIONAIS = ["Leite em Pó", "Granola", "Paçoca", "Banana", "Leite Condensado", "Morango", "Bis"];
+
+    /* ===========================================================
+       FIM DO MODO CRIADOR - ABAIXO É A LÓGICA DO SISTEMA
+       ===========================================================
+    */
 
     let carrinho = [];
     let itemSelecionado = null;
 
-    // Gerar Cardápio Automaticamente
     function renderizarCardapio() {
         const container = document.getElementById('cardapio-container');
         let html = '';
@@ -212,13 +255,17 @@
         CARDAPIO.forEach(cat => {
             html += `<div class="categoria-titulo">${cat.categoria}</div>`;
             cat.itens.forEach(prod => {
+                const fotoUrl = GITHUB_BASE + prod.img;
                 html += `
                     <div class="produto-card" onclick="abrirOpcionais('${prod.nome}', ${prod.preco})">
                         <div class="produto-info">
                             <h3>${prod.nome}</h3>
                             <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
                         </div>
-                        <img src="${GITHUB_BASE}${prod.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
+                        <div class="img-container">
+                            <img src="${fotoUrl}" class="produto-img" 
+                                 onerror="this.parentElement.innerHTML='<i class=\'fas fa-ice-cream\' style=\'color:#ddd; font-size:24px\'></i>'">
+                        </div>
                     </div>
                 `;
             });
@@ -226,12 +273,12 @@
         container.innerHTML = html;
     }
 
-    // Configurar Adicionais no Modal
     function configurarAdicionais() {
         const lista = document.getElementById('lista-adicionais');
         lista.innerHTML = ADICIONAIS.map(add => `
-            <label style="display:block; padding:10px; border-bottom:1px solid #eee;">
-                <input type="checkbox" class="extra" value="${add}"> ${add}
+            <label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #f0f0f0; cursor:pointer;">
+                <input type="checkbox" class="extra" value="${add}" style="width:20px; margin-right:15px;"> 
+                <span style="font-size:15px">${add}</span>
             </label>
         `).join('');
     }
@@ -247,7 +294,7 @@
     function adicionarAoCarrinho() {
         let extras = [];
         document.querySelectorAll('.extra:checked').forEach(el => extras.push(el.value));
-        carrinho.push({ ...itemSelecionado, acompanhamentos: extras.join(', ') || 'Sem adicionais' });
+        carrinho.push({ ...itemSelecionado, acompanhamentos: extras.join(', ') || 'Natural' });
         
         atualizarInterface();
         fecharModal('modalOpcionais');
@@ -255,21 +302,48 @@
     }
 
     function atualizarInterface() {
-        let total = carrinho.reduce((acc, i) => acc + i.preco, 0);
+        let subtotal = carrinho.reduce((acc, i) => acc + i.preco, 0);
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = 'Total: R$ ' + (total + TAXA_ENTREGA).toFixed(2);
+        document.getElementById('totalFlutuante').innerText = 'R$ ' + (subtotal + TAXA_ENTREGA).toFixed(2);
     }
 
     function abrirCarrinho() {
         let container = document.getElementById('itensNoCarrinho');
-        container.innerHTML = carrinho.map(i => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px; font-size:14px">
-                <span><b>${i.nome}</b><br><small>${i.acompanhamentos}</small></span>
-                <span>R$ ${i.preco.toFixed(2)}</span>
-            </div>
-        `).join('');
+        if(carrinho.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#999">Sua sacola está vazia</p>';
+        } else {
+            container.innerHTML = carrinho.map((i, index) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px">
+                    <div style="flex:1">
+                        <div style="font-weight:bold; font-size:14px">${i.nome}</div>
+                        <div style="font-size:12px; color:#777">${i.acompanhamentos}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-size:14px; font-weight:bold">R$ ${i.preco.toFixed(2)}</div>
+                        <small style="color:red; cursor:pointer" onclick="removerItem(${index})">Remover</small>
+                    </div>
+                </div>
+            `).join('');
+            
+            let subtotal = carrinho.reduce((acc, i) => acc + i.preco, 0);
+            container.innerHTML += `
+                <div style="margin-top:15px; border-top:2px dashed #eee; padding-top:10px">
+                    <div style="display:flex; justify-content:space-between; font-size:14px"><span>Subtotal:</span> <span>R$ ${subtotal.toFixed(2)}</span></div>
+                    <div style="display:flex; justify-content:space-between; font-size:14px"><span>Entrega:</span> <span>R$ ${TAXA_ENTREGA.toFixed(2)}</span></div>
+                    <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:800; margin-top:5px; color:var(--roxo-principal)">
+                        <span>Total:</span> <span>R$ ${(subtotal + TAXA_ENTREGA).toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+        }
         document.getElementById('modalCarrinho').style.display = 'flex';
+    }
+
+    function removerItem(index) {
+        carrinho.splice(index, 1);
+        atualizarInterface();
+        abrirCarrinho();
     }
 
     function finalizarPedido() {
@@ -277,14 +351,21 @@
         const endereco = document.getElementById('enderecoCliente').value;
         const pag = document.getElementById('formaPagamento').value;
 
-        if(!nome || !endereco || !pag) return alert("Preencha todos os campos!");
+        if(!nome || !endereco || !pag) return alert("Por favor, preencha todos os dados de entrega!");
 
-        let total = carrinho.reduce((acc, i) => acc + i.preco, 0) + TAXA_ENTREGA;
-        let msg = `*NOVO PEDIDO - ONMI AÇAÍ*%0A%0A`;
+        let subtotal = carrinho.reduce((acc, i) => acc + i.preco, 0);
+        let total = subtotal + TAXA_ENTREGA;
+        
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A`;
         msg += `*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}%0A%0A`;
-        msg += `*ITENS:*%0A`;
-        carrinho.forEach(i => msg += `• ${i.nome} (R$ ${i.preco.toFixed(2)})%0A  _Adicionais: ${i.acompanhamentos}_%0A`);
-        msg += `%0A*Entrega:* R$ ${TAXA_ENTREGA.toFixed(2)}%0A*TOTAL: R$ ${total.toFixed(2)}*`;
+        msg += `*---------- ITENS ----------*%0A`;
+        carrinho.forEach(i => {
+            msg += `✅ *${i.nome}*%0A   _Adicionais: ${i.acompanhamentos}_%0A   Preço: R$ ${i.preco.toFixed(2)}%0A%0A`;
+        });
+        msg += `*---------------------------*%0A`;
+        msg += `*Subtotal:* R$ ${subtotal.toFixed(2)}%0A`;
+        msg += `*Entrega:* R$ ${TAXA_ENTREGA.toFixed(2)}%0A`;
+        msg += `*TOTAL: R$ ${total.toFixed(2)}*`;
 
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
