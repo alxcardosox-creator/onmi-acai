@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onmi Açaí | Delivery</title>
+    <title>Onmi Açaí | Delivery Profissional</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -71,6 +71,7 @@
             align-items: center;
             transition: 0.2s;
             border: 1px solid rgba(0,0,0,0.03);
+            cursor: pointer;
         }
 
         .produto-card:active { transform: scale(0.96); }
@@ -217,11 +218,6 @@
 
     const ESTRUTURA_ADICIONAIS = [
         {
-            titulo: "Sabor do Açaí",
-            limite: 1,
-            opcoes: ["Açaí de Banana", "açai de morango"]
-        },
-        {
             titulo: "Onde deseja os Complementos?",
             limite: 1,
             opcoes: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"]
@@ -232,23 +228,17 @@
             opcoes: [
                 "Granola", "Aveia", "Chocoboll", "Flocos de arroz", "Leite em pó", 
                 "Completo", "Paçoca", "Sucrilhos", "Jujuba", "Amendoim"
-        },
-        {
-            titulo: "Coberturas",
-            limite: 1,
-            opcoes: [
-                "Uva", "Morango", "Kiwi", "Leite condensado"
             ]
         },
         {
-            titulo: "Deseja frutas?",
+            titulo: "Caldas",
             limite: 1,
-            opcoes: ["Banana"]
+            opcoes: ["Uva", "Morango", "Leite condensado"]
         },
         {
-            titulo: "Adicionais Extras",
-            limite: 5,
-            opcoes: ["Potinho de Nutella"]
+            titulo: "Frutas",
+            limite: 1,
+            opcoes: ["Banana"]
         }
     ];
 
