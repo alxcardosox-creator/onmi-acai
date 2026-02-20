@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onmi Açaí | Delivery Profissional</title>
+    <title>Onmi Açaí | Delivery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -78,7 +78,6 @@
         }
 
         .produto-card:active { transform: scale(0.96); }
-
         .produto-info { flex: 1; padding-right: 10px; }
         .produto-info h3 { margin: 0 0 4px 0; font-size: 15px; color: #111; }
         .preco { font-weight: 800; color: var(--roxo-principal); font-size: 14px; }
@@ -94,11 +93,7 @@
             justify-content: center;
         }
 
-        .produto-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
         .modal {
             display: none;
@@ -139,6 +134,7 @@
             border: 1px solid #ddd;
             border-radius: 12px;
             font-size: 14px;
+            box-sizing: border-box;
         }
 
         .footer-carrinho {
@@ -194,6 +190,7 @@
             </select>
         </div>
         <button class="btn-acao" onclick="finalizarPedido()">Enviar via WhatsApp</button>
+        <button class="btn-acao" style="background:transparent; color:#999;" onclick="fecharModal('modalCarrinho')">Continuar Comprando</button>
     </div>
 </div>
 
@@ -205,8 +202,6 @@
 <script>
     const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
     const TAXA_ENTREGA = 3.00;
-
-    // Configuração de Horário
     const HORA_ABRE = 13;
     const HORA_FECHA = 22;
 
@@ -214,9 +209,9 @@
         {
             categoria: "Açaí no Copo",
             itens: [
-                { id: 1, nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg", tipo: "copo" },
+                { id: 1, nome: "Copo 250ml", preco: 6.00, img: "copo250.jpg", tipo: "copo" },
                 { id: 2, nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg", tipo: "copo" },
-                { id: 3, nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg", tipo: "copo" },
+                { id: 3, nome: "Copo 400ml", preco: 12.00, img: "copo400.jpg", tipo: "copo" },
                 { id: 4, nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg", tipo: "copo" },
                 { id: 5, nome: "Copo 700ml", preco: 17.00, img: "copo700.jpg", tipo: "copo" }
             ]
@@ -238,23 +233,12 @@
     ];
 
     const ESTRUTURA_GARRAFA = [
-        { 
-            titulo: "Complementos da Garrafa", 
-            limite: 5, 
-            opcoes: [
-                { n: "Leite Condensado", p: 0 },
-                { n: "Mousse de Maracujá", p: 2.00 },
-                { n: "Mousse de Morango", p: 2.00 },
-                { n: "Nutella", p: 2.00 },
-                { n: "Ninho", p: 2.00 }
-            ] 
-        }
+        { titulo: "Complementos", limite: 5, opcoes: [{ n: "Leite Condensado", p: 0 }, { n: "Mousse de Maracujá", p: 2.00 }, { n: "Mousse de Morango", p: 2.00 }, { n: "Nutella", p: 2.00 }, { n: "Ninho", p: 2.00 }] }
     ];
 
     let carrinho = [];
     let itemSelecionado = null;
 
-    // Função para verificar se a loja está aberta
     function estaAberto() {
         const agora = new Date();
         const hora = agora.getHours();
@@ -285,8 +269,7 @@
                             <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
                         </div>
                         <div class="img-container">
-                            <img src="${GITHUB_BASE}${prod.img}" class="produto-img" 
-                                 onerror="this.parentElement.innerHTML='<i class=\'fas fa-ice-cream\' style=\'color:#ddd; font-size:24px\'></i>'">
+                            <img src="${GITHUB_BASE}${prod.img}" class="produto-img" onerror="this.parentElement.innerHTML='<i class=\'fas fa-ice-cream\' style=\'color:#ddd; font-size:24px\'></i>'">
                         </div>
                     </div>`;
             });
@@ -295,40 +278,26 @@
     }
 
     function abrirOpcionais(produto) {
-        if(!estaAberto()) {
-            return alert("Desculpe! No momento estamos fechados. Nosso horário é das 13h às 22h.");
-        }
-
+        if(!estaAberto()) return alert("No momento estamos fechados! Voltamos às 13h.");
+        
         itemSelecionado = produto;
         document.getElementById('nomeProdModal').innerText = produto.nome;
         const lista = document.getElementById('lista-adicionais');
         let html = '';
-        
         const estrutura = produto.tipo === 'garrafa' ? ESTRUTURA_GARRAFA : ESTRUTURA_COPO;
 
         estrutura.forEach((secao, idxSecao) => {
-            html += `
-                <div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:10px;">
-                    <strong style="color:var(--roxo-principal); font-size:14px;">${secao.titulo}</strong><br>
-                    <small style="color:#666;">Escolha até ${secao.limite} item(ns)</small>
-                </div>
-            `;
+            html += `<div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:10px;">
+                        <strong style="color:var(--roxo-principal)">${secao.titulo}</strong><br>
+                        <small>Escolha até ${secao.limite}</small>
+                    </div>`;
             secao.opcoes.forEach(opcao => {
-                const precoTxt = opcao.p > 0 ? ` (+ R$ ${opcao.p.toFixed(2)})` : ' (Grátis)';
-                html += `
-                    <label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #eee; cursor:pointer;">
-                        <input type="checkbox" class="extra-item" 
-                               data-secao="${idxSecao}" 
-                               data-preco="${opcao.p}" 
-                               value="${opcao.n}" 
-                               onclick="verificarLimite(this, ${secao.limite})" 
-                               style="width:18px; height:18px; margin-right:12px;">
-                        <span style="font-size:14px;">${opcao.n}${precoTxt}</span>
-                    </label>
-                `;
+                html += `<label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #eee; cursor:pointer;">
+                            <input type="checkbox" class="extra-item" data-secao="${idxSecao}" data-preco="${opcao.p}" value="${opcao.n}" onclick="verificarLimite(this, ${secao.limite})" style="width:18px; height:18px; margin-right:12px;">
+                            <span>${opcao.n} ${opcao.p > 0 ? '(+ R$ '+opcao.p.toFixed(2)+')' : '(Grátis)'}</span>
+                        </label>`;
             });
         });
-
         lista.innerHTML = html;
         document.getElementById('modalOpcionais').style.display = 'flex';
     }
@@ -338,7 +307,7 @@
         const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
         if (selecionados.length > limite) {
             checkbox.checked = false;
-            alert(`Nesta seção você pode escolher no máximo ${limite} item(ns).`);
+            alert(`Limite de ${limite} item(ns) atingido.`);
         }
     }
 
@@ -346,91 +315,61 @@
 
     function adicionarAoCarrinho() {
         let escolhidos = [];
-        let precoAdicional = 0;
+        let adicional = 0;
         document.querySelectorAll('.extra-item:checked').forEach(el => {
             escolhidos.push(el.value);
-            precoAdicional += parseFloat(el.getAttribute('data-preco'));
+            adicional += parseFloat(el.getAttribute('data-preco'));
         });
-        
-        carrinho.push({ 
-            ...itemSelecionado, 
-            precoFinal: itemSelecionado.preco + precoAdicional,
-            acompanhamentos: escolhidos.join(', ') || 'Natural' 
-        });
-        
+        carrinho.push({ ...itemSelecionado, precoFinal: itemSelecionado.preco + adicional, acompanhamentos: escolhidos.join(', ') || 'Sem adicionais' });
         atualizarInterface();
         fecharModal('modalOpcionais');
     }
 
     function atualizarInterface() {
-        let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        let total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = 'R$ ' + (subtotal + TAXA_ENTREGA).toFixed(2);
+        document.getElementById('totalFlutuante').innerText = 'R$ ' + (total + TAXA_ENTREGA).toFixed(2);
     }
 
     function abrirCarrinho() {
         let container = document.getElementById('itensNoCarrinho');
-        if(carrinho.length === 0) {
-            container.innerHTML = '<p style="text-align:center; color:#999">Sua sacola está vazia</p>';
-        } else {
-            container.innerHTML = carrinho.map((i, index) => `
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px">
-                    <div style="flex:1">
-                        <div style="font-weight:bold; font-size:14px">${i.nome}</div>
-                        <div style="font-size:12px; color:#777; line-height:1.4;">${i.acompanhamentos}</div>
-                    </div>
-                    <div style="text-align:right; margin-left:10px;">
-                        <div style="font-size:14px; font-weight:bold">R$ ${i.precoFinal.toFixed(2)}</div>
-                        <small style="color:red; cursor:pointer" onclick="removerItem(${index})">Remover</small>
-                    </div>
-                </div>
-            `).join('');
-            
-            let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-            container.innerHTML += `
-                <div style="margin-top:15px; border-top:2px dashed #eee; padding-top:10px">
-                    <div style="display:flex; justify-content:space-between; font-size:14px"><span>Subtotal:</span> <span>R$ ${subtotal.toFixed(2)}</span></div>
-                    <div style="display:flex; justify-content:space-between; font-size:14px"><span>Entrega:</span> <span>R$ ${TAXA_ENTREGA.toFixed(2)}</span></div>
-                    <div style="display:flex; justify-content:space-between; font-size:18px; font-weight:800; margin-top:5px; color:var(--roxo-principal)">
-                        <span>Total:</span> <span>R$ ${(subtotal + TAXA_ENTREGA).toFixed(2)}</span>
-                    </div>
-                </div>
-            `;
-        }
+        container.innerHTML = carrinho.map((i, index) => `
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px">
+                <div><b>${i.nome}</b><br><small>${i.acompanhamentos}</small></div>
+                <div style="text-align:right">R$ ${i.precoFinal.toFixed(2)}<br><small style="color:red" onclick="removerItem(${index})">Remover</small></div>
+            </div>`).join('');
+        
+        // --- MEMÓRIA DO CLIENTE ---
+        if(localStorage.getItem('onmi_nome')) document.getElementById('nomeCliente').value = localStorage.getItem('onmi_nome');
+        if(localStorage.getItem('onmi_endereco')) document.getElementById('enderecoCliente').value = localStorage.getItem('onmi_endereco');
+        if(localStorage.getItem('onmi_pagamento')) document.getElementById('formaPagamento').value = localStorage.getItem('onmi_pagamento');
+
         document.getElementById('modalCarrinho').style.display = 'flex';
     }
 
     function removerItem(index) {
         carrinho.splice(index, 1);
         atualizarInterface();
-        abrirCarrinho();
+        carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho');
     }
 
     function finalizarPedido() {
-        if(!estaAberto()) {
-            return alert("A loja fechou enquanto você montava o pedido. Não é possível finalizar agora.");
-        }
-
         const nome = document.getElementById('nomeCliente').value;
         const endereco = document.getElementById('enderecoCliente').value;
         const pag = document.getElementById('formaPagamento').value;
 
-        if(!nome || !endereco || !pag) return alert("Por favor, preencha todos os dados de entrega!");
+        if(!nome || !endereco || !pag) return alert("Preencha todos os dados!");
+
+        // Salvar para a próxima vez
+        localStorage.setItem('onmi_nome', nome);
+        localStorage.setItem('onmi_endereco', endereco);
+        localStorage.setItem('onmi_pagamento', pag);
 
         let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        let total = subtotal + TAXA_ENTREGA;
-        
-        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A`;
-        msg += `*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}%0A%0A`;
-        msg += `*---------- ITENS ----------*%0A`;
-        carrinho.forEach(i => {
-            msg += `✅ *${i.nome}*%0A   _Escolhas: ${i.acompanhamentos}_%0A   R$ ${i.precoFinal.toFixed(2)}%0A%0A`;
-        });
-        msg += `*---------------------------*%0A`;
-        msg += `*Subtotal:* R$ ${subtotal.toFixed(2)}%0A`;
-        msg += `*Entrega:* R$ ${TAXA_ENTREGA.toFixed(2)}%0A`;
-        msg += `*TOTAL: R$ ${total.toFixed(2)}*`;
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}%0A%0A`;
+        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A_${i.acompanhamentos}_%0A`);
+        msg += `%0A*Total c/ Entrega: R$ ${(subtotal + TAXA_ENTREGA).toFixed(2)}*`;
 
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
@@ -440,11 +379,8 @@
         window.scrollY > 50 ? header.classList.add("scrolled") : header.classList.remove("scrolled");
     };
 
-    // Inicialização
     atualizarStatusBadge();
     renderizarCardapio();
-    
-    // Atualiza o status a cada 1 minuto caso a página fique aberta
     setInterval(atualizarStatusBadge, 60000);
 </script>
 </body>
