@@ -1,12 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onmi Açaí | Delivery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --roxo-principal: #5b0f73;
+            --verde-sucesso: #27ae60;
+            --cinza-fundo: #f4f4f4;
+            --branco: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--cinza-fundo);
+            padding-bottom: 100px;
+            color: #333;
+        }
+
+        header {
+            background: var(--roxo-principal);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: 0.3s;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        header.scrolled { padding: 10px; }
+        header.scrolled .logo-img { max-width: 50px; }
+
+        .logo-img { max-width: 90px; transition: 0.3s; border-radius: 50%; border: 2px solid white; }
+
+        .status-badge {
+            display: block;
+            background: var(--branco);
+            color: var(--verde-sucesso);
+            font-size: 11px;
+            font-weight: bold;
+            width: fit-content;
+            margin: 8px auto 0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .container { max-width: 600px; margin: auto; }
+
+        .categoria-titulo {
+            padding: 25px 15px 10px;
+            font-size: 16px;
+            font-weight: 900;
+            color: var(--roxo-principal);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .produto-card {
+            display: flex;
+            background: var(--branco);
+            margin: 10px 15px;
+            padding: 12px;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            align-items: center;
+            transition: 0.2s;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .produto-card:active { transform: scale(0.96); }
+
+        .produto-info { flex: 1; padding-right: 10px; }
+        .produto-info h3 { margin: 0 0 4px 0; font-size: 15px; color: #111; }
+        .preco { font-weight: 800; color: var(--roxo-principal); font-size: 14px; }
+
+        .img-container {
+            width: 85px;
+            height: 85px;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .produto-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Modais */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 200;
+            align-items: flex-end;
+        }
+
+        .modal-content {
+            background: var(--branco);
+            width: 100%;
+            border-radius: 30px 30px 0 0;
+            padding: 25px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        .btn-acao {
+            background: var(--roxo-principal);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 14px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .footer-carrinho {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 500px;
+            background: var(--roxo-principal);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(91, 15, 115, 0.4);
+            cursor: pointer;
+            z-index: 150;
+        }
+    </style>
+</head>
+<body>
+
+<header id="mainHeader">
+    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" alt="Onmi Açaí">
+    <span class="status-badge">● Aberto Agora</span>
+</header>
+
+<div class="container" id="cardapio-container">
+    </div>
+
+<div id="modalOpcionais" class="modal">
+    <div class="modal-content">
+        <h2 id="nomeProdModal" style="color:var(--roxo-principal); margin-bottom:20px;">Adicionais</h2>
+        <div id="lista-adicionais"></div>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()">Confirmar e Adicionar</button>
+        <button class="btn-acao" style="background:#f8f8f8; color:#999;" onclick="fecharModal('modalOpcionais')">Voltar</button>
+    </div>
+</div>
+
+<div id="modalCarrinho" class="modal">
+    <div class="modal-content">
+        <h2 style="color:var(--roxo-principal)">Sua Sacola</h2>
+        <div id="itensNoCarrinho"></div>
+        <div style="margin-top:20px; padding:15px; background:#f9f9f9; border-radius:15px">
+            <input type="text" id="nomeCliente" placeholder="Qual seu nome?">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Número, Bairro)">
+            <select id="formaPagamento">
+                <option value="">Como prefere pagar?</option>
+                <option value="Pix">Pix (Mais rápido)</option>
+                <option value="Cartão">Cartão na entrega</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+        </div>
+        <button class="btn-acao" onclick="finalizarPedido()">Enviar via WhatsApp</button>
+    </div>
+</div>
+
+<div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
+    <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
+    <span id="totalFlutuante" style="font-weight:800">R$ 0,00</span>
+</div>
+
 <script>
     /* ===========================================================
-       MODO CRIADOR - EDITADO CONFORME SEUS PRINTS
+       MODO CRIADOR - AJUSTE TUDO AQUI!
        ===========================================================
     */
 
+    // 1. Caminho base das fotos no GitHub (confira se o final tem a /)
     const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
+
+    // 2. Taxa de entrega fixa
     const TAXA_ENTREGA = 3.00;
 
+    // 3. Suas categorias e produtos
     const CARDAPIO = [
         {
             categoria: "Açaí na Garrafa",
@@ -22,53 +228,20 @@
                 { id: 4, nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
                 { id: 5, nome: "Copo 400ml", preco: 12.00, img: "copo400.jpg" }
             ]
+        },
+        {
+            categoria: "Especiais da Casa",
+            itens: [
+                { id: 6, nome: "Super Onmi 700ml", preco: 22.00, img: "copo700.jpg" }
+            ]
         }
     ];
 
-    // Estrutura de adicionais baseada nas suas imagens
-    const ESTRUTURA_ADICIONAIS = [
-        {
-            titulo: "Sabor do Açaí",
-            limite: 1,
-            opcoes: ["Açaí de Banana"] // Adicione mais sabores se tiver
-        },
-        {
-            titulo: "Onde deseja os Complementos?",
-            limite: 1,
-            opcoes: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"]
-        },
-        {
-            titulo: "Complementos",
-            limite: 6,
-            opcoes: [
-                "Granola", "Aveia", "Chocoboll", "Flocos de arroz", "Leite em pó", 
-                "Completo", "Paçoca", "Sucrilhos", "Jujuba", "Amendoim",
-                "Granulado preto", "Coco ralado", "Granulado colorido", "Marshmallow",
-                "Amendoim colorido", "Delicado (bala )", "argola colorida"
-            ]
-        },
-        {
-            titulo: "Coberturas",
-            limite: 1,
-            opcoes: [
-                "Uva", "Morango", "Maçã verde", "Kiwi", "Chocolate suíço",
-                "TuttiFruit", "Milho", "Maracujá", "Leite condensado", "Menta"
-            ]
-        },
-        {
-            titulo: "Deseja frutas?",
-            limite: 3,
-            opcoes: ["Morango", "Banana"]
-        },
-        {
-            titulo: "Adicionais Extras",
-            limite: 5,
-            opcoes: ["Potinho de Nutella"]
-        }
-    ];
+    // 4. Lista de Adicionais (Checkboxes)
+    const ADICIONAIS = ["Leite em Pó", "Granola", "Paçoca", "Banana", "Leite Condensado", "Morango", "Bis"];
 
     /* ===========================================================
-       LÓGICA DO SISTEMA
+       FIM DO MODO CRIADOR - ABAIXO É A LÓGICA DO SISTEMA
        ===========================================================
     */
 
@@ -78,9 +251,11 @@
     function renderizarCardapio() {
         const container = document.getElementById('cardapio-container');
         let html = '';
+
         CARDAPIO.forEach(cat => {
             html += `<div class="categoria-titulo">${cat.categoria}</div>`;
             cat.itens.forEach(prod => {
+                const fotoUrl = GITHUB_BASE + prod.img;
                 html += `
                     <div class="produto-card" onclick="abrirOpcionais('${prod.nome}', ${prod.preco})">
                         <div class="produto-info">
@@ -88,10 +263,11 @@
                             <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
                         </div>
                         <div class="img-container">
-                            <img src="${GITHUB_BASE}${prod.img}" class="produto-img" 
+                            <img src="${fotoUrl}" class="produto-img" 
                                  onerror="this.parentElement.innerHTML='<i class=\'fas fa-ice-cream\' style=\'color:#ddd; font-size:24px\'></i>'">
                         </div>
-                    </div>`;
+                    </div>
+                `;
             });
         });
         container.innerHTML = html;
@@ -99,55 +275,30 @@
 
     function configurarAdicionais() {
         const lista = document.getElementById('lista-adicionais');
-        let html = '';
-
-        ESTRUTURA_ADICIONAIS.forEach((secao, idxSecao) => {
-            html += `
-                <div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:10px;">
-                    <strong style="color:var(--roxo-principal); font-size:14px;">${secao.titulo}</strong><br>
-                    <small style="color:#666;">Escolha até ${secao.limite} item(ns)</small>
-                </div>
-            `;
-            secao.opcoes.forEach(opcao => {
-                html += `
-                    <label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #eee; cursor:pointer;">
-                        <input type="checkbox" class="extra-item" data-secao="${idxSecao}" value="${opcao}" 
-                               onclick="verificarLimite(this, ${secao.limite})" style="width:18px; height:18px; margin-right:12px;">
-                        <span style="font-size:14px;">${opcao}</span>
-                    </label>
-                `;
-            });
-        });
-        lista.innerHTML = html;
-    }
-
-    function verificarLimite(checkbox, limite) {
-        const secao = checkbox.getAttribute('data-secao');
-        const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
-        if (selecionados.length > limite) {
-            checkbox.checked = false;
-            alert(`Nesta seção você pode escolher no máximo ${limite} item(ns).`);
-        }
+        lista.innerHTML = ADICIONAIS.map(add => `
+            <label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #f0f0f0; cursor:pointer;">
+                <input type="checkbox" class="extra" value="${add}" style="width:20px; margin-right:15px;"> 
+                <span style="font-size:15px">${add}</span>
+            </label>
+        `).join('');
     }
 
     function abrirOpcionais(nome, preco) {
         itemSelecionado = { nome, preco };
         document.getElementById('nomeProdModal').innerText = nome;
         document.getElementById('modalOpcionais').style.display = 'flex';
-        document.querySelectorAll('.extra-item').forEach(el => el.checked = false);
     }
 
     function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
 
     function adicionarAoCarrinho() {
-        let escolhidos = [];
-        document.querySelectorAll('.extra-item:checked').forEach(el => escolhidos.push(el.value));
-        carrinho.push({ 
-            ...itemSelecionado, 
-            acompanhamentos: escolhidos.length > 0 ? escolhidos.join(', ') : 'Natural' 
-        });
+        let extras = [];
+        document.querySelectorAll('.extra:checked').forEach(el => extras.push(el.value));
+        carrinho.push({ ...itemSelecionado, acompanhamentos: extras.join(', ') || 'Natural' });
+        
         atualizarInterface();
         fecharModal('modalOpcionais');
+        document.querySelectorAll('.extra').forEach(el => el.checked = false);
     }
 
     function atualizarInterface() {
@@ -163,12 +314,12 @@
             container.innerHTML = '<p style="text-align:center; color:#999">Sua sacola está vazia</p>';
         } else {
             container.innerHTML = carrinho.map((i, index) => `
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px">
                     <div style="flex:1">
                         <div style="font-weight:bold; font-size:14px">${i.nome}</div>
-                        <div style="font-size:12px; color:#777; line-height:1.4;">${i.acompanhamentos}</div>
+                        <div style="font-size:12px; color:#777">${i.acompanhamentos}</div>
                     </div>
-                    <div style="text-align:right; margin-left:10px;">
+                    <div style="text-align:right">
                         <div style="font-size:14px; font-weight:bold">R$ ${i.preco.toFixed(2)}</div>
                         <small style="color:red; cursor:pointer" onclick="removerItem(${index})">Remover</small>
                     </div>
@@ -209,7 +360,7 @@
         msg += `*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}%0A%0A`;
         msg += `*---------- ITENS ----------*%0A`;
         carrinho.forEach(i => {
-            msg += `✅ *${i.nome}*%0A   _Escolhas: ${i.acompanhamentos}_%0A   R$ ${i.preco.toFixed(2)}%0A%0A`;
+            msg += `✅ *${i.nome}*%0A   _Adicionais: ${i.acompanhamentos}_%0A   Preço: R$ ${i.preco.toFixed(2)}%0A%0A`;
         });
         msg += `*---------------------------*%0A`;
         msg += `*Subtotal:* R$ ${subtotal.toFixed(2)}%0A`;
@@ -224,6 +375,10 @@
         window.scrollY > 50 ? header.classList.add("scrolled") : header.classList.remove("scrolled");
     };
 
+    // Inicialização
     renderizarCardapio();
     configurarAdicionais();
 </script>
+
+</body>
+</html>
