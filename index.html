@@ -15,90 +15,90 @@
         }
 
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--cinza-fundo); padding-bottom: 100px; color: #333; }
-        header { background: var(--roxo-principal); padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; transition: 0.3s; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        header.scrolled { padding: 10px; }
-        header.scrolled .logo-img { max-width: 50px; }
-        .logo-img { max-width: 90px; transition: 0.3s; border-radius: 50%; border: 2px solid white; }
+        header { background: var(--roxo-principal); padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .logo-img { max-width: 90px; border-radius: 50%; border: 2px solid white; background: white; }
         .status-badge { display: block; background: var(--branco); font-size: 11px; font-weight: bold; width: fit-content; margin: 8px auto 0; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }
         .status-aberto { color: var(--verde-sucesso); }
         .status-fechado { color: var(--vermelho-erro); }
+        
         .container { max-width: 600px; margin: auto; }
         .categoria-titulo { padding: 25px 15px 10px; font-size: 16px; font-weight: 900; color: var(--roxo-principal); text-transform: uppercase; letter-spacing: 1.5px; }
-        .produto-card { display: flex; background: var(--branco); margin: 10px 15px; padding: 12px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); align-items: center; transition: 0.2s; border: 1px solid rgba(0,0,0,0.03); cursor: pointer; }
+        
+        .produto-card { display: flex; background: var(--branco); margin: 10px 15px; padding: 12px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); align-items: center; cursor: pointer; border: 1px solid transparent; }
         .produto-info { flex: 1; padding-right: 10px; }
-        .produto-info h3 { margin: 0 0 4px 0; font-size: 15px; color: #111; }
-        .preco { font-weight: 800; color: var(--roxo-principal); font-size: 14px; }
-        .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
+        .produto-info h3 { margin: 0 0 4px 0; font-size: 15px; }
+        .preco { font-weight: 800; color: var(--roxo-principal); }
+        
+        .img-container { width: 80px; height: 80px; border-radius: 12px; overflow: hidden; background: #eee; flex-shrink: 0; }
         .produto-img { width: 100%; height: 100%; object-fit: cover; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; align-items: flex-end; }
-        .modal-content { background: var(--branco); width: 100%; border-radius: 30px 30px 0 0; padding: 25px; max-height: 85vh; overflow-y: auto; box-sizing: border-box; }
+
+        /* Modais */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 200; align-items: flex-end; }
+        .modal-content { background: var(--branco); width: 100%; border-radius: 30px 30px 0 0; padding: 20px; max-height: 90vh; overflow-y: auto; }
+        
+        .secao-titulo { background: #f0f0f0; padding: 8px 15px; margin: 15px 0 10px; border-radius: 8px; font-size: 14px; font-weight: bold; color: #555; }
+        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #eee; cursor: pointer; }
+        .opcao-item input { width: 20px; height: 20px; cursor: pointer; }
+
         .btn-acao { background: var(--roxo-principal); color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; box-sizing: border-box; }
-        .info-pix { background: #e8f4fd; padding: 15px; border-radius: 12px; margin-top: 10px; display: none; border-left: 5px solid #2980b9; }
-        .info-troco { display: none; }
-        .footer-carrinho { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: var(--roxo-principal); color: white; padding: 15px 25px; border-radius: 25px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.4); cursor: pointer; z-index: 150; }
+        
+        .footer-carrinho { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: var(--roxo-principal); color: white; padding: 15px 25px; border-radius: 25px; display: none; justify-content: space-between; align-items: center; z-index: 150; }
     </style>
 </head>
 <body>
 
-<header id="mainHeader">
+<header>
     <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" alt="Onmi Açaí">
-    <span id="statusLoja" class="status-badge">● Verificando...</span>
+    <span id="statusLoja" class="status-badge">Verificando...</span>
 </header>
 
 <div class="container" id="cardapio-container"></div>
 
 <div id="modalOpcionais" class="modal">
     <div class="modal-content">
-        <h2 id="nomeProdModal" style="color:var(--roxo-principal); margin-bottom:20px;">Adicionais</h2>
+        <h2 id="nomeProdModal" style="color:var(--roxo-principal); margin: 0 0 10px 0;">Escolha seus itens</h2>
+        <p id="descLimite" style="font-size: 12px; color: #666; margin-bottom: 15px;">Selecione as opções desejadas abaixo:</p>
         <div id="lista-adicionais"></div>
-        <button class="btn-acao" onclick="adicionarAoCarrinho()">Confirmar e Adicionar</button>
-        <button class="btn-acao" style="background:#f8f8f8; color:#999;" onclick="fecharModal('modalOpcionais')">Voltar</button>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
+        <button class="btn-acao" style="background:#f4f4f4; color:#666;" onclick="fecharModal('modalOpcionais')">Cancelar</button>
     </div>
 </div>
 
 <div id="modalCarrinho" class="modal">
     <div class="modal-content">
-        <h2 style="color:var(--roxo-principal)">Sua Sacola</h2>
+        <h2 style="color:var(--roxo-principal)">Meu Pedido</h2>
         <div id="itensNoCarrinho"></div>
-        <div style="margin-top:20px; padding:15px; background:#f9f9f9; border-radius:15px">
-            <input type="text" id="nomeCliente" placeholder="Qual seu nome?">
-            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Número, Bairro)">
+        
+        <div style="margin-top:20px;">
+            <input type="text" id="nomeCliente" placeholder="Seu nome" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
+            <input type="text" id="enderecoCliente" placeholder="Endereço Completo" style="width:100%; padding:12px; margin-bottom:10px; border:1px solid #ddd; border-radius:10px;">
             
-            <select id="formaPagamento" onchange="togglePagamento()">
-                <option value="">Como prefere pagar?</option>
+            <select id="formaPagamento" onchange="togglePagamento()" style="width:100%; padding:12px; border:1px solid #ddd; border-radius:10px;">
+                <option value="">Forma de Pagamento</option>
                 <option value="Pix">Pix</option>
-                <option value="Cartão">Cartão na entrega</option>
+                <option value="Cartão">Cartão</option>
                 <option value="Dinheiro">Dinheiro</option>
             </select>
 
-            <div id="areaPix" class="info-pix">
-                <strong>Chave Pix (CPF):</strong><br>
-                <span style="font-size: 18px; color: #2980b9; font-weight: bold;">20076905780</span><br>
-                <strong>Alex Cardoso</strong><br>
-                <small style="color: #555;">Favor compartilhar o comprovante após enviar o pedido.</small>
-            </div>
-
-            <div id="areaTroco" class="info-troco">
-                <input type="text" id="trocoPara" placeholder="Troco para quanto? (Ex: 50)">
+            <div id="areaPix" style="display:none; background:#e1f5fe; padding:15px; border-radius:10px; margin-top:10px;">
+                <strong>Pix: 20076905780 (CPF)</strong><br>Alex Cardoso
             </div>
         </div>
-        <button class="btn-acao" onclick="finalizarPedido()">Enviar via WhatsApp</button>
-        <button class="btn-acao" style="background:transparent; color:#999;" onclick="fecharModal('modalCarrinho')">Continuar Comprando</button>
+
+        <button class="btn-acao" onclick="finalizarPedido()">Finalizar no WhatsApp</button>
+        <button class="btn-acao" style="background:none; color:#999;" onclick="fecharModal('modalCarrinho')">Voltar</button>
     </div>
 </div>
 
 <div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
     <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
-    <span id="totalFlutuante" style="font-weight:800">R$ 0,00</span>
+    <span id="totalFlutuante">R$ 0,00</span>
 </div>
 
 <script>
     const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
     const TAXA_ENTREGA = 3.00;
-    const HORA_ABRE = 13;
-    const HORA_FECHA = 22;
-
+    
     const CARDAPIO = [
         {
             categoria: "Açaí no Copo",
@@ -120,156 +120,136 @@
     ];
 
     const ESTRUTURA_COPO = [
-        { titulo: "Onde deseja os Complementos?", limite: 1, opcoes: [{n: "Em cima", p: 0}, {n: "Meio a Meio", p: 0}, {n: "Só no meio", p: 0}, {n: "Sem complementos", p: 0}, {n: "Embaixo", p: 0}] },
-        { titulo: "Complementos", limite: 3, opcoes: [{n: "Granola", p: 0}, {n: "Aveia", p: 0}, {n: "Chocoboll", p: 0}, {n: "Flocos de arroz", p: 0}, {n: "Leite em pó", p: 0}, {n: "Completo", p: 0}, {n: "Paçoca", p: 0}, {n: "Sucrilhos", p: 0}, {n: "Jujuba", p: 0}, {n: "Amendoim", p: 0}] },
-        { titulo: "Caldas", limite: 1, opcoes: [{n: "Uva", p: 0}, {n: "Morango", p: 0}, {n: "Leite condensado", p: 0}] },
-        { titulo: "Frutas", limite: 1, opcoes: [{n: "Banana", p: 0}] }
+        { titulo: "Onde deseja os Complementos?", limite: 1, opcoes: [{n: "Em cima", p: 0}, {n: "Meio a Meio", p: 0}, {n: "Só no meio", p: 0}, {n: "Sem complementos", p: 0}] },
+        { titulo: "Escolha até 3 Complementos", limite: 3, opcoes: [{n: "Granola", p: 0}, {n: "Aveia", p: 0}, {n: "Chocoboll", p: 0}, {n: "Leite em pó", p: 0}, {n: "Paçoca", p: 0}, {n: "Jujuba", p: 0}, {n: "Amendoim", p: 0}] },
+        { titulo: "Caldas", limite: 1, opcoes: [{n: "Uva", p: 0}, {n: "Morango", p: 0}, {n: "Leite condensado", p: 0}] }
     ];
 
     const ESTRUTURA_GARRAFA = [
-        { titulo: "Complementos", limite: 5, opcoes: [{ n: "Leite Condensado", p: 0 }, { n: "Mousse de Maracujá", p: 2.00 }, { n: "Mousse de Morango", p: 2.00 }, { n: "Nutella", p: 2.00 }, { n: "Ninho", p: 2.00 }] }
+        { titulo: "Adicionais (Até 5)", limite: 5, opcoes: [{ n: "Leite Condensado", p: 0 }, { n: "Mousse de Morango", p: 2.00 }, { n: "Nutella", p: 2.00 }, { n: "Ninho", p: 2.00 }] }
     ];
 
     let carrinho = [];
     let itemSelecionado = null;
 
-    function estaAberto() {
-        const agora = new Date();
-        const hora = agora.getHours();
-        return hora >= HORA_ABRE && hora < HORA_FECHA;
+    function renderizarCardapio() {
+        const container = document.getElementById('cardapio-container');
+        container.innerHTML = CARDAPIO.map(cat => `
+            <div class="categoria-titulo">${cat.categoria}</div>
+            ${cat.itens.map(prod => `
+                <div class="produto-card" onclick='abrirOpcionais(${JSON.stringify(prod)})'>
+                    <div class="produto-info">
+                        <h3>${prod.nome}</h3>
+                        <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
+                    </div>
+                    <div class="img-container">
+                        <img src="${GITHUB_BASE}${prod.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
+                    </div>
+                </div>
+            `).join('')}
+        `).join('');
     }
 
-    function atualizarStatusBadge() {
-        const badge = document.getElementById('statusLoja');
-        if (estaAberto()) {
-            badge.innerText = "● Aberto Agora";
-            badge.className = "status-badge status-aberto";
-        } else {
-            badge.innerText = "● Fechado (Abre às 13h)";
-            badge.className = "status-badge status-fechado";
+    function abrirOpcionais(produto) {
+        itemSelecionado = produto;
+        document.getElementById('nomeProdModal').innerText = produto.nome;
+        const lista = document.getElementById('lista-adicionais');
+        const estrutura = produto.tipo === 'garrafa' ? ESTRUTURA_GARRAFA : ESTRUTURA_COPO;
+        
+        lista.innerHTML = estrutura.map((secao, idx) => `
+            <div class="secao-titulo">${secao.titulo} (Máx: ${secao.limite})</div>
+            ${secao.opcoes.map(opt => `
+                <label class="opcao-item">
+                    <span>${opt.n} ${opt.p > 0 ? `<small style="color:green">+ R$ ${opt.p.toFixed(2)}</small>` : ''}</span>
+                    <input type="checkbox" class="extra-item" 
+                        data-secao="${idx}" 
+                        data-preco="${opt.p}" 
+                        value="${opt.n}" 
+                        onclick="validarLimite(this, ${secao.limite})">
+                </label>
+            `).join('')}
+        `).join('');
+        
+        document.getElementById('modalOpcionais').style.display = 'flex';
+    }
+
+    function validarLimite(input, limite) {
+        const secao = input.getAttribute('data-secao');
+        const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
+        if (selecionados.length > limite) {
+            input.checked = false;
+            alert(`Você só pode escolher ${limite} opções nesta seção.`);
         }
     }
 
-    function renderizarCardapio() {
-        const container = document.getElementById('cardapio-container');
-        let html = '';
-        CARDAPIO.forEach(cat => {
-            html += `<div class="categoria-titulo">${cat.categoria}</div>`;
-            cat.itens.forEach(prod => {
-                html += `
-                    <div class="produto-card" onclick="abrirOpcionais(${JSON.stringify(prod).replace(/"/g, '&quot;')})">
-                        <div class="produto-info">
-                            <h3>${prod.nome}</h3>
-                            <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
-                        </div>
-                        <div class="img-container">
-                            <img src="${GITHUB_BASE}${prod.img}" class="produto-img" onerror="this.parentElement.innerHTML='<i class=\'fas fa-ice-cream\' style=\'color:#ddd; font-size:24px\'></i>'">
-                        </div>
-                    </div>`;
-            });
+    function adicionarAoCarrinho() {
+        const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
+        const nomesAdicionais = selecionados.map(el => el.value);
+        const precoExtra = selecionados.reduce((total, el) => total + parseFloat(el.dataset.preco), 0);
+
+        carrinho.push({
+            nome: itemSelecionado.nome,
+            precoBase: itemSelecionado.preco,
+            precoFinal: itemSelecionado.preco + precoExtra,
+            detalhes: nomesAdicionais.join(', ') || 'Puro'
         });
-        container.innerHTML = html;
+
+        atualizarBarra();
+        fecharModal('modalOpcionais');
+    }
+
+    function atualizarBarra() {
+        const total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0) + (carrinho.length > 0 ? TAXA_ENTREGA : 0);
+        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
+        document.getElementById('qtdItens').innerText = carrinho.length;
+        document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2)}`;
+    }
+
+    function abrirCarrinho() {
+        const lista = document.getElementById('itensNoCarrinho');
+        lista.innerHTML = carrinho.map((i, idx) => `
+            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small></div>
+                <div style="text-align:right">R$ ${i.precoFinal.toFixed(2)} <br> 
+                <span onclick="removerItem(${idx})" style="color:red; cursor:pointer; font-size:12px">Remover</span></div>
+            </div>
+        `).join('');
+        document.getElementById('modalCarrinho').style.display = 'flex';
+    }
+
+    function removerItem(idx) {
+        carrinho.splice(idx, 1);
+        carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho');
+        atualizarBarra();
     }
 
     function togglePagamento() {
         const pag = document.getElementById('formaPagamento').value;
         document.getElementById('areaPix').style.display = pag === 'Pix' ? 'block' : 'none';
-        document.getElementById('areaTroco').style.display = pag === 'Dinheiro' ? 'block' : 'none';
-    }
-
-    function abrirOpcionais(produto) {
-        if(!estaAberto()) return alert("Estamos fechados! Voltamos às 13h.");
-        itemSelecionado = produto;
-        document.getElementById('nomeProdModal').innerText = produto.nome;
-        const lista = document.getElementById('lista-adicionais');
-        let html = '';
-        const estrutura = produto.tipo === 'garrafa' ? ESTRUTURA_GARRAFA : ESTRUTURA_COPO;
-        estrutura.forEach((secao, idxSecao) => {
-            html += `<div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:10px;"><strong>${secao.titulo}</strong></div>`;
-            secao.opcoes.forEach(opcao => {
-                html += `<label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #eee;">
-                            <input type="checkbox" class="extra-item" data-secao="${idxSecao}" data-preco="${opcao.p}" value="${opcao.n}" onclick="verificarLimite(this, ${secao.limite})" style="margin-right:10px;">
-                            <span>${opcao.n}</span>
-                        </label>`;
-            });
-        });
-        lista.innerHTML = html;
-        document.getElementById('modalOpcionais').style.display = 'flex';
-    }
-
-    function verificarLimite(checkbox, limite) {
-        const secao = checkbox.getAttribute('data-secao');
-        if (document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`).length > limite) {
-            checkbox.checked = false;
-            alert(`Escolha no máximo ${limite} opções.`);
-        }
-    }
-
-    function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-
-    function adicionarAoCarrinho() {
-        let escolhidos = [];
-        let adicional = 0;
-        document.querySelectorAll('.extra-item:checked').forEach(el => {
-            escolhidos.push(el.value);
-            adicional += parseFloat(el.getAttribute('data-preco'));
-        });
-        carrinho.push({ ...itemSelecionado, precoFinal: itemSelecionado.preco + adicional, acompanhamentos: escolhidos.join(', ') || 'Sem adicionais' });
-        atualizarInterface();
-        fecharModal('modalOpcionais');
-    }
-
-    function atualizarInterface() {
-        let total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
-        document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = 'R$ ' + (total + TAXA_ENTREGA).toFixed(2);
-    }
-
-    function abrirCarrinho() {
-        let container = document.getElementById('itensNoCarrinho');
-        container.innerHTML = carrinho.map((i, index) => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee;">
-                <div><b>${i.nome}</b><br><small>${i.acompanhamentos}</small></div>
-                <div>R$ ${i.precoFinal.toFixed(2)} <span style="color:red" onclick="removerItem(${index})">X</span></div>
-            </div>`).join('');
-        document.getElementById('modalCarrinho').style.display = 'flex';
-    }
-
-    function removerItem(index) {
-        carrinho.splice(index, 1);
-        atualizarInterface();
-        carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho');
     }
 
     function finalizarPedido() {
         const nome = document.getElementById('nomeCliente').value;
         const endereco = document.getElementById('enderecoCliente').value;
-        const pag = document.getElementById('formaPagamento').value;
-        const troco = document.getElementById('trocoPara').value;
+        if(!nome || !endereco) return alert("Preencha nome e endereço!");
 
-        if(!nome || !endereco || !pag) return alert("Preencha Nome, Endereço e Pagamento!");
-
-        let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        let totalFinal = (subtotal + TAXA_ENTREGA).toFixed(2);
+        let total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0) + TAXA_ENTREGA;
+        let texto = `*NOVO PEDIDO - ONMI AÇAÍ*%0A%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A%0A`;
         
-        let formaPagMsg = pag;
-        if(pag === 'Pix') formaPagMsg = `Pix (20076905780 - Alex Cardoso)`;
-        
-        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${formaPagMsg}`;
-        
-        if(pag === 'Dinheiro' && troco) msg += `%0A*Troco para:* R$ ${troco}`;
-        if(pag === 'Pix') msg += `%0A⚠️ *Favor enviar o comprovante após a mensagem!*`;
+        carrinho.forEach(i => {
+            texto += `• *${i.nome}*%0A  ${i.detalhes}%0A`;
+        });
 
-        msg += `%0A%0A`;
-        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A_${i.acompanhamentos}_%0A`);
-        msg += `%0A*Total c/ Entrega: R$ ${totalFinal}*`;
-
-        window.open(`https://wa.me/5521988626495?text=${msg}`);
+        texto += `%0A*Total c/ Entrega: R$ ${total.toFixed(2)}*`;
+        window.open(`https://wa.me/5521988626495?text=${texto}`);
     }
 
-    atualizarStatusBadge();
+    function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    // Início
     renderizarCardapio();
+    document.getElementById('statusLoja').innerText = "● Aberto Agora";
+    document.getElementById('statusLoja').classList.add('status-aberto');
 </script>
 
 </body>
