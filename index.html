@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Onmi Açaí Delivery</title>
+<style>
+body{
+font-family: Arial;
+background: linear-gradient(135deg,#5b0f73,#8e2de2);
+margin:0;
+padding:0;
+color:white;
+}
+
+.container{
+max-width:420px;
+margin:30px auto;
+background:white;
+color:black;
+padding:20px;
+border-radius:20px;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+}
+
+h1{
+text-align:center;
+color:#5b0f73;
+}
+
+label{
+font-weight:bold;
+margin-top:10px;
+display:block;
+}
+
+input, select{
+width:100%;
+padding:10px;
+margin-top:5px;
+border-radius:8px;
+border:1px solid #ccc;
+}
+
+.checkbox-group{
+margin-top:5px;
+}
+
+button{
+background:#5b0f73;
+color:white;
+padding:15px;
+border:none;
+width:100%;
+font-size:16px;
+border-radius:12px;
+margin-top:15px;
+cursor:pointer;
+transition:0.3s;
+}
+
+button:hover{
+background:#3d0850;
+}
+
+.total{
+margin-top:10px;
+font-size:18px;
+font-weight:bold;
+color:#5b0f73;
+text-align:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>🍧 Onmi Açaí</h1>
+
+<label>Seu Nome</label>
+<input type="text" id="nome">
+
+<label>Endereço (Japeri)</label>
+<input type="text" id="endereco">
+
+<label>Tamanho</label>
+<select id="tamanho" onchange="calcularTotal()">
+<option value="5">200ml - R$5</option>
+<option value="7">300ml - R$7</option>
+<option value="11">400ml - R$11</option>
+<option value="13">500ml - R$13</option>
+<option value="17">700ml - R$17</option>
+</select>
+
+<label>Quantidade</label>
+<input type="number" id="quantidade" value="1" min="1" onchange="calcularTotal()">
+
+<label>Acompanhamentos</label>
+<div class="checkbox-group">
+<input type="checkbox" value="Leite em pó"> Leite em pó<br>
+<input type="checkbox" value="Paçoca"> Paçoca<br>
+<input type="checkbox" value="Confetes"> Confetes<br>
+<input type="checkbox" value="Granola"> Granola<br>
+</div>
+
+<label>Forma de Pagamento</label>
+<select id="pagamento">
+<option>Pix</option>
+<option>Dinheiro</option>
+<option>Cartão</option>
+</select>
+
+<div class="total" id="total">Total: R$ 8</div>
+
+<button onclick="enviarPedido()">Finalizar Pedido</button>
+
+</div>
+
+<script>
+function calcularTotal(){
+let preco = parseFloat(document.getElementById("tamanho").value);
+let qtd = parseInt(document.getElementById("quantidade").value);
+let taxa = 3;
+let total = (preco * qtd) + taxa;
+document.getElementById("total").innerHTML = "Total: R$ " + total.toFixed(2);
+}
+
+function enviarPedido(){
+let nome = document.getElementById("nome").value;
+let endereco = document.getElementById("endereco").value;
+let tamanhoSelect = document.getElementById("tamanho");
+let tamanhoTexto = tamanhoSelect.options[tamanhoSelect.selectedIndex].text;
+let preco = parseFloat(tamanhoSelect.value);
+let qtd = parseInt(document.getElementById("quantidade").value);
+let pagamento = document.getElementById("pagamento").value;
+let taxa = 3;
+let total = (preco * qtd) + taxa;
+
+let adicionais = "";
+let checks = document.querySelectorAll("input[type=checkbox]:checked");
+checks.forEach((item)=>{
+adicionais += item.value + ", ";
+});
+
+let mensagem = `Olá, quero fazer um pedido:%0A
+Nome: ${nome}%0A
+Endereço: ${endereco}%0A
+Tamanho: ${tamanhoTexto}%0A
+Quantidade: ${qtd}%0A
+Acompanhamentos: ${adicionais}%0A
+Forma de Pagamento: ${pagamento}%0A
+Taxa: R$3%0A
+Total: R$${total.toFixed(2)}`;
+
+window.open(`https://wa.me/5521988626495?text=${mensagem}`);
+}
+
+calcularTotal();
+</script>
+
+</body>
+</html>
