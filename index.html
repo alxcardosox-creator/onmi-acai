@@ -9,82 +9,93 @@
         :root {
             --roxo-principal: #5b0f73;
             --roxo-claro: #8e2de2;
-            --cinza-fundo: #f8f9fa;
+            --cinza-fundo: #f1f1f1;
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             background: var(--cinza-fundo);
             color: #333;
-            padding-bottom: 80px;
+            padding-bottom: 100px;
         }
 
-        /* Header Estilo App */
+        /* Header com a sua Logo */
         header {
             background: var(--roxo-principal);
-            color: white;
-            padding: 20px;
+            padding: 15px;
             text-align: center;
-            font-size: 22px;
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
-        .status-loja {
+        .logo-img {
+            max-width: 150px;
+            height: auto;
+        }
+
+        .status-badge {
+            display: block;
+            color: #27ae60;
+            background: white;
             font-size: 12px;
-            background: #27ae60;
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-top: 5px;
-            display: inline-block;
-        }
-
-        /* Categorias */
-        .categoria-titulo {
-            padding: 20px 15px 10px;
-            font-size: 18px;
             font-weight: bold;
-            color: var(--roxo-principal);
+            width: fit-content;
+            margin: 5px auto 0;
+            padding: 2px 12px;
+            border-radius: 20px;
         }
 
-        /* Card de Produto */
+        .categoria-titulo {
+            padding: 20px 15px 5px;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--roxo-principal);
+            text-transform: uppercase;
+        }
+
+        /* Listagem de Produtos */
         .produto-card {
             display: flex;
             background: white;
-            margin: 0 15px 12px;
+            margin: 8px 15px;
             padding: 12px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             align-items: center;
-            transition: 0.2s;
             cursor: pointer;
         }
 
-        .produto-card:active { transform: scale(0.98); }
-
-        .produto-info { flex: 1; padding-right: 10px; }
+        .produto-info { flex: 1; }
         .produto-info h3 { margin: 0; font-size: 16px; color: #222; }
-        .produto-info p { margin: 5px 0; font-size: 13px; color: #666; }
-        .produto-preco { color: var(--roxo-principal); font-weight: bold; font-size: 15px; }
-
-        .produto-img {
-            width: 85px;
-            height: 85px;
-            border-radius: 8px;
-            object-fit: cover;
-            background: #eee;
+        .produto-info .preco { color: #333; font-weight: bold; margin-top: 5px; display: block; }
+        
+        .cashback-badge {
+            font-size: 10px;
+            color: #27ae60;
+            background: #e8f5e9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 4px;
+            display: inline-block;
         }
 
-        /* Modal de Opções */
+        .produto-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+
+        /* Modais */
         .modal {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.7);
             z-index: 200;
             justify-content: center;
             align-items: flex-end;
@@ -96,20 +107,23 @@
             max-width: 500px;
             border-radius: 20px 20px 0 0;
             padding: 20px;
-            animation: slideUp 0.3s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .close-btn { font-size: 28px; cursor: pointer; color: #666; }
 
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-        .btn-fechar { font-size: 24px; cursor: pointer; color: #999; }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-sizing: border-box;
+        }
 
-        .opcoes-grupo { margin-bottom: 15px; border-top: 1px solid #eee; padding-top: 10px; }
-        .opcao-item { display: flex; align-items: center; margin: 10px 0; font-size: 15px; }
-        .opcao-item input { margin-right: 10px; width: 18px; height: 18px; accent-color: var(--roxo-principal); }
-
-        /* Botão Adicionar */
-        .btn-add-carrinho {
+        .btn-acao {
             background: var(--roxo-principal);
             color: white;
             border: none;
@@ -119,163 +133,248 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
+            margin-top: 10px;
         }
 
         /* Carrinho Flutuante */
-        .barra-carrinho {
+        .footer-carrinho {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
             background: var(--roxo-principal);
             color: white;
+            padding: 15px 20px;
+            border-radius: 15px;
             display: none;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 25px;
-            border-radius: 50px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             z-index: 150;
         }
 
-        .cart-count { background: white; color: var(--roxo-principal); padding: 2px 8px; border-radius: 10px; font-weight: bold; }
+        .cart-info { font-weight: bold; }
+        .cart-btn { background: white; color: var(--roxo-principal); padding: 8px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; text-decoration: none;}
+
+        .resumo-item {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+        }
     </style>
 </head>
 <body>
 
 <header>
-    🍧 Onmi Açaí
-    <br><span class="status-loja">Aberto • Japeri</span>
+    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" onerror="this.src='https://i.ibb.co/VWVm0Qz/onmi-logo.png'" alt="Onmi Açaí">
+    <span class="status-badge">Aberto • Japeri</span>
 </header>
 
+<div class="categoria-titulo">Açaí na Garrafa</div>
+<div class="produto-card" onclick="abrirOpcionais('Açaí Garrafa 300ml', 9.00)">
+    <div class="produto-info">
+        <h3>300ml</h3>
+        <span class="preco">R$ 9,00</span>
+        <span class="cashback-badge">0% cashback</span>
+    </div>
+    <img src="https://i.ibb.co/68v8XhM/garrafa.jpg" class="produto-img">
+</div>
+
+<div class="produto-card" onclick="abrirOpcionais('Açaí Garrafa 500ml', 12.00)">
+    <div class="produto-info">
+        <h3>500ml</h3>
+        <span class="preco">R$ 12,00</span>
+        <span class="cashback-badge">0% cashback</span>
+    </div>
+    <img src="https://i.ibb.co/68v8XhM/garrafa.jpg" class="produto-img">
+</div>
+
 <div class="categoria-titulo">Açaí no Copo</div>
-
-<div class="produto-card" onclick="abrirModal('200ml', 5.00)">
+<div class="produto-card" onclick="abrirOpcionais('Açaí Copo 250ml', 6.00)">
     <div class="produto-info">
-        <h3>Açaí 200ml</h3>
-        <p>O queridinho da galera. Monte do seu jeito!</p>
-        <div class="produto-preco">R$ 5,00</div>
+        <h3>250ml</h3>
+        <span class="preco">R$ 6,00</span>
+        <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://images.unsplash.com/photo-1590301157890-4810ed352733?w=200" class="produto-img">
+    <img src="https://i.ibb.co/m0Z8K8K/copo250.jpg" class="produto-img">
 </div>
 
-<div class="produto-card" onclick="abrirModal('300ml', 7.00)">
+<div class="produto-card" onclick="abrirOpcionais('Açaí Copo 300ml', 8.00)">
     <div class="produto-info">
-        <h3>Açaí 300ml</h3>
-        <p>Tamanho perfeito para um lanche rápido.</p>
-        <div class="produto-preco">R$ 7,00</div>
+        <h3>300ml</h3>
+        <span class="preco">R$ 8,00</span>
+        <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://images.unsplash.com/photo-1590301157890-4810ed352733?w=200" class="produto-img">
+    <img src="https://i.ibb.co/G3XmY7V/copo300.jpg" class="produto-img">
 </div>
 
-<div class="produto-card" onclick="abrirModal('500ml', 13.00)">
+<div class="produto-card" onclick="abrirOpcionais('Açaí Copo 400ml', 12.00)">
     <div class="produto-info">
-        <h3>Açaí 500ml</h3>
-        <p>Ideal para quem ama açaí de verdade.</p>
-        <div class="produto-preco">R$ 13,00</div>
+        <h3>400ml</h3>
+        <span class="preco">R$ 12,00</span>
+        <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://images.unsplash.com/photo-1590301157890-4810ed352733?w=200" class="produto-img">
+    <img src="https://i.ibb.co/M7XzN3p/copo400.jpg" class="produto-img">
 </div>
 
-<div class="produto-card" onclick="abrirModal('700ml', 17.00)">
+<div class="produto-card" onclick="abrirOpcionais('Açaí Copo 500ml', 13.00)">
     <div class="produto-info">
-        <h3>Açaí Super 700ml</h3>
-        <p>Para quem está com fome de leão!</p>
-        <div class="produto-preco">R$ 17,00</div>
+        <h3>500ml</h3>
+        <span class="preco">R$ 13,00</span>
+        <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://images.unsplash.com/photo-1590301157890-4810ed352733?w=200" class="produto-img">
+    <img src="https://i.ibb.co/n7LpD3D/copo500.jpg" class="produto-img">
 </div>
 
-<div id="modalPedido" class="modal">
+<div id="modalOpcionais" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h2 id="modalNomeProd" style="margin:0; font-size: 20px;">Finalizar Item</h2>
-            <span class="btn-fechar" onclick="fecharModal()">&times;</span>
+            <h2 id="nomeProdModal" style="margin:0">Opcionais</h2>
+            <span class="close-btn" onclick="fecharModal('modalOpcionais')">&times;</span>
         </div>
-        
-        <div class="opcoes-grupo">
-            <p><strong>Escolha os acompanhamentos:</strong></p>
-            <div class="opcao-item"><input type="checkbox" class="extra" value="Leite em pó"> Leite em pó</div>
-            <div class="opcao-item"><input type="checkbox" class="extra" value="Granola"> Granola</div>
-            <div class="opcao-item"><input type="checkbox" class="extra" value="Paçoca"> Paçoca</div>
-            <div class="opcao-item"><input type="checkbox" class="extra" value="Confetes"> Confetes</div>
-            <div class="opcao-item"><input type="checkbox" class="extra" value="Banana"> Banana</div>
+        <div id="listaOpcionais">
+            <p><strong>Escolha seus acompanhamentos:</strong></p>
+            <label><input type="checkbox" class="extra" value="Leite em Pó"> Leite em Pó</label><br>
+            <label><input type="checkbox" class="extra" value="Granola"> Granola</label><br>
+            <label><input type="checkbox" class="extra" value="Paçoca"> Paçoca</label><br>
+            <label><input type="checkbox" class="extra" value="Banana"> Banana</label><br>
+            <label><input type="checkbox" class="extra" value="Morango"> Morango</label>
         </div>
-
-        <button class="btn-add-carrinho" onclick="confirmarItem()">Adicionar ao Carrinho</button>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
     </div>
 </div>
 
-<div id="barraCarrinho" class="barra-carrinho" onclick="checkout()">
-    <div><span class="cart-count" id="contagem">0</span> Ver sacola</div>
-    <div id="valorTotalFooter">R$ 0,00</div>
+<div id="modalCarrinho" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 style="margin:0">Resumo do Pedido</h2>
+            <span class="close-btn" onclick="fecharModal('modalCarrinho')">&times;</span>
+        </div>
+        
+        <div id="itensNoCarrinho"></div>
+        
+        <div style="margin-top: 20px;">
+            <input type="text" id="nomeCliente" placeholder="Seu Nome">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Japeri)">
+            <select id="formaPagamento">
+                <option value="">Forma de Pagamento</option>
+                <option value="Pix">Pix</option>
+                <option value="Dinheiro">Dinheiro</option>
+                <option value="Cartão">Cartão</option>
+            </select>
+            <textarea id="obsPedido" placeholder="Alguma observação?"></textarea>
+        </div>
+
+        <div style="border-top: 2px solid var(--roxo-principal); margin-top: 15px; padding-top: 10px;">
+            <div class="resumo-item"><span>Taxa de Entrega:</span> <span>R$ 3,00</span></div>
+            <div class="resumo-item" style="font-weight: 800; font-size: 18px;">
+                <span>TOTAL:</span> <span id="valorTotalModal">R$ 0,00</span>
+            </div>
+        </div>
+        
+        <button class="btn-acao" onclick="finalizarPedido()">Finalizar Pedido via WhatsApp</button>
+    </div>
+</div>
+
+<div id="barraCarrinho" class="footer-carrinho">
+    <div class="cart-info">
+        <i class="fas fa-shopping-basket"></i> <span id="qtdItens">0</span> Itens
+    </div>
+    <div id="totalFlutuante" style="font-weight: 800;">R$ 0,00</div>
+    <div class="cart-btn" onclick="abrirCarrinho()">Ver Sacola</div>
 </div>
 
 <script>
     let carrinho = [];
-    let totalGeral = 0;
-    let itemAtual = {};
+    let itemSelecionado = {};
 
-    function abrirModal(nome, preco) {
-        itemAtual = { nome, preco };
-        document.getElementById('modalNomeProd').innerText = nome;
-        document.getElementById('modalPedido').style.display = 'flex';
+    function abrirOpcionais(nome, preco) {
+        itemSelecionado = { nome, preco };
+        document.getElementById('nomeProdModal').innerText = nome;
+        document.getElementById('modalOpcionais').style.display = 'flex';
     }
 
-    function fecharModal() {
-        document.getElementById('modalPedido').style.display = 'none';
-        // Limpar checkboxes
-        document.querySelectorAll('.extra').forEach(el => el.checked = false);
+    function fecharModal(id) {
+        document.getElementById(id).style.display = 'none';
+        if(id === 'modalOpcionais') {
+            document.querySelectorAll('.extra').forEach(el => el.checked = false);
+        }
     }
 
-    function confirmarItem() {
+    function adicionarAoCarrinho() {
         let extras = [];
         document.querySelectorAll('.extra:checked').forEach(el => extras.push(el.value));
         
         carrinho.push({
-            nome: itemAtual.nome,
-            preco: itemAtual.preco,
-            extras: extras.join(', ')
+            nome: itemSelecionado.nome,
+            preco: itemSelecionado.preco,
+            acompanhamentos: extras.join(', ') || 'Sem adicionais'
         });
 
-        totalGeral += itemAtual.preco;
-        atualizarBarra();
-        fecharModal();
+        atualizarInterface();
+        fecharModal('modalOpcionais');
     }
 
-    function atualizarBarra() {
-        if(carrinho.length > 0) {
-            document.getElementById('barraCarrinho').style.display = 'flex';
-            document.getElementById('contagem').innerText = carrinho.length;
-            document.getElementById('valorTotalFooter').innerText = 'R$ ' + (totalGeral + 3).toFixed(2);
-        }
+    function atualizarInterface() {
+        let total = carrinho.reduce((acc, item) => acc + item.preco, 0);
+        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
+        document.getElementById('qtdItens').innerText = carrinho.length;
+        document.getElementById('totalFlutuante').innerText = 'R$ ' + (total + 3).toFixed(2);
     }
 
-    function checkout() {
-        let nomeCliente = prompt("Qual seu nome?");
-        let endereco = prompt("Qual endereço em Japeri?");
-        let pagamento = prompt("Forma de pagamento (Pix, Dinheiro ou Cartão)?");
+    function abrirCarrinho() {
+        let container = document.getElementById('itensNoCarrinho');
+        container.innerHTML = '';
+        let total = 0;
 
-        if(!nomeCliente || !endereco) return alert("Por favor, preencha os dados!");
+        carrinho.forEach((item, index) => {
+            total += item.preco;
+            container.innerHTML += `
+                <div class="resumo-item">
+                    <div>
+                        <strong>${item.nome}</strong><br>
+                        <small>${item.acompanhamentos}</small>
+                    </div>
+                    <div>R$ ${item.preco.toFixed(2)} <i class="fas fa-trash" style="color:red; margin-left:10px" onclick="removerItem(${index})"></i></div>
+                </div>
+            `;
+        });
 
-        let resumo = "*NOVO PEDIDO - ONMI AÇAÍ*%0A%0A";
-        resumo += `*Cliente:* ${nomeCliente}%0A`;
-        resumo += `*Endereço:* ${endereco}%0A%0A`;
+        document.getElementById('valorTotalModal').innerText = 'R$ ' + (total + 3).toFixed(2);
+        document.getElementById('modalCarrinho').style.display = 'flex';
+    }
+
+    function removerItem(index) {
+        carrinho.splice(index, 1);
+        if(carrinho.length === 0) fecharModal('modalCarrinho');
+        atualizarInterface();
+        abrirCarrinho();
+    }
+
+    function finalizarPedido() {
+        let nome = document.getElementById('nomeCliente').value;
+        let endereco = document.getElementById('enderecoCliente').value;
+        let pag = document.getElementById('formaPagamento').value;
+        let obs = document.getElementById('obsPedido').value;
+
+        if(!nome || !endereco || !pag) return alert("Preencha Nome, Endereço e Pagamento!");
+
+        let total = carrinho.reduce((acc, item) => acc + item.preco, 0) + 3;
+        let texto = `*PEDIDO ONMI AÇAÍ*%0A%0A`;
+        texto += `👤 *Cliente:* ${nome}%0A📍 *Endereço:* ${endereco}%0A💳 *Pagamento:* ${pag}%0A`;
+        if(obs) texto += `📝 *Obs:* ${obs}%0A`;
+        texto += `%0A*ITENS:*%0A`;
         
         carrinho.forEach(item => {
-            resumo += `✅ *${item.nome}* (R$ ${item.preco.toFixed(2)})%0A`;
-            if(item.extras) resumo += `_Extras: ${item.extras}_%0A`;
-            resumo += `%0A`;
+            texto += `• ${item.nome} (R$ ${item.preco.toFixed(2)})%0A   _${item.acompanhamentos}_%0A`;
         });
 
-        resumo += `*Taxa de Entrega:* R$ 3,00%0A`;
-        resumo += `*Pagamento:* ${pagamento}%0A`;
-        resumo += `*TOTAL: R$ ${(totalGeral + 3).toFixed(2)}*`;
+        texto += `%0A🚚 *Entrega:* R$ 3,00%0A💰 *TOTAL: R$ ${total.toFixed(2)}*`;
 
-        window.open(`https://wa.me/5521988626495?text=${resumo}`);
+        window.open(`https://wa.me/5521988626495?text=${texto}`);
     }
 </script>
 
