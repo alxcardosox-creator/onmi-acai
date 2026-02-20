@@ -14,147 +14,29 @@
             --branco: #ffffff;
         }
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: var(--cinza-fundo);
-            padding-bottom: 100px;
-            color: #333;
-        }
-
-        header {
-            background: var(--roxo-principal);
-            padding: 20px;
-            text-align: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            transition: 0.3s;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: var(--cinza-fundo); padding-bottom: 100px; color: #333; }
+        header { background: var(--roxo-principal); padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; transition: 0.3s; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
         header.scrolled { padding: 10px; }
         header.scrolled .logo-img { max-width: 50px; }
-
         .logo-img { max-width: 90px; transition: 0.3s; border-radius: 50%; border: 2px solid white; }
-
-        .status-badge {
-            display: block;
-            background: var(--branco);
-            font-size: 11px;
-            font-weight: bold;
-            width: fit-content;
-            margin: 8px auto 0;
-            padding: 4px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-        }
-        
+        .status-badge { display: block; background: var(--branco); font-size: 11px; font-weight: bold; width: fit-content; margin: 8px auto 0; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }
         .status-aberto { color: var(--verde-sucesso); }
         .status-fechado { color: var(--vermelho-erro); }
-
         .container { max-width: 600px; margin: auto; }
-
-        .categoria-titulo {
-            padding: 25px 15px 10px;
-            font-size: 16px;
-            font-weight: 900;
-            color: var(--roxo-principal);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-        }
-
-        .produto-card {
-            display: flex;
-            background: var(--branco);
-            margin: 10px 15px;
-            padding: 12px;
-            border-radius: 18px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            align-items: center;
-            transition: 0.2s;
-            border: 1px solid rgba(0,0,0,0.03);
-            cursor: pointer;
-        }
-
-        .produto-card:active { transform: scale(0.96); }
+        .categoria-titulo { padding: 25px 15px 10px; font-size: 16px; font-weight: 900; color: var(--roxo-principal); text-transform: uppercase; letter-spacing: 1.5px; }
+        .produto-card { display: flex; background: var(--branco); margin: 10px 15px; padding: 12px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); align-items: center; transition: 0.2s; border: 1px solid rgba(0,0,0,0.03); cursor: pointer; }
         .produto-info { flex: 1; padding-right: 10px; }
         .produto-info h3 { margin: 0 0 4px 0; font-size: 15px; color: #111; }
         .preco { font-weight: 800; color: var(--roxo-principal); font-size: 14px; }
-
-        .img-container {
-            width: 85px;
-            height: 85px;
-            border-radius: 12px;
-            overflow: hidden;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
+        .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
         .produto-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 200;
-            align-items: flex-end;
-        }
-
-        .modal-content {
-            background: var(--branco);
-            width: 100%;
-            border-radius: 30px 30px 0 0;
-            padding: 25px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-sizing: border-box;
-        }
-
-        .btn-acao {
-            background: var(--roxo-principal);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 16px;
-            border-radius: 15px;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 10px;
-            cursor: pointer;
-        }
-
-        input, select {
-            width: 100%;
-            padding: 14px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 14px;
-            box-sizing: border-box;
-        }
-
-        .footer-carrinho {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 500px;
-            background: var(--roxo-principal);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 25px;
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 10px 30px rgba(91, 15, 115, 0.4);
-            cursor: pointer;
-            z-index: 150;
-        }
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 200; align-items: flex-end; }
+        .modal-content { background: var(--branco); width: 100%; border-radius: 30px 30px 0 0; padding: 25px; max-height: 85vh; overflow-y: auto; box-sizing: border-box; }
+        .btn-acao { background: var(--roxo-principal); color: white; border: none; width: 100%; padding: 16px; border-radius: 15px; font-size: 16px; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border: 1px solid #ddd; border-radius: 12px; font-size: 14px; box-sizing: border-box; }
+        .info-pix { background: #e8f4fd; padding: 15px; border-radius: 12px; margin-top: 10px; display: none; border-left: 5px solid #2980b9; }
+        .info-troco { display: none; }
+        .footer-carrinho { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 500px; background: var(--roxo-principal); color: white; padding: 15px 25px; border-radius: 25px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.4); cursor: pointer; z-index: 150; }
     </style>
 </head>
 <body>
@@ -182,12 +64,23 @@
         <div style="margin-top:20px; padding:15px; background:#f9f9f9; border-radius:15px">
             <input type="text" id="nomeCliente" placeholder="Qual seu nome?">
             <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Número, Bairro)">
-            <select id="formaPagamento">
+            
+            <select id="formaPagamento" onchange="togglePagamento()">
                 <option value="">Como prefere pagar?</option>
-                <option value="Pix">Pix (Mais rápido)</option>
+                <option value="Pix">Pix</option>
                 <option value="Cartão">Cartão na entrega</option>
                 <option value="Dinheiro">Dinheiro</option>
             </select>
+
+            <div id="areaPix" class="info-pix">
+                <strong>Chave Pix (CPF):</strong><br>
+                <span style="font-size: 18px; color: #2980b9;">200.769.057-80</span><br>
+                <small>Beneficiário: Alex Cardoso Sousa</small>
+            </div>
+
+            <div id="areaTroco" class="info-troco">
+                <input type="text" id="trocoPara" placeholder="Troco para quanto? (Ex: 50)">
+            </div>
         </div>
         <button class="btn-acao" onclick="finalizarPedido()">Enviar via WhatsApp</button>
         <button class="btn-acao" style="background:transparent; color:#999;" onclick="fecharModal('modalCarrinho')">Continuar Comprando</button>
@@ -277,24 +170,25 @@
         container.innerHTML = html;
     }
 
+    function togglePagamento() {
+        const pag = document.getElementById('formaPagamento').value;
+        document.getElementById('areaPix').style.display = pag === 'Pix' ? 'block' : 'none';
+        document.getElementById('areaTroco').style.display = pag === 'Dinheiro' ? 'block' : 'none';
+    }
+
     function abrirOpcionais(produto) {
-        if(!estaAberto()) return alert("No momento estamos fechados! Voltamos às 13h.");
-        
+        if(!estaAberto()) return alert("Estamos fechados! Voltamos às 13h.");
         itemSelecionado = produto;
         document.getElementById('nomeProdModal').innerText = produto.nome;
         const lista = document.getElementById('lista-adicionais');
         let html = '';
         const estrutura = produto.tipo === 'garrafa' ? ESTRUTURA_GARRAFA : ESTRUTURA_COPO;
-
         estrutura.forEach((secao, idxSecao) => {
-            html += `<div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:10px;">
-                        <strong style="color:var(--roxo-principal)">${secao.titulo}</strong><br>
-                        <small>Escolha até ${secao.limite}</small>
-                    </div>`;
+            html += `<div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:10px;"><strong>${secao.titulo}</strong></div>`;
             secao.opcoes.forEach(opcao => {
-                html += `<label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #eee; cursor:pointer;">
-                            <input type="checkbox" class="extra-item" data-secao="${idxSecao}" data-preco="${opcao.p}" value="${opcao.n}" onclick="verificarLimite(this, ${secao.limite})" style="width:18px; height:18px; margin-right:12px;">
-                            <span>${opcao.n} ${opcao.p > 0 ? '(+ R$ '+opcao.p.toFixed(2)+')' : '(Grátis)'}</span>
+                html += `<label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #eee;">
+                            <input type="checkbox" class="extra-item" data-secao="${idxSecao}" data-preco="${opcao.p}" value="${opcao.n}" onclick="verificarLimite(this, ${secao.limite})" style="margin-right:10px;">
+                            <span>${opcao.n}</span>
                         </label>`;
             });
         });
@@ -304,10 +198,9 @@
 
     function verificarLimite(checkbox, limite) {
         const secao = checkbox.getAttribute('data-secao');
-        const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
-        if (selecionados.length > limite) {
+        if (document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`).length > limite) {
             checkbox.checked = false;
-            alert(`Limite de ${limite} item(ns) atingido.`);
+            alert(`Escolha no máximo ${limite} opções.`);
         }
     }
 
@@ -335,16 +228,10 @@
     function abrirCarrinho() {
         let container = document.getElementById('itensNoCarrinho');
         container.innerHTML = carrinho.map((i, index) => `
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px">
+            <div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee;">
                 <div><b>${i.nome}</b><br><small>${i.acompanhamentos}</small></div>
-                <div style="text-align:right">R$ ${i.precoFinal.toFixed(2)}<br><small style="color:red" onclick="removerItem(${index})">Remover</small></div>
+                <div>R$ ${i.precoFinal.toFixed(2)} <span style="color:red" onclick="removerItem(${index})">X</span></div>
             </div>`).join('');
-        
-        // --- MEMÓRIA DO CLIENTE ---
-        if(localStorage.getItem('onmi_nome')) document.getElementById('nomeCliente').value = localStorage.getItem('onmi_nome');
-        if(localStorage.getItem('onmi_endereco')) document.getElementById('enderecoCliente').value = localStorage.getItem('onmi_endereco');
-        if(localStorage.getItem('onmi_pagamento')) document.getElementById('formaPagamento').value = localStorage.getItem('onmi_pagamento');
-
         document.getElementById('modalCarrinho').style.display = 'flex';
     }
 
@@ -358,30 +245,28 @@
         const nome = document.getElementById('nomeCliente').value;
         const endereco = document.getElementById('enderecoCliente').value;
         const pag = document.getElementById('formaPagamento').value;
+        const troco = document.getElementById('trocoPara').value;
 
-        if(!nome || !endereco || !pag) return alert("Preencha todos os dados!");
-
-        // Salvar para a próxima vez
-        localStorage.setItem('onmi_nome', nome);
-        localStorage.setItem('onmi_endereco', endereco);
-        localStorage.setItem('onmi_pagamento', pag);
+        if(!nome || !endereco || !pag) return alert("Preencha Nome, Endereço e Pagamento!");
 
         let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}%0A%0A`;
+        let totalFinal = (subtotal + TAXA_ENTREGA).toFixed(2);
+        
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}`;
+        
+        if(pag === 'Dinheiro' && troco) msg += `%0A*Troco para:* R$ ${troco}`;
+        if(pag === 'Pix') msg += `%0A_(Já realizei o Pix para Alex)_`;
+
+        msg += `%0A%0A`;
         carrinho.forEach(i => msg += `✅ *${i.nome}*%0A_${i.acompanhamentos}_%0A`);
-        msg += `%0A*Total c/ Entrega: R$ ${(subtotal + TAXA_ENTREGA).toFixed(2)}*`;
+        msg += `%0A*Total c/ Entrega: R$ ${totalFinal}*`;
 
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
-    window.onscroll = () => {
-        const header = document.getElementById("mainHeader");
-        window.scrollY > 50 ? header.classList.add("scrolled") : header.classList.remove("scrolled");
-    };
-
     atualizarStatusBadge();
     renderizarCardapio();
-    setInterval(atualizarStatusBadge, 60000);
 </script>
+
 </body>
 </html>
