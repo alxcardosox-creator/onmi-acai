@@ -74,8 +74,9 @@
 
             <div id="areaPix" class="info-pix">
                 <strong>Chave Pix (CPF):</strong><br>
-                <span style="font-size: 18px; color: #2980b9;">200.769.057-80</span><br>
-                <small>Beneficiário: Alex Cardoso Sousa</small>
+                <span style="font-size: 18px; color: #2980b9; font-weight: bold;">20076905780</span><br>
+                <strong>Alex Cardoso</strong><br>
+                <small style="color: #555;">Favor compartilhar o comprovante após enviar o pedido.</small>
             </div>
 
             <div id="areaTroco" class="info-troco">
@@ -252,10 +253,13 @@
         let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
         let totalFinal = (subtotal + TAXA_ENTREGA).toFixed(2);
         
-        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}`;
+        let formaPagMsg = pag;
+        if(pag === 'Pix') formaPagMsg = `Pix (20076905780 - Alex Cardoso)`;
+        
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${formaPagMsg}`;
         
         if(pag === 'Dinheiro' && troco) msg += `%0A*Troco para:* R$ ${troco}`;
-        if(pag === 'Pix') msg += `%0A_(Já realizei o Pix para Alex)_`;
+        if(pag === 'Pix') msg += `%0A⚠️ *Favor enviar o comprovante após a mensagem!*`;
 
         msg += `%0A%0A`;
         carrinho.forEach(i => msg += `✅ *${i.nome}*%0A_${i.acompanhamentos}_%0A`);
