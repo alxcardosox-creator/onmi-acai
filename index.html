@@ -3,24 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onmi Açaí | Delivery Profissional</title>
+    <title>Onmi Açaí | Delivery</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
             --roxo-principal: #5b0f73;
-            --roxo-claro: #8e2de2;
-            --cinza-fundo: #f1f1f1;
+            --cinza-fundo: #f8f9fa;
         }
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--cinza-fundo);
             color: #333;
             padding-bottom: 100px;
         }
 
-        /* Header com a sua Logo */
+        /* Header que sobe e encolhe */
         header {
             background: var(--roxo-principal);
             padding: 15px;
@@ -29,48 +28,60 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        /* Estilo quando o usuário rola a página */
+        header.scrolled {
+            padding: 8px;
+            transform: translateY(-5px);
         }
 
         .logo-img {
-            max-width: 150px;
+            max-width: 100px; /* Tamanho reduzido conforme pedido */
             height: auto;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled .logo-img {
+            max-width: 60px;
         }
 
         .status-badge {
             display: block;
             color: #27ae60;
             background: white;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             width: fit-content;
             margin: 5px auto 0;
-            padding: 2px 12px;
+            padding: 2px 10px;
             border-radius: 20px;
         }
 
+        /* Categorias e Cards */
         .categoria-titulo {
             padding: 20px 15px 5px;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 800;
             color: var(--roxo-principal);
             text-transform: uppercase;
         }
 
-        /* Listagem de Produtos */
         .produto-card {
             display: flex;
             background: white;
-            margin: 8px 15px;
+            margin: 10px 15px;
             padding: 12px;
             border-radius: 12px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             align-items: center;
             cursor: pointer;
         }
 
         .produto-info { flex: 1; }
-        .produto-info h3 { margin: 0; font-size: 16px; color: #222; }
-        .produto-info .preco { color: #333; font-weight: bold; margin-top: 5px; display: block; }
+        .produto-info h3 { margin: 0; font-size: 15px; color: #222; }
+        .produto-info .preco { color: #333; font-weight: bold; margin-top: 5px; display: block; font-size: 14px; }
         
         .cashback-badge {
             font-size: 10px;
@@ -78,16 +89,17 @@
             background: #e8f5e9;
             padding: 2px 6px;
             border-radius: 4px;
-            margin-top: 4px;
+            margin-top: 5px;
             display: inline-block;
         }
 
         .produto-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 10px;
+            width: 75px;
+            height: 75px;
+            border-radius: 8px;
             object-fit: cover;
             margin-left: 10px;
+            background: #eee;
         }
 
         /* Modais */
@@ -107,21 +119,13 @@
             max-width: 500px;
             border-radius: 20px 20px 0 0;
             padding: 20px;
-            max-height: 90vh;
+            max-height: 85vh;
             overflow-y: auto;
-        }
-
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .close-btn { font-size: 28px; cursor: pointer; color: #666; }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
             box-sizing: border-box;
         }
+
+        .close-btn { font-size: 28px; cursor: pointer; color: #999; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
 
         .btn-acao {
             background: var(--roxo-principal);
@@ -133,10 +137,9 @@
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
         }
 
-        /* Carrinho Flutuante */
+        /* Rodapé Carrinho */
         .footer-carrinho {
             position: fixed;
             bottom: 20px;
@@ -146,150 +149,126 @@
             max-width: 450px;
             background: var(--roxo-principal);
             color: white;
-            padding: 15px 20px;
+            padding: 15px;
             border-radius: 15px;
             display: none;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
             z-index: 150;
         }
 
-        .cart-info { font-weight: bold; }
-        .cart-btn { background: white; color: var(--roxo-principal); padding: 8px 15px; border-radius: 8px; font-weight: 800; cursor: pointer; text-decoration: none;}
-
-        .resumo-item {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #eee;
-            padding: 10px 0;
-        }
+        .resumo-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
     </style>
 </head>
 <body>
 
-<header>
-    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" onerror="this.src='https://i.ibb.co/VWVm0Qz/onmi-logo.png'" alt="Onmi Açaí">
+<header id="mainHeader">
+    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" alt="Onmi Açaí">
     <span class="status-badge">Aberto • Japeri</span>
 </header>
 
 <div class="categoria-titulo">Açaí na Garrafa</div>
-<div class="produto-card" onclick="abrirOpcionais('Açaí Garrafa 300ml', 9.00)">
+<div class="produto-card" onclick="abrirOpcionais('Garrafa 300ml', 9.00)">
     <div class="produto-info">
         <h3>300ml</h3>
         <span class="preco">R$ 9,00</span>
         <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://i.ibb.co/68v8XhM/garrafa.jpg" class="produto-img">
+    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/garrafa.jpg" class="produto-img">
 </div>
 
-<div class="produto-card" onclick="abrirOpcionais('Açaí Garrafa 500ml', 12.00)">
+<div class="produto-card" onclick="abrirOpcionais('Garrafa 500ml', 12.00)">
     <div class="produto-info">
         <h3>500ml</h3>
         <span class="preco">R$ 12,00</span>
         <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://i.ibb.co/68v8XhM/garrafa.jpg" class="produto-img">
+    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/garrafa.jpg" class="produto-img">
 </div>
 
 <div class="categoria-titulo">Açaí no Copo</div>
-<div class="produto-card" onclick="abrirOpcionais('Açaí Copo 250ml', 6.00)">
+<div class="produto-card" onclick="abrirOpcionais('Copo 250ml', 6.00)">
     <div class="produto-info">
         <h3>250ml</h3>
         <span class="preco">R$ 6,00</span>
         <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://i.ibb.co/m0Z8K8K/copo250.jpg" class="produto-img">
+    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/copo250.jpg" class="produto-img">
 </div>
 
-<div class="produto-card" onclick="abrirOpcionais('Açaí Copo 300ml', 8.00)">
+<div class="produto-card" onclick="abrirOpcionais('Copo 300ml', 8.00)">
     <div class="produto-info">
         <h3>300ml</h3>
         <span class="preco">R$ 8,00</span>
         <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://i.ibb.co/G3XmY7V/copo300.jpg" class="produto-img">
+    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/copo300.jpg" class="produto-img">
 </div>
 
-<div class="produto-card" onclick="abrirOpcionais('Açaí Copo 400ml', 12.00)">
+<div class="produto-card" onclick="abrirOpcionais('Copo 400ml', 12.00)">
     <div class="produto-info">
         <h3>400ml</h3>
         <span class="preco">R$ 12,00</span>
         <span class="cashback-badge">0% cashback</span>
     </div>
-    <img src="https://i.ibb.co/M7XzN3p/copo400.jpg" class="produto-img">
-</div>
-
-<div class="produto-card" onclick="abrirOpcionais('Açaí Copo 500ml', 13.00)">
-    <div class="produto-info">
-        <h3>500ml</h3>
-        <span class="preco">R$ 13,00</span>
-        <span class="cashback-badge">0% cashback</span>
-    </div>
-    <img src="https://i.ibb.co/n7LpD3D/copo500.jpg" class="produto-img">
+    <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/copo400.jpg" class="produto-img">
 </div>
 
 <div id="modalOpcionais" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2 id="nomeProdModal" style="margin:0">Opcionais</h2>
+        <div style="display:flex; justify-content:space-between">
+            <h2 id="nomeProdModal" style="margin:0; font-size:18px">Adicionais</h2>
             <span class="close-btn" onclick="fecharModal('modalOpcionais')">&times;</span>
         </div>
-        <div id="listaOpcionais">
-            <p><strong>Escolha seus acompanhamentos:</strong></p>
-            <label><input type="checkbox" class="extra" value="Leite em Pó"> Leite em Pó</label><br>
-            <label><input type="checkbox" class="extra" value="Granola"> Granola</label><br>
-            <label><input type="checkbox" class="extra" value="Paçoca"> Paçoca</label><br>
-            <label><input type="checkbox" class="extra" value="Banana"> Banana</label><br>
-            <label><input type="checkbox" class="extra" value="Morango"> Morango</label>
+        <div style="margin: 15px 0">
+            <label><input type="checkbox" class="extra" value="Leite em Pó"> Leite em Pó</label><br><br>
+            <label><input type="checkbox" class="extra" value="Granola"> Granola</label><br><br>
+            <label><input type="checkbox" class="extra" value="Paçoca"> Paçoca</label><br><br>
+            <label><input type="checkbox" class="extra" value="Banana"> Banana</label>
         </div>
-        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao Carrinho</button>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar à Sacola</button>
     </div>
 </div>
 
 <div id="modalCarrinho" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h2 style="margin:0">Resumo do Pedido</h2>
+        <div style="display:flex; justify-content:space-between">
+            <h2 style="margin:0; font-size:18px">Sua Sacola</h2>
             <span class="close-btn" onclick="fecharModal('modalCarrinho')">&times;</span>
         </div>
-        
-        <div id="itensNoCarrinho"></div>
-        
-        <div style="margin-top: 20px;">
-            <input type="text" id="nomeCliente" placeholder="Seu Nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço (Japeri)">
-            <select id="formaPagamento">
-                <option value="">Forma de Pagamento</option>
-                <option value="Pix">Pix</option>
-                <option value="Dinheiro">Dinheiro</option>
-                <option value="Cartão">Cartão</option>
-            </select>
-            <textarea id="obsPedido" placeholder="Alguma observação?"></textarea>
-        </div>
-
-        <div style="border-top: 2px solid var(--roxo-principal); margin-top: 15px; padding-top: 10px;">
-            <div class="resumo-item"><span>Taxa de Entrega:</span> <span>R$ 3,00</span></div>
-            <div class="resumo-item" style="font-weight: 800; font-size: 18px;">
-                <span>TOTAL:</span> <span id="valorTotalModal">R$ 0,00</span>
-            </div>
-        </div>
-        
-        <button class="btn-acao" onclick="finalizarPedido()">Finalizar Pedido via WhatsApp</button>
+        <div id="itensNoCarrinho" style="margin: 15px 0"></div>
+        <input type="text" id="nomeCliente" placeholder="Seu Nome">
+        <input type="text" id="enderecoCliente" placeholder="Endereço de Entrega">
+        <select id="formaPagamento">
+            <option value="">Forma de Pagamento</option>
+            <option value="Pix">Pix</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão">Cartão</option>
+        </select>
+        <button class="btn-acao" onclick="finalizarPedido()">Enviar Pedido para WhatsApp</button>
     </div>
 </div>
 
-<div id="barraCarrinho" class="footer-carrinho">
-    <div class="cart-info">
-        <i class="fas fa-shopping-basket"></i> <span id="qtdItens">0</span> Itens
-    </div>
-    <div id="totalFlutuante" style="font-weight: 800;">R$ 0,00</div>
-    <div class="cart-btn" onclick="abrirCarrinho()">Ver Sacola</div>
+<div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
+    <div><i class="fas fa-shopping-cart"></i> <span id="qtdItens">0</span> itens</div>
+    <div id="totalFlutuante" style="font-weight:bold">R$ 0,00</div>
+    <div style="background:white; color:var(--roxo-principal); padding:5px 10px; border-radius:8px; font-weight:bold">Ver Sacola</div>
 </div>
 
 <script>
     let carrinho = [];
     let itemSelecionado = {};
+
+    // Efeito de Header ao rolar
+    window.onscroll = function() {
+        let header = document.getElementById("mainHeader");
+        if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+            header.classList.add("scrolled");
+        } else {
+            header.classList.remove("scrolled");
+        }
+    };
 
     function abrirOpcionais(nome, preco) {
         itemSelecionado = { nome, preco };
@@ -299,82 +278,57 @@
 
     function fecharModal(id) {
         document.getElementById(id).style.display = 'none';
-        if(id === 'modalOpcionais') {
-            document.querySelectorAll('.extra').forEach(el => el.checked = false);
-        }
     }
 
     function adicionarAoCarrinho() {
         let extras = [];
         document.querySelectorAll('.extra:checked').forEach(el => extras.push(el.value));
-        
         carrinho.push({
             nome: itemSelecionado.nome,
             preco: itemSelecionado.preco,
-            acompanhamentos: extras.join(', ') || 'Sem adicionais'
+            acompanhamentos: extras.join(', ') || 'Natural'
         });
-
         atualizarInterface();
         fecharModal('modalOpcionais');
+        document.querySelectorAll('.extra').forEach(el => el.checked = false);
     }
 
     function atualizarInterface() {
         let total = carrinho.reduce((acc, item) => acc + item.preco, 0);
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = 'R$ ' + (total + 3).toFixed(2);
+        document.getElementById('totalFlutuante').innerText = 'Total: R$ ' + (total + 3).toFixed(2);
     }
 
     function abrirCarrinho() {
         let container = document.getElementById('itensNoCarrinho');
         container.innerHTML = '';
         let total = 0;
-
         carrinho.forEach((item, index) => {
             total += item.preco;
             container.innerHTML += `
                 <div class="resumo-item">
-                    <div>
-                        <strong>${item.nome}</strong><br>
-                        <small>${item.acompanhamentos}</small>
-                    </div>
-                    <div>R$ ${item.preco.toFixed(2)} <i class="fas fa-trash" style="color:red; margin-left:10px" onclick="removerItem(${index})"></i></div>
+                    <span>${item.nome}</span>
+                    <span>R$ ${item.preco.toFixed(2)}</span>
                 </div>
             `;
         });
-
-        document.getElementById('valorTotalModal').innerText = 'R$ ' + (total + 3).toFixed(2);
         document.getElementById('modalCarrinho').style.display = 'flex';
-    }
-
-    function removerItem(index) {
-        carrinho.splice(index, 1);
-        if(carrinho.length === 0) fecharModal('modalCarrinho');
-        atualizarInterface();
-        abrirCarrinho();
     }
 
     function finalizarPedido() {
         let nome = document.getElementById('nomeCliente').value;
         let endereco = document.getElementById('enderecoCliente').value;
         let pag = document.getElementById('formaPagamento').value;
-        let obs = document.getElementById('obsPedido').value;
 
-        if(!nome || !endereco || !pag) return alert("Preencha Nome, Endereço e Pagamento!");
+        if(!nome || !endereco || !pag) return alert("Por favor, preencha todos os dados!");
 
         let total = carrinho.reduce((acc, item) => acc + item.preco, 0) + 3;
-        let texto = `*PEDIDO ONMI AÇAÍ*%0A%0A`;
-        texto += `👤 *Cliente:* ${nome}%0A📍 *Endereço:* ${endereco}%0A💳 *Pagamento:* ${pag}%0A`;
-        if(obs) texto += `📝 *Obs:* ${obs}%0A`;
-        texto += `%0A*ITENS:*%0A`;
-        
-        carrinho.forEach(item => {
-            texto += `• ${item.nome} (R$ ${item.preco.toFixed(2)})%0A   _${item.acompanhamentos}_%0A`;
-        });
+        let msg = `*PEDIDO ONMI AÇAÍ*%0A%0A*Nome:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}%0A%0A*ITENS:*%0A`;
+        carrinho.forEach(i => msg += `- ${i.nome}: R$ ${i.preco.toFixed(2)} (${i.acompanhamentos})%0A`);
+        msg += `%0A*Entrega:* R$ 3,00%0A*TOTAL: R$ ${total.toFixed(2)}*`;
 
-        texto += `%0A🚚 *Entrega:* R$ 3,00%0A💰 *TOTAL: R$ ${total.toFixed(2)}*`;
-
-        window.open(`https://wa.me/5521988626495?text=${texto}`);
+        window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 </script>
 
