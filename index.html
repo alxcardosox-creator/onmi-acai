@@ -31,7 +31,6 @@
             padding-bottom: 100px;
         }
 
-        /* Header */
         header { 
             background: var(--primary); 
             padding: 15px 20px; 
@@ -63,7 +62,6 @@
             border: 1px solid #afffcf44;
         }
 
-        /* Menu Categorias */
         .nav-categories {
             background: var(--white);
             padding: 12px 0;
@@ -92,7 +90,6 @@
         }
         .cat-item.active { background: var(--primary); color: white; }
 
-        /* Container & Cards */
         .container { max-width: 600px; margin: 0 auto; padding: 10px 15px; }
         
         .section-header { 
@@ -132,7 +129,6 @@
         }
         .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Modais */
         .modal { 
             display: none; position: fixed; inset: 0; 
             background: rgba(0,0,0,0.6); z-index: 2000; 
@@ -261,7 +257,7 @@
         
         <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:15px;">
             <input type="text" id="nomeCliente" placeholder="Seu nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)" oninput="atualizarBarra()">
             
             <select id="formaPagamento" onchange="togglePagamento()">
                 <option value="">Forma de Pagamento</option>
@@ -273,7 +269,7 @@
             <div id="areaPix" style="display:none; font-size:12px; background:#fff; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:10px;">
                 <span style="color:var(--primary); font-weight:700;">DADOS PARA PAGAMENTO:</span><br>
                 <strong>Alex Cardoso Sousa</strong><br>
-                Chave Pix: <span id="chavePixTexto">200.769.057-80</span> (CPF)
+                Chave Pix: 200.769.057-80 (CPF)
             </div>
 
             <div id="areaTroco" style="display:none;">
@@ -288,12 +284,14 @@
 
 <div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
     <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
-    <span id="totalFlutuante" style="font-weight:800;">R$ 0,00</span>
+    <div style="text-align: right;">
+        <span id="labelTaxa" style="display: block; font-size: 9px; opacity: 0.8;"></span>
+        <span id="totalFlutuante" style="font-weight:800;">R$ 0,00</span>
+    </div>
 </div>
 
 <script>
     const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
-    const TAXA_ENTREGA = 3.00;
     const CHAVE_PIX = "200.769.057-80";
     const NOME_PIX = "Alex Cardoso Sousa";
     
@@ -320,6 +318,16 @@
 
     let carrinho = [];
     let itemSelecionado = null;
+
+    // Função inteligente para calcular a taxa baseada no endereço
+    function calcularTaxaEntrega() {
+        const endereco = document.getElementById('enderecoCliente').value.toLowerCase();
+        // Verifica se contém "beira rio" ou "beirario"
+        if (endereco.includes("beira rio") || endereco.includes("beirario")) {
+            return 2.00;
+        }
+        return 3.00; // Padrão Japeri
+    }
 
     function renderizar() {
         const listaCopos = document.getElementById('lista-copos');
@@ -387,10 +395,13 @@
 
     function atualizarBarra() {
         const subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        const total = subtotal + (carrinho.length > 0 ? TAXA_ENTREGA : 0);
+        const taxaAtual = calcularTaxaEntrega();
+        const total = subtotal + (carrinho.length > 0 ? taxaAtual : 0);
+        
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
         document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
+        document.getElementById('labelTaxa').innerText = `+ Entrega: R$ ${taxaAtual.toFixed(2).replace('.',',')}`;
     }
 
     function abrirCarrinho() {
@@ -423,8 +434,9 @@
         
         if(!n || !e || !p) return alert("Por favor, preencha nome, endereço e forma de pagamento.");
 
+        const taxaFinal = calcularTaxaEntrega();
         let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        let totalFinal = subtotal + TAXA_ENTREGA;
+        let totalFinal = subtotal + taxaFinal;
 
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
         msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
@@ -436,7 +448,7 @@
 
         msg += `--------------------------%0A`;
         msg += `*Subtotal:* R$ ${subtotal.toFixed(2).replace('.',',')}%0A`;
-        msg += `*Entrega:* R$ ${TAXA_ENTREGA.toFixed(2).replace('.',',')}%0A`;
+        msg += `*Entrega:* R$ ${taxaFinal.toFixed(2).replace('.',',')}%0A`;
         msg += `*TOTAL: R$ ${totalFinal.toFixed(2).replace('.',',')}*%0A`;
 
         if(p === 'Pix') {
