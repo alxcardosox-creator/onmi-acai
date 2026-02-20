@@ -9,6 +9,7 @@
         :root {
             --roxo-principal: #5b0f73;
             --verde-sucesso: #27ae60;
+            --vermelho-erro: #e74c3c;
             --cinza-fundo: #f4f4f4;
             --branco: #ffffff;
         }
@@ -40,7 +41,6 @@
         .status-badge {
             display: block;
             background: var(--branco);
-            color: var(--verde-sucesso);
             font-size: 11px;
             font-weight: bold;
             width: fit-content;
@@ -49,6 +49,9 @@
             border-radius: 20px;
             text-transform: uppercase;
         }
+        
+        .status-aberto { color: var(--verde-sucesso); }
+        .status-fechado { color: var(--vermelho-erro); }
 
         .container { max-width: 600px; margin: auto; }
 
@@ -162,7 +165,7 @@
 
 <header id="mainHeader">
     <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" alt="Onmi Açaí">
-    <span class="status-badge">● Aberto Agora</span>
+    <span id="statusLoja" class="status-badge">● Verificando...</span>
 </header>
 
 <div class="container" id="cardapio-container"></div>
@@ -202,6 +205,10 @@
 <script>
     const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
     const TAXA_ENTREGA = 3.00;
+
+    // Configuração de Horário
+    const HORA_ABRE = 13;
+    const HORA_FECHA = 22;
 
     const CARDAPIO = [
         {
@@ -247,6 +254,24 @@
     let carrinho = [];
     let itemSelecionado = null;
 
+    // Função para verificar se a loja está aberta
+    function estaAberto() {
+        const agora = new Date();
+        const hora = agora.getHours();
+        return hora >= HORA_ABRE && hora < HORA_FECHA;
+    }
+
+    function atualizarStatusBadge() {
+        const badge = document.getElementById('statusLoja');
+        if (estaAberto()) {
+            badge.innerText = "● Aberto Agora";
+            badge.className = "status-badge status-aberto";
+        } else {
+            badge.innerText = "● Fechado (Abre às 13h)";
+            badge.className = "status-badge status-fechado";
+        }
+    }
+
     function renderizarCardapio() {
         const container = document.getElementById('cardapio-container');
         let html = '';
@@ -270,6 +295,10 @@
     }
 
     function abrirOpcionais(produto) {
+        if(!estaAberto()) {
+            return alert("Desculpe! No momento estamos fechados. Nosso horário é das 13h às 22h.");
+        }
+
         itemSelecionado = produto;
         document.getElementById('nomeProdModal').innerText = produto.nome;
         const lista = document.getElementById('lista-adicionais');
@@ -379,6 +408,10 @@
     }
 
     function finalizarPedido() {
+        if(!estaAberto()) {
+            return alert("A loja fechou enquanto você montava o pedido. Não é possível finalizar agora.");
+        }
+
         const nome = document.getElementById('nomeCliente').value;
         const endereco = document.getElementById('enderecoCliente').value;
         const pag = document.getElementById('formaPagamento').value;
@@ -407,7 +440,12 @@
         window.scrollY > 50 ? header.classList.add("scrolled") : header.classList.remove("scrolled");
     };
 
+    // Inicialização
+    atualizarStatusBadge();
     renderizarCardapio();
+    
+    // Atualiza o status a cada 1 minuto caso a página fique aberta
+    setInterval(atualizarStatusBadge, 60000);
 </script>
 </body>
 </html>
