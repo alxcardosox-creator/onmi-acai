@@ -228,19 +228,34 @@
         document.getElementById('areaPix').style.display = pag === 'Pix' ? 'block' : 'none';
     }
 
-    function finalizarPedido() {
+function finalizarPedido() {
         const nome = document.getElementById('nomeCliente').value;
         const endereco = document.getElementById('enderecoCliente').value;
-        if(!nome || !endereco) return alert("Preencha nome e endereço!");
+        const pag = document.getElementById('formaPagamento').value;
+        
+        if(!nome || !endereco || !pag) return alert("Preencha Nome, Endereço e Forma de Pagamento!");
 
-        let total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0) + TAXA_ENTREGA;
-        let texto = `*NOVO PEDIDO - ONMI AÇAÍ*%0A%0A*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A%0A`;
+        let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        let totalFinal = (subtotal + TAXA_ENTREGA).toFixed(2);
+        
+        // Formatação da mensagem de pagamento
+        let formaPagMsg = pag;
+        if(pag === 'Pix') {
+            formaPagMsg = `Pix (20076905780 - Alex Cardoso)%0A⚠️ *Favor enviar o comprovante após a mensagem!*`;
+        }
+        
+        let texto = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A`;
+        texto += `*Cliente:* ${nome}%0A`;
+        texto += `*Endereço:* ${endereco}%0A`;
+        texto += `*Pagamento:* ${formaPagMsg}%0A%0A`;
+        texto += `*ITENS:*%0A`;
         
         carrinho.forEach(i => {
-            texto += `• *${i.nome}*%0A  ${i.detalhes}%0A`;
+            texto += `✅ *${i.nome}*%0A   _${i.detalhes}_%0A`;
         });
 
-        texto += `%0A*Total c/ Entrega: R$ ${total.toFixed(2)}*`;
+        texto += `%0A*Total com Entrega: R$ ${totalFinal}*`;
+        
         window.open(`https://wa.me/5521988626495?text=${texto}`);
     }
 
