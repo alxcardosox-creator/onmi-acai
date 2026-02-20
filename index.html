@@ -2,160 +2,160 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Onmi Açaí Delivery</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onmi Açaí</title>
+
 <style>
 body{
-font-family: Arial;
-background: linear-gradient(135deg,#5b0f73,#8e2de2);
 margin:0;
-padding:0;
-color:white;
+font-family:Arial;
+background:#f5f5f5;
 }
 
-.container{
-max-width:420px;
-margin:30px auto;
-background:white;
-color:black;
-padding:20px;
-border-radius:20px;
-box-shadow:0 10px 25px rgba(0,0,0,0.3);
-}
-
-h1{
-text-align:center;
-color:#5b0f73;
-}
-
-label{
-font-weight:bold;
-margin-top:10px;
-display:block;
-}
-
-input, select{
-width:100%;
-padding:10px;
-margin-top:5px;
-border-radius:8px;
-border:1px solid #ccc;
-}
-
-.checkbox-group{
-margin-top:5px;
-}
-
-button{
+header{
 background:#5b0f73;
 color:white;
 padding:15px;
-border:none;
-width:100%;
-font-size:16px;
-border-radius:12px;
-margin-top:15px;
-cursor:pointer;
-transition:0.3s;
+font-size:20px;
+font-weight:bold;
 }
 
-button:hover{
-background:#3d0850;
-}
-
-.total{
-margin-top:10px;
+.categoria{
+padding:15px;
 font-size:18px;
 font-weight:bold;
+}
+
+.produto{
+display:flex;
+justify-content:space-between;
+align-items:center;
+background:white;
+margin:10px;
+padding:10px;
+border-radius:10px;
+box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.produto-info{
+flex:1;
+}
+
+.produto-info h3{
+margin:0;
+font-size:16px;
+}
+
+.produto-info p{
+margin:5px 0 0;
 color:#5b0f73;
-text-align:center;
+font-weight:bold;
+}
+
+.produto img{
+width:90px;
+height:90px;
+border-radius:10px;
+object-fit:cover;
+}
+
+button{
+margin-top:8px;
+background:#5b0f73;
+color:white;
+border:none;
+padding:6px 10px;
+border-radius:6px;
+cursor:pointer;
+}
+
+.carrinho{
+position:fixed;
+bottom:15px;
+right:15px;
+background:#5b0f73;
+color:white;
+padding:15px;
+border-radius:50px;
+font-weight:bold;
+cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<h1>🍧 Onmi Açaí</h1>
+<header>🍧 Onmi Açaí</header>
 
-<label>Seu Nome</label>
-<input type="text" id="nome">
+<div class="categoria">Açaí no Copo</div>
 
-<label>Endereço (Japeri)</label>
-<input type="text" id="endereco">
-
-<label>Tamanho</label>
-<select id="tamanho" onchange="calcularTotal()">
-<option value="5">200ml - R$5</option>
-<option value="7">300ml - R$7</option>
-<option value="11">400ml - R$11</option>
-<option value="13">500ml - R$13</option>
-<option value="17">700ml - R$17</option>
-</select>
-
-<label>Quantidade</label>
-<input type="number" id="quantidade" value="1" min="1" onchange="calcularTotal()">
-
-<label>Acompanhamentos</label>
-<div class="checkbox-group">
-<input type="checkbox" value="Leite em pó"> Leite em pó<br>
-<input type="checkbox" value="Paçoca"> Paçoca<br>
-<input type="checkbox" value="Confetes"> Confetes<br>
-<input type="checkbox" value="Granola"> Granola<br>
+<div class="produto">
+<div class="produto-info">
+<h3>200ml</h3>
+<p>R$ 5,00</p>
+<button onclick="addCarrinho('200ml',5)">Adicionar</button>
+</div>
+<img src="https://images.unsplash.com/photo-1625944525903-b1dba4c4c1a1">
 </div>
 
-<label>Forma de Pagamento</label>
-<select id="pagamento">
-<option>Pix</option>
-<option>Dinheiro</option>
-<option>Cartão</option>
-</select>
+<div class="produto">
+<div class="produto-info">
+<h3>300ml</h3>
+<p>R$ 7,00</p>
+<button onclick="addCarrinho('300ml',7)">Adicionar</button>
+</div>
+<img src="https://images.unsplash.com/photo-1625944525903-b1dba4c4c1a1">
+</div>
 
-<div class="total" id="total">Total: R$ 8</div>
+<div class="produto">
+<div class="produto-info">
+<h3>400ml</h3>
+<p>R$ 11,00</p>
+<button onclick="addCarrinho('400ml',11)">Adicionar</button>
+</div>
+<img src="https://images.unsplash.com/photo-1625944525903-b1dba4c4c1a1">
+</div>
 
-<button onclick="enviarPedido()">Finalizar Pedido</button>
+<div class="produto">
+<div class="produto-info">
+<h3>500ml</h3>
+<p>R$ 13,00</p>
+<button onclick="addCarrinho('500ml',13)">Adicionar</button>
+</div>
+<img src="https://images.unsplash.com/photo-1625944525903-b1dba4c4c1a1">
+</div>
 
+<div class="produto">
+<div class="produto-info">
+<h3>700ml</h3>
+<p>R$ 17,00</p>
+<button onclick="addCarrinho('700ml',17)">Adicionar</button>
+</div>
+<img src="https://images.unsplash.com/photo-1625944525903-b1dba4c4c1a1">
+</div>
+
+<div class="carrinho" onclick="finalizarPedido()">
+🛒 Finalizar
 </div>
 
 <script>
-function calcularTotal(){
-let preco = parseFloat(document.getElementById("tamanho").value);
-let qtd = parseInt(document.getElementById("quantidade").value);
-let taxa = 3;
-let total = (preco * qtd) + taxa;
-document.getElementById("total").innerHTML = "Total: R$ " + total.toFixed(2);
+let carrinho = [];
+let total = 0;
+
+function addCarrinho(produto, preco){
+carrinho.push(produto);
+total += preco;
+alert(produto + " adicionado!");
 }
 
-function enviarPedido(){
-let nome = document.getElementById("nome").value;
-let endereco = document.getElementById("endereco").value;
-let tamanhoSelect = document.getElementById("tamanho");
-let tamanhoTexto = tamanhoSelect.options[tamanhoSelect.selectedIndex].text;
-let preco = parseFloat(tamanhoSelect.value);
-let qtd = parseInt(document.getElementById("quantidade").value);
-let pagamento = document.getElementById("pagamento").value;
+function finalizarPedido(){
+let lista = carrinho.join(", ");
 let taxa = 3;
-let total = (preco * qtd) + taxa;
+let totalFinal = total + taxa;
 
-let adicionais = "";
-let checks = document.querySelectorAll("input[type=checkbox]:checked");
-checks.forEach((item)=>{
-adicionais += item.value + ", ";
-});
-
-let mensagem = `Olá, quero fazer um pedido:%0A
-Nome: ${nome}%0A
-Endereço: ${endereco}%0A
-Tamanho: ${tamanhoTexto}%0A
-Quantidade: ${qtd}%0A
-Acompanhamentos: ${adicionais}%0A
-Forma de Pagamento: ${pagamento}%0A
-Taxa: R$3%0A
-Total: R$${total.toFixed(2)}`;
-
+let mensagem = `Olá, quero pedir:%0A${lista}%0ATaxa: R$3%0ATotal: R$${totalFinal}`;
 window.open(`https://wa.me/5521988626495?text=${mensagem}`);
 }
-
-calcularTotal();
 </script>
 
 </body>
