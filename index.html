@@ -128,7 +128,7 @@
     ];
 
     const ESTRUTURA_GARRAFA = [
-        { titulo: "Adicionais (Até 2)", limite: 5, opcoes: [{ n: "Leite Condensado", p: 0 }, { n: "Mousse de maracuja", p: 2.00 }, { n: "Mousse de Morango", p: 2.00 }, { n: "Nutella", p: 2.00 }, { n: "Ninho", p: 2.00 }] }
+        { titulo: "Adicionais (Até 2)", limite: 2, opcoes: [{ n: "Leite Condensado", p: 0 }, { n: "Mousse de maracuja", p: 2.00 }, { n: "Mousse de Morango", p: 2.00 }, { n: "Nutella", p: 2.00 }, { n: "Ninho", p: 2.00 }] }
     ];
 
     let carrinho = [];
@@ -174,7 +174,7 @@
         const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
         if (selecionados.length > limite) {
             input.checked = false;
-            alert(`Limite de ${limite} opções.`);
+            alert(`Você pode escolher no máximo ${limite} opções nesta seção.`);
         }
     }
 
@@ -182,11 +182,13 @@
         const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
         const nomesAdicionais = selecionados.map(el => el.value);
         const precoExtra = selecionados.reduce((total, el) => total + parseFloat(el.dataset.preco), 0);
+        
         carrinho.push({
             nome: itemSelecionado.nome,
             precoFinal: itemSelecionado.preco + precoExtra,
             detalhes: nomesAdicionais.join(', ') || 'Puro'
         });
+        
         atualizarBarra();
         fecharModal('modalOpcionais');
     }
@@ -201,9 +203,12 @@
     function abrirCarrinho() {
         const lista = document.getElementById('itensNoCarrinho');
         lista.innerHTML = carrinho.map((i, idx) => `
-            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
                 <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small></div>
-                <div>R$ ${i.precoFinal.toFixed(2)} <span onclick="removerItem(${idx})" style="color:red; margin-left:10px;">X</span></div>
+                <div style="text-align:right;">
+                    R$ ${i.precoFinal.toFixed(2)} <br>
+                    <span onclick="removerItem(${idx})" style="color:red; cursor:pointer; font-size:12px;">Remover</span>
+                </div>
             </div>
         `).join('');
         document.getElementById('modalCarrinho').style.display = 'flex';
@@ -211,7 +216,11 @@
 
     function removerItem(idx) {
         carrinho.splice(idx, 1);
-        carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho');
+        if(carrinho.length > 0) {
+            abrirCarrinho();
+        } else {
+            fecharModal('modalCarrinho');
+        }
         atualizarBarra();
     }
 
@@ -227,10 +236,11 @@
         const pag = document.getElementById('formaPagamento').value;
         const troco = document.getElementById('trocoPara').value;
         
-        if(!nome || !endereco || !pag) return alert("Preencha todos os campos!");
+        if(!nome || !endereco || !pag) return alert("Por favor, preencha nome, endereço e forma de pagamento!");
 
         let total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0) + TAXA_ENTREGA;
         
+        // Lógica de texto de pagamento (Pix e Dinheiro)
         let pagTexto = pag;
         if(pag === 'Pix') {
             pagTexto = `Pix (20076905780 - Alex Cardoso)%0A⚠️ *Favor enviar o comprovante após a mensagem!*`;
@@ -249,10 +259,14 @@
         });
 
         msg += `%0A*Total c/ Entrega: R$ ${total.toFixed(2)}*`;
+        
+        // Abre o WhatsApp com a mensagem formatada
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
     function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+    
+    // Inicia o cardápio
     renderizarCardapio();
 </script>
 
