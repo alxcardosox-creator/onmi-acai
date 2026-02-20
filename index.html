@@ -31,7 +31,7 @@
             padding-bottom: 100px;
         }
 
-        /* Header Modernizado */
+        /* Header */
         header { 
             background: var(--primary); 
             padding: 15px 20px; 
@@ -132,7 +132,7 @@
         }
         .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* MODAL ESTILO ANOTA AI */
+        /* Modais */
         .modal { 
             display: none; position: fixed; inset: 0; 
             background: rgba(0,0,0,0.6); z-index: 2000; 
@@ -147,7 +147,6 @@
         }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* Cabeçalhos de Seção Coloridos */
         .secao-titulo-box {
             background: #f1f2f6;
             padding: 12px 18px;
@@ -172,7 +171,6 @@
             font-weight: 600;
         }
 
-        /* Itens de Opção (Radio e Checkbox) */
         .opcao-item { 
             display: flex; justify-content: space-between; align-items: center; 
             padding: 16px 20px; border-bottom: 1px solid var(--divider);
@@ -181,7 +179,6 @@
         .opcao-nome { font-size: 14px; color: var(--text); font-weight: 400; }
         .opcao-preco { font-size: 13px; color: var(--success); font-weight: 600; margin-left: 8px; }
 
-        /* Custom Input Styling */
         input[type="checkbox"], input[type="radio"] {
             appearance: none; -webkit-appearance: none;
             width: 22px; height: 22px;
@@ -198,7 +195,6 @@
             top: 50%; left: 50%; transform: translate(-50%, -50%);
         }
 
-        /* Botões */
         .btn-acao { 
             background: var(--primary); color: white; border: none; 
             width: 90%; margin: 20px auto; display: block;
@@ -206,7 +202,6 @@
             font-size: 15px; font-weight: 700;
         }
 
-        /* Carrinho Flutuante Inferior */
         .footer-carrinho { 
             position: fixed; bottom: 15px; left: 50%; 
             transform: translateX(-50%); width: 92%; 
@@ -216,6 +211,13 @@
             align-items: center; z-index: 1500;
             box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3);
         }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%; padding: 14px; margin-bottom: 10px;
+            border: 1px solid #ddd; border-radius: 10px; font-family: inherit;
+        }
+
+        .remover-btn { color: #e74c3c; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -248,29 +250,39 @@
             <i class="fas fa-chevron-down" onclick="fecharModal('modalOpcionais')" style="color:#636e72;"></i>
         </div>
         <div id="lista-adicionais"></div>
-        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao carrinho</button>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()">Confirmar</button>
     </div>
 </div>
 
 <div id="modalCarrinho" class="modal">
-    <div class="modal-content" style="padding: 20px; border-radius: 0;">
-        <h2 style="font-size:18px; margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Resumo do Pedido</h2>
+    <div class="modal-content" style="padding: 20px;">
+        <h2 style="font-size:18px; margin-bottom:15px; color:var(--primary);"><i class="fas fa-shopping-basket"></i> Resumo do Pedido</h2>
         <div id="itensNoCarrinho"></div>
-        <div style="margin-top:20px;">
+        
+        <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:15px;">
             <input type="text" id="nomeCliente" placeholder="Seu nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço Completo">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)">
+            
             <select id="formaPagamento" onchange="togglePagamento()">
                 <option value="">Forma de Pagamento</option>
                 <option value="Pix">Pix</option>
                 <option value="Cartão">Cartão</option>
                 <option value="Dinheiro">Dinheiro</option>
             </select>
-            <div id="areaPix" style="display:none; font-size:12px; background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:10px;">
-                <strong>Alex Cardoso Sousa</strong><br>Pix: 200.769.057-80
+
+            <div id="areaPix" style="display:none; font-size:12px; background:#fff; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:10px;">
+                <span style="color:var(--primary); font-weight:700;">DADOS PARA PAGAMENTO:</span><br>
+                <strong>Alex Cardoso Sousa</strong><br>
+                Chave Pix: <span id="chavePixTexto">200.769.057-80</span> (CPF)
             </div>
-            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
+
+            <div id="areaTroco" style="display:none;">
+                <input type="number" id="trocoPara" placeholder="Troco para quanto?">
+            </div>
         </div>
-        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success); width:100%;">Finalizar Pedido</button>
+
+        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success); margin-top:15px;">Finalizar no WhatsApp</button>
+        <p onclick="fecharModal('modalCarrinho')" style="text-align:center; color:#999; font-size:13px; margin-top:10px;">Adicionar mais itens</p>
     </div>
 </div>
 
@@ -282,6 +294,8 @@
 <script>
     const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
     const TAXA_ENTREGA = 3.00;
+    const CHAVE_PIX = "200.769.057-80";
+    const NOME_PIX = "Alex Cardoso Sousa";
     
     const PRODUTOS = [
         { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
@@ -310,7 +324,6 @@
     function renderizar() {
         const listaCopos = document.getElementById('lista-copos');
         const listaGarrafas = document.getElementById('lista-garrafas');
-        
         const htmlProd = (p) => `
             <div class="produto-card" onclick='abrirOpcionais(${JSON.stringify(p)})'>
                 <div class="produto-info">
@@ -321,7 +334,6 @@
                     <img src="${GITHUB_BASE}${p.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
                 </div>
             </div>`;
-
         listaCopos.innerHTML = PRODUTOS.filter(p => p.cat === 'copo').map(htmlProd).join('');
         listaGarrafas.innerHTML = PRODUTOS.filter(p => p.cat === 'garrafa').map(htmlProd).join('');
     }
@@ -331,7 +343,6 @@
         document.getElementById('nomeProdModal').innerText = p.nome;
         const lista = document.getElementById('lista-adicionais');
         const estrutura = OPCOES[p.cat];
-        
         lista.innerHTML = estrutura.map((sec, idx) => {
             const isRadio = sec.l === 1;
             return `
@@ -348,51 +359,28 @@
                 return `
                 <label class="opcao-item">
                     <span class="opcao-nome">${nome} ${preco > 0 ? `<span class="opcao-preco">+ R$${preco}</span>` : ''}</span>
-                    <input type="${isRadio ? 'radio' : 'checkbox'}" 
-                           name="secao-${idx}" 
-                           class="extra-item" 
-                           data-secao="${idx}" 
-                           data-limite="${sec.l}"
-                           data-preco="${preco}" 
-                           value="${nome}" 
-                           onclick="validarLimite(this)">
+                    <input type="${isRadio ? 'radio' : 'checkbox'}" name="secao-${idx}" class="extra-item" 
+                           data-secao="${idx}" data-limite="${sec.l}" data-preco="${preco}" value="${nome}" onclick="validarLimite(this)">
                 </label>`;
-            }).join('')}
-        `}).join('');
+            }).join('')}`
+        }).join('');
         document.getElementById('modalOpcionais').style.display = 'flex';
     }
 
     function validarLimite(input) {
         const secaoIdx = input.getAttribute('data-secao');
         const limite = parseInt(input.getAttribute('data-limite'));
-        const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secaoIdx}"]:checked`);
-        
-        if (selecionados.length > limite) {
-            input.checked = false;
-        }
-
-        // Atualiza a barra de progresso/badge
+        let selecionados = document.querySelectorAll(`.extra-item[data-secao="${secaoIdx}"]:checked`);
+        if (selecionados.length > limite) { input.checked = false; }
         const finalCount = document.querySelectorAll(`.extra-item[data-secao="${secaoIdx}"]:checked`).length;
         document.getElementById(`badge-sec-${secaoIdx}`).innerText = `${finalCount} / ${limite}`;
-    }
-
-    function scrollToCategory(id, el) {
-        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function adicionarAoCarrinho() {
         const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
         const nomes = selecionados.map(el => el.value);
         const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
-        
-        carrinho.push({
-            nome: itemSelecionado.nome,
-            precoFinal: itemSelecionado.preco + precoExtra,
-            detalhes: nomes.join(', ') || 'Tradicional'
-        });
-        
+        carrinho.push({ nome: itemSelecionado.nome, precoFinal: itemSelecionado.preco + precoExtra, detalhes: nomes.join(', ') || 'Tradicional' });
         atualizarBarra();
         fecharModal('modalOpcionais');
     }
@@ -408,15 +396,10 @@
     function abrirCarrinho() {
         const lista = document.getElementById('itensNoCarrinho');
         lista.innerHTML = carrinho.map((i, idx) => `
-            <div style="padding:15px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                <div style="flex:1">
-                    <strong style="font-size:14px">${i.nome}</strong><br>
-                    <small style="color:#777">${i.detalhes}</small><br>
-                    <span class="remover-btn" onclick="removerItem(${idx})">Remover</span>
-                </div>
+            <div style="padding:12px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                <div style="flex:1"><strong style="font-size:14px">${i.nome}</strong><br><small style="color:#777">${i.detalhes}</small><br><span class="remover-btn" onclick="removerItem(${idx})">Remover</span></div>
                 <div style="font-weight:700">R$ ${i.precoFinal.toFixed(2).replace('.',',')}</div>
-            </div>
-        `).join('');
+            </div>`).join('');
         document.getElementById('modalCarrinho').style.display = 'flex';
     }
 
@@ -436,19 +419,40 @@
         const n = document.getElementById('nomeCliente').value;
         const e = document.getElementById('enderecoCliente').value;
         const p = document.getElementById('formaPagamento').value;
-        if(!n || !e || !p) return alert("Preencha todos os dados!");
+        const t = document.getElementById('trocoPara').value;
+        
+        if(!n || !e || !p) return alert("Por favor, preencha nome, endereço e forma de pagamento.");
 
         let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        let totalFinal = subtotal + TAXA_ENTREGA;
+
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
-        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A--------------------------%0A`;
-        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A`);
-        msg += `--------------------------%0A*Subtotal:* R$ ${subtotal.toFixed(2)}%0A*Entrega:* R$ ${TAXA_ENTREGA.toFixed(2)}%0A*TOTAL: R$ ${(subtotal+TAXA_ENTREGA).toFixed(2)}*`;
+        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
         
+        if(p === 'Dinheiro' && t) msg += ` (Troco p/ R$ ${t})`;
+        msg += `%0A--------------------------%0A`;
+
+        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
+
+        msg += `--------------------------%0A`;
+        msg += `*Subtotal:* R$ ${subtotal.toFixed(2).replace('.',',')}%0A`;
+        msg += `*Entrega:* R$ ${TAXA_ENTREGA.toFixed(2).replace('.',',')}%0A`;
+        msg += `*TOTAL: R$ ${totalFinal.toFixed(2).replace('.',',')}*%0A`;
+
+        if(p === 'Pix') {
+            msg += `--------------------------%0A`;
+            msg += `*DADOS PIX:*%0A${NOME_PIX}%0AChave CPF: ${CHAVE_PIX}`;
+        }
+
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
     function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-    
+    function scrollToCategory(id, el) {
+        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
     renderizar();
 </script>
 
