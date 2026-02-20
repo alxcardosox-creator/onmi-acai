@@ -207,38 +207,38 @@
         {
             categoria: "Açaí no Copo",
             itens: [
-                { id: 1, nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
-                { id: 2, nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
-                { id: 3, nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg" },
-                { id: 4, nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg" },
-                { id: 5, nome: "Copo 700ml", preco: 17.00, img: "copo700.jpg" }
+                { id: 1, nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg", tipo: "copo" },
+                { id: 2, nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg", tipo: "copo" },
+                { id: 3, nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg", tipo: "copo" },
+                { id: 4, nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg", tipo: "copo" },
+                { id: 5, nome: "Copo 700ml", preco: 17.00, img: "copo700.jpg", tipo: "copo" }
+            ]
+        },
+        {
+            categoria: "Açaí na Garrafa",
+            itens: [
+                { id: 6, nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg", tipo: "garrafa" },
+                { id: 7, nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg", tipo: "garrafa" }
             ]
         }
     ];
 
-    const ESTRUTURA_ADICIONAIS = [
-        {
-            titulo: "Onde deseja os Complementos?",
-            limite: 1,
-            opcoes: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"]
-        },
-        {
-            titulo: "Complementos",
-            limite: 3,
+    const ESTRUTURA_COPO = [
+        { titulo: "Onde deseja os Complementos?", limite: 1, opcoes: [{n: "Em cima", p: 0}, {n: "Meio a Meio", p: 0}, {n: "Só no meio", p: 0}, {n: "Sem complementos", p: 0}, {n: "Embaixo", p: 0}] },
+        { titulo: "Complementos", limite: 3, opcoes: [{n: "Granola", p: 0}, {n: "Aveia", p: 0}, {n: "Chocoboll", p: 0}, {n: "Flocos de arroz", p: 0}, {n: "Leite em pó", p: 0}, {n: "Completo", p: 0}, {n: "Paçoca", p: 0}, {n: "Sucrilhos", p: 0}, {n: "Jujuba", p: 0}, {n: "Amendoim", p: 0}] },
+        { titulo: "Caldas", limite: 1, opcoes: [{n: "Uva", p: 0}, {n: "Morango", p: 0}, {n: "Leite condensado", p: 0}] },
+        { titulo: "Frutas", limite: 1, opcoes: [{n: "Banana", p: 0}] }
+    ];
+
+    const ESTRUTURA_GARRAFA = [
+        { 
+            titulo: "Complementos da Garrafa", 
+            limite: 2, 
             opcoes: [
-                "Granola", "Aveia", "Chocoboll", "Flocos de arroz", "Leite em pó", 
-                "Completo", "Paçoca", "Sucrilhos", "Jujuba", "Amendoim"
-            ]
-        },
-        {
-            titulo: "Caldas",
-            limite: 1,
-            opcoes: ["Uva", "Morango", "Leite condensado"]
-        },
-        {
-            titulo: "Frutas",
-            limite: 1,
-            opcoes: ["Banana"]
+                { n: "Leite Condensado", p: 0 },
+                { n: "Nutella", p: 2.00 },
+                { n: "Ninho", p: 2.00 }
+            ] 
         }
     ];
 
@@ -252,7 +252,7 @@
             html += `<div class="categoria-titulo">${cat.categoria}</div>`;
             cat.itens.forEach(prod => {
                 html += `
-                    <div class="produto-card" onclick="abrirOpcionais('${prod.nome}', ${prod.preco})">
+                    <div class="produto-card" onclick="abrirOpcionais(${JSON.stringify(prod).replace(/"/g, '&quot;')})">
                         <div class="produto-info">
                             <h3>${prod.nome}</h3>
                             <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
@@ -267,10 +267,15 @@
         container.innerHTML = html;
     }
 
-    function configurarAdicionais() {
+    function abrirOpcionais(produto) {
+        itemSelecionado = produto;
+        document.getElementById('nomeProdModal').innerText = produto.nome;
         const lista = document.getElementById('lista-adicionais');
         let html = '';
-        ESTRUTURA_ADICIONAIS.forEach((secao, idxSecao) => {
+        
+        const estrutura = produto.tipo === 'garrafa' ? ESTRUTURA_GARRAFA : ESTRUTURA_COPO;
+
+        estrutura.forEach((secao, idxSecao) => {
             html += `
                 <div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:10px;">
                     <strong style="color:var(--roxo-principal); font-size:14px;">${secao.titulo}</strong><br>
@@ -278,16 +283,23 @@
                 </div>
             `;
             secao.opcoes.forEach(opcao => {
+                const precoTxt = opcao.p > 0 ? ` (+ R$ ${opcao.p.toFixed(2)})` : ' (Grátis)';
                 html += `
                     <label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #eee; cursor:pointer;">
-                        <input type="checkbox" class="extra-item" data-secao="${idxSecao}" value="${opcao}" 
-                               onclick="verificarLimite(this, ${secao.limite})" style="width:18px; height:18px; margin-right:12px;">
-                        <span style="font-size:14px;">${opcao}</span>
+                        <input type="checkbox" class="extra-item" 
+                               data-secao="${idxSecao}" 
+                               data-preco="${opcao.p}" 
+                               value="${opcao.n}" 
+                               onclick="verificarLimite(this, ${secao.limite})" 
+                               style="width:18px; height:18px; margin-right:12px;">
+                        <span style="font-size:14px;">${opcao.n}${precoTxt}</span>
                     </label>
                 `;
             });
         });
+
         lista.innerHTML = html;
+        document.getElementById('modalOpcionais').style.display = 'flex';
     }
 
     function verificarLimite(checkbox, limite) {
@@ -299,25 +311,28 @@
         }
     }
 
-    function abrirOpcionais(nome, preco) {
-        itemSelecionado = { nome, preco };
-        document.getElementById('nomeProdModal').innerText = nome;
-        document.getElementById('modalOpcionais').style.display = 'flex';
-        document.querySelectorAll('.extra-item').forEach(el => el.checked = false);
-    }
-
     function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
 
     function adicionarAoCarrinho() {
         let escolhidos = [];
-        document.querySelectorAll('.extra-item:checked').forEach(el => escolhidos.push(el.value));
-        carrinho.push({ ...itemSelecionado, acompanhamentos: escolhidos.join(', ') || 'Natural' });
+        let precoAdicional = 0;
+        document.querySelectorAll('.extra-item:checked').forEach(el => {
+            escolhidos.push(el.value);
+            precoAdicional += parseFloat(el.getAttribute('data-preco'));
+        });
+        
+        carrinho.push({ 
+            ...itemSelecionado, 
+            precoFinal: itemSelecionado.preco + precoAdicional,
+            acompanhamentos: escolhidos.join(', ') || 'Natural' 
+        });
+        
         atualizarInterface();
         fecharModal('modalOpcionais');
     }
 
     function atualizarInterface() {
-        let subtotal = carrinho.reduce((acc, i) => acc + i.preco, 0);
+        let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
         document.getElementById('totalFlutuante').innerText = 'R$ ' + (subtotal + TAXA_ENTREGA).toFixed(2);
@@ -335,13 +350,13 @@
                         <div style="font-size:12px; color:#777; line-height:1.4;">${i.acompanhamentos}</div>
                     </div>
                     <div style="text-align:right; margin-left:10px;">
-                        <div style="font-size:14px; font-weight:bold">R$ ${i.preco.toFixed(2)}</div>
+                        <div style="font-size:14px; font-weight:bold">R$ ${i.precoFinal.toFixed(2)}</div>
                         <small style="color:red; cursor:pointer" onclick="removerItem(${index})">Remover</small>
                     </div>
                 </div>
             `).join('');
             
-            let subtotal = carrinho.reduce((acc, i) => acc + i.preco, 0);
+            let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
             container.innerHTML += `
                 <div style="margin-top:15px; border-top:2px dashed #eee; padding-top:10px">
                     <div style="display:flex; justify-content:space-between; font-size:14px"><span>Subtotal:</span> <span>R$ ${subtotal.toFixed(2)}</span></div>
@@ -368,14 +383,14 @@
 
         if(!nome || !endereco || !pag) return alert("Por favor, preencha todos os dados de entrega!");
 
-        let subtotal = carrinho.reduce((acc, i) => acc + i.preco, 0);
+        let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
         let total = subtotal + TAXA_ENTREGA;
         
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A%0A`;
         msg += `*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}%0A%0A`;
         msg += `*---------- ITENS ----------*%0A`;
         carrinho.forEach(i => {
-            msg += `✅ *${i.nome}*%0A   _Escolhas: ${i.acompanhamentos}_%0A   R$ ${i.preco.toFixed(2)}%0A%0A`;
+            msg += `✅ *${i.nome}*%0A   _Escolhas: ${i.acompanhamentos}_%0A   R$ ${i.precoFinal.toFixed(2)}%0A%0A`;
         });
         msg += `*---------------------------*%0A`;
         msg += `*Subtotal:* R$ ${subtotal.toFixed(2)}%0A`;
@@ -391,7 +406,6 @@
     };
 
     renderizarCardapio();
-    configurarAdicionais();
 </script>
 </body>
 </html>
