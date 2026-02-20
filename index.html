@@ -1,6 +1,6 @@
 <script>
     /* ===========================================================
-       MODO CRIADOR - AGORA COM CATEGORIAS DE ADICIONAIS
+       MODO CRIADOR - EDITADO CONFORME SEUS PRINTS
        ===========================================================
     */
 
@@ -25,32 +25,50 @@
         }
     ];
 
-    // Definição das categorias de adicionais baseadas nos prints
+    // Estrutura de adicionais baseada nas suas imagens
     const ESTRUTURA_ADICIONAIS = [
+        {
+            titulo: "Sabor do Açaí",
+            limite: 1,
+            opcoes: ["Açaí de Banana"] // Adicione mais sabores se tiver
+        },
         {
             titulo: "Onde deseja os Complementos?",
             limite: 1,
-            opcoes: ["Em cima", "Meio a Meio", "Só no meio", "Embaixo", "Sem complementos"]
+            opcoes: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"]
         },
         {
             titulo: "Complementos",
             limite: 6,
-            opcoes: ["Granola", "Aveia", "Chocoboll", "Flocos de arroz", "Leite em pó", "Paçoca", "Sucrilhos", "Jujuba", "Amendoim", "Granulado preto", "Granulado colorido", "Marshmallow", "Amendoim colorido", "Delicado (bala)", "Argola colorida"]
+            opcoes: [
+                "Granola", "Aveia", "Chocoboll", "Flocos de arroz", "Leite em pó", 
+                "Completo", "Paçoca", "Sucrilhos", "Jujuba", "Amendoim",
+                "Granulado preto", "Coco ralado", "Granulado colorido", "Marshmallow",
+                "Amendoim colorido", "Delicado (bala )", "argola colorida"
+            ]
         },
         {
             titulo: "Coberturas",
             limite: 1,
-            opcoes: ["Uva", "Morango", "Maçã verde", "Kiwi", "Chocolate suíço", "TuttiFruit", "Milho", "Maracujá", "Leite condensado", "Menta"]
+            opcoes: [
+                "Uva", "Morango", "Maçã verde", "Kiwi", "Chocolate suíço",
+                "TuttiFruit", "Milho", "Maracujá", "Leite condensado", "Menta"
+            ]
         },
         {
             titulo: "Deseja frutas?",
             limite: 3,
-            opcoes: ["Morango", "Banana", "Kiwi", "Manga"]
+            opcoes: ["Morango", "Banana"]
+        },
+        {
+            titulo: "Adicionais Extras",
+            limite: 5,
+            opcoes: ["Potinho de Nutella"]
         }
     ];
 
     /* ===========================================================
-       LÓGICA DO SISTEMA (MODIFICADA PARA SUPORTAR LIMITES)
+       LÓGICA DO SISTEMA
        ===========================================================
     */
 
@@ -103,11 +121,9 @@
         lista.innerHTML = html;
     }
 
-    // Função para impedir que o usuário selecione mais que o permitido
     function verificarLimite(checkbox, limite) {
         const secao = checkbox.getAttribute('data-secao');
         const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
-        
         if (selecionados.length > limite) {
             checkbox.checked = false;
             alert(`Nesta seção você pode escolher no máximo ${limite} item(ns).`);
@@ -118,7 +134,6 @@
         itemSelecionado = { nome, preco };
         document.getElementById('nomeProdModal').innerText = nome;
         document.getElementById('modalOpcionais').style.display = 'flex';
-        // Resetar seleções ao abrir
         document.querySelectorAll('.extra-item').forEach(el => el.checked = false);
     }
 
@@ -127,12 +142,10 @@
     function adicionarAoCarrinho() {
         let escolhidos = [];
         document.querySelectorAll('.extra-item:checked').forEach(el => escolhidos.push(el.value));
-        
         carrinho.push({ 
             ...itemSelecionado, 
             acompanhamentos: escolhidos.length > 0 ? escolhidos.join(', ') : 'Natural' 
         });
-        
         atualizarInterface();
         fecharModal('modalOpcionais');
     }
