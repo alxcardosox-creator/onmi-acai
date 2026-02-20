@@ -4,438 +4,298 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Onmi Açaí | Premium Delivery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
             --primary: #5b0f73;
-            --primary-light: #7b1fa2;
+            --primary-light: #f3e5f5;
             --accent: #ffc107;
             --success: #27ae60;
-            --bg: #fdfdfd;
-            --text: #2d3436;
+            --bg: #f8f9fa;
+            --text-dark: #333;
+            --text-muted: #666;
             --white: #ffffff;
-            --shadow: 0 2px 10px rgba(0,0,0,0.05);
+            --divider: #eeeeee;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body { 
             margin: 0; 
             font-family: 'Poppins', sans-serif; 
             background: var(--bg); 
-            color: var(--text);
-            padding-bottom: 100px;
+            color: var(--text-dark);
+            padding-bottom: 80px;
         }
 
-        /* Header Compacto */
+        /* Header Estilo App */
         header { 
-            background: var(--primary); 
-            padding: 15px 20px; 
+            background: var(--white); 
+            padding: 15px; 
             display: flex;
             align-items: center;
             justify-content: space-between;
             position: sticky;
             top: 0;
             z-index: 1100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .header-info { display: flex; align-items: center; gap: 12px; }
-        .logo-img { 
-            width: 45px; height: 45px; 
-            border-radius: 50%; 
-            border: 2px solid var(--white);
-            background: var(--white);
-        }
-        .store-name { color: white; font-weight: 700; font-size: 1.1rem; }
+        .logo-img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        .store-name { font-weight: 700; font-size: 1rem; color: var(--primary); }
 
-        .status-badge {
-            background: rgba(255,255,255,0.15);
-            color: #afffcf;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 4px 10px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        /* Menu de Categorias Horizontal */
+        /* Categorias */
         .nav-categories {
             background: var(--white);
-            padding: 10px 0;
-            position: sticky;
-            top: 75px; /* Logo abaixo do header */
-            z-index: 1000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
-            overflow-x: auto;
-            white-space: nowrap;
+            padding: 12px 0;
             display: flex;
+            overflow-x: auto;
             gap: 10px;
             padding-left: 15px;
-            scrollbar-width: none; /* Firefox */
+            border-bottom: 1px solid var(--divider);
+            scrollbar-width: none;
         }
-
-        .nav-categories::-webkit-scrollbar { display: none; } /* Chrome/Safari */
-
+        .nav-categories::-webkit-scrollbar { display: none; }
         .cat-item {
-            padding: 8px 18px;
-            background: #f1f1f1;
-            border-radius: 25px;
+            padding: 6px 15px;
+            background: #eee;
+            border-radius: 20px;
             font-size: 13px;
-            font-weight: 600;
-            color: #666;
-            cursor: pointer;
-            transition: 0.3s;
-            border: 1px solid transparent;
+            font-weight: 500;
+            white-space: nowrap;
+            color: var(--text-muted);
         }
+        .cat-item.active { background: var(--primary); color: white; }
 
-        .cat-item.active {
-            background: var(--primary);
-            color: white;
-        }
+        /* Cards de Produto */
+        .container { padding: 15px; max-width: 600px; margin: auto; }
+        .section-title { font-size: 16px; font-weight: 700; margin: 20px 0 10px; text-transform: uppercase; color: #555; }
 
-        /* Container de Conteúdo */
-        .container { max-width: 600px; margin: 0 auto; padding: 10px 15px; }
-        
-        .section-header { 
-            font-weight: 800; 
-            font-size: 1.1rem; 
-            color: var(--primary); 
-            margin: 25px 0 15px;
-            padding-top: 100px; /* Offset para o menu fixo */
-            margin-top: -80px;
-        }
-
-        /* Cards de Produto Estilo Lista */
         .produto-card { 
             display: flex; 
             background: var(--white); 
-            margin-bottom: 12px; 
+            margin-bottom: 10px; 
             padding: 12px; 
-            border-radius: 15px; 
-            box-shadow: var(--shadow);
-            border: 1px solid #f0f0f0;
-            align-items: center;
+            border-radius: 12px; 
+            border: 1px solid var(--divider);
         }
-
         .produto-info { flex: 1; }
         .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; }
-        .preco { color: var(--success); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
-        
-        .img-container { 
-            width: 80px; height: 80px; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            margin-left: 15px;
-            background: #f5f5f5;
-            flex-shrink: 0;
+        .preco { color: var(--text-dark); font-weight: 700; font-size: 15px; margin-top: 5px; display: block; }
+        .cashback-badge { 
+            background: #e8f5e9; color: #2e7d32; 
+            font-size: 11px; padding: 2px 8px; 
+            border-radius: 4px; display: inline-block; margin-top: 8px;
         }
+        .img-container { width: 85px; height: 85px; border-radius: 8px; overflow: hidden; margin-left: 10px; }
         .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Modais */
+        /* MODAL DE PERSONALIZAÇÃO (Igual Anota AI) */
         .modal { 
-            display: none; 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(0,0,0,0.5); 
-            z-index: 2000; 
+            display: none; position: fixed; inset: 0; 
+            background: rgba(0,0,0,0.5); z-index: 2000; 
             align-items: flex-end; 
-            backdrop-filter: blur(4px);
         }
-
         .modal-content { 
-            background: var(--white); 
-            width: 100%; 
-            border-radius: 25px 25px 0 0; 
-            padding: 20px; 
-            max-height: 90vh; 
-            overflow-y: auto; 
-            animation: slideUp 0.3s ease;
+            background: var(--white); width: 100%; 
+            border-radius: 20px 20px 0 0; 
+            max-height: 90vh; overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
         }
-
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .secao-titulo { 
-            background: #fcf8ff; 
-            padding: 8px 12px; 
-            margin: 15px 0 10px; 
-            border-radius: 8px; 
-            font-size: 12px; 
-            font-weight: 700; 
-            color: var(--primary);
+        .modal-header {
+            padding: 15px; border-bottom: 1px solid var(--divider);
+            display: flex; align-items: center; position: sticky; top: 0; background: white; z-index: 10;
         }
+        .modal-header h2 { flex: 1; font-size: 16px; margin: 0; text-align: center; }
 
-        .opcao-item { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 12px 5px; 
-            border-bottom: 1px solid #f8f8f8;
-            font-size: 14px;
+        .secao-header {
+            background: #f4f4f4; padding: 12px 15px;
+            display: flex; justify-content: space-between; align-items: center;
         }
+        .secao-header div { font-size: 14px; font-weight: 600; }
+        .secao-header span { font-size: 11px; color: #777; background: #fff; padding: 2px 8px; border-radius: 10px; }
 
-        /* Botões */
-        .btn-acao { 
-            background: var(--primary); 
-            color: white; 
-            border: none; 
-            width: 100%; 
-            padding: 15px; 
-            border-radius: 12px; 
-            font-size: 15px; 
-            font-weight: 700; 
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(91, 15, 115, 0.2);
+        .opcao-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; border-bottom: 1px solid #f9f9f9;
         }
+        .opcao-label { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .opcao-icon { width: 35px; height: 35px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #ccc; }
 
-        /* Carrinho Flutuante */
-        .footer-carrinho { 
-            position: fixed; 
-            bottom: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 92%; 
-            max-width: 500px; 
-            background: var(--primary); 
-            color: white; 
-            padding: 15px 20px; 
-            border-radius: 15px; 
-            display: none; 
-            justify-content: space-between; 
-            align-items: center; 
-            z-index: 1500;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        /* Custom Checkbox/Radio */
+        .check-circle { width: 22px; height: 22px; border: 2px solid #ddd; border-radius: 50%; cursor: pointer; position: relative; }
+        input[type="checkbox"], input[type="radio"] { display: none; }
+        input:checked + .check-circle { border-color: var(--primary); background: var(--primary); }
+        input:checked + .check-circle::after { content: '✓'; color: white; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; }
+
+        /* Barra Inferior Fixa */
+        .footer-carrinho {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--white); padding: 10px 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: none; gap: 10px;
         }
-
-        input, select { 
-            width: 100%; padding: 12px; margin-bottom: 10px; 
-            border: 1px solid #ddd; border-radius: 10px; font-family: inherit;
+        .btn-confirmar {
+            background: var(--primary); color: white; border: none; flex: 1;
+            padding: 12px; border-radius: 8px; font-weight: 600; font-size: 15px;
         }
-
-        .remover-btn { color: #e74c3c; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <header>
     <div class="header-info">
-        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img">
+        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" onerror="this.src='https://via.placeholder.com/40'">
         <span class="store-name">Onmi Açaí</span>
     </div>
-    <span class="status-badge">● Aberto</span>
+    <div style="font-size: 12px; color: var(--success); font-weight: 600;"><i class="fas fa-circle" style="font-size: 8px;"></i> Aberto</div>
 </header>
 
-<div class="nav-categories" id="category-menu">
-    <div class="cat-item active" onclick="scrollToCategory('cat-copo', this)">Açaí no Copo</div>
-    <div class="cat-item" onclick="scrollToCategory('cat-garrafa', this)">Açaí na Garrafa</div>
-    </div>
-
-<div class="container" id="menu-content">
-    <div id="cat-copo" class="section-header">Açaí no Copo</div>
-    <div id="lista-copos"></div>
-
-    <div id="cat-garrafa" class="section-header">Açaí na Garrafa</div>
-    <div id="lista-garrafas"></div>
+<div class="nav-categories">
+    <div class="cat-item active">Açaí no Copo</div>
+    <div class="cat-item">Açaí na Garrafa</div>
+    <div class="cat-item">Potes</div>
 </div>
 
-<div id="modalOpcionais" class="modal">
+<div class="container" id="lista-produtos">
+    </div>
+
+<div id="modalPersonalizar" class="modal">
     <div class="modal-content">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-            <h2 id="nomeProdModal" style="margin:0; font-size:18px; color:var(--primary);">Personalizar</h2>
-            <i class="fas fa-times" onclick="fecharModal('modalOpcionais')" style="color:#aaa; font-size:20px;"></i>
+        <div class="modal-header">
+            <i class="fas fa-chevron-down" onclick="fecharModal()"></i>
+            <h2 id="modal-titulo">Personalizar</h2>
         </div>
-        <div id="lista-adicionais"></div>
-        <button class="btn-acao" onclick="adicionarAoCarrinho()" style="margin-top:20px;">Confirmar Adição</button>
-    </div>
-</div>
-
-<div id="modalCarrinho" class="modal">
-    <div class="modal-content">
-        <h2 style="color:var(--primary); font-size:20px; margin-bottom:20px;"><i class="fas fa-shopping-basket"></i> Seu Pedido</h2>
-        <div id="itensNoCarrinho"></div>
         
-        <div style="margin-top:20px; padding:15px; background:#f8f8f8; border-radius:15px;">
-            <input type="text" id="nomeCliente" placeholder="Seu nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço de entrega (Rua, Nº, Bairro)">
-            
-            <select id="formaPagamento" onchange="togglePagamento()">
-                <option value="">Forma de Pagamento</option>
-                <option value="Pix">Pix</option>
-                <option value="Cartão">Cartão</option>
-                <option value="Dinheiro">Dinheiro</option>
-            </select>
-
-            <div id="areaPix" style="display:none; background:#fff; padding:10px; border-radius:10px; margin-bottom:10px; font-size:13px; border:1px solid #eee;">
-                <strong>Alex Cardoso Sousa</strong><br>
-                Chave Pix: 200.769.057-80 (CPF)
+        <div id="modal-body">
             </div>
 
-            <div id="areaTroco" style="display:none;">
-                <input type="number" id="trocoPara" placeholder="Troco para quanto?">
-            </div>
+        <div style="padding: 15px; border-top: 1px solid #eee;">
+            <button class="btn-confirmar" onclick="adicionarAoCarrinho()">Adicionar ao Pedido</button>
         </div>
-
-        <button class="btn-acao" onclick="finalizarPedido()" style="margin-top:20px; background:var(--success);">Finalizar no WhatsApp</button>
-        <p onclick="fecharModal('modalCarrinho')" style="text-align:center; color:#999; font-size:13px; margin-top:15px;">Adicionar mais itens</p>
     </div>
 </div>
 
-<div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
-    <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
-    <span id="totalFlutuante" style="font-weight:800;">R$ 0,00</span>
+<div id="barraCarrinho" class="footer-carrinho" onclick="abrirCheckOut()">
+    <div style="flex: 1;">
+        <div id="qtd-total" style="font-size: 12px; color: #777;">0 itens</div>
+        <div id="preco-total" style="font-weight: 700; color: var(--primary);">R$ 0,00</div>
+    </div>
+    <button class="btn-confirmar">Ver Carrinho <i class="fas fa-shopping-basket"></i></button>
 </div>
 
 <script>
-    const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
-    const TAXA_ENTREGA = 3.00;
-    
     const PRODUTOS = [
         { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
         { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
-        { id: 3, cat: "copo", nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg" },
-        { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg" },
-        { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg" },
         { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg" },
         { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg" }
     ];
 
-    const OPCOES = {
+    const ESTRUTURA = {
         copo: [
-            { t: "Onde deseja os Complementos?", l: 1, o: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"] },
-            { t: "Escolha até 3 Complementos (Grátis)", l: 3, o: ["Granola", "Aveia", "Chocoboll", "Leite em pó", "Paçoca", "Jujuba", "Amendoim"] },
-            { t: "Caldas", l: 1, o: ["Uva", "Morango", "Leite condensado"] }
-        ],
-        garrafa: [
-            { t: "Adicionais (Até 2)", l: 2, o: [{n:"Leite Condensado",p:0}, {n:"Mousse de Maracujá",p:2}, {n:"Mousse de Morango",p:2}, {n:"Nutella",p:2}, {n:"Ninho",p:2}] }
+            { t: "Onde deseja os Complementos?", max: 1, type: "radio", itens: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"] },
+            { t: "Escolha até 3 Complementos (Grátis)", max: 3, type: "checkbox", itens: ["Granola", "Aveia", "Chocoboll", "Leite em pó", "Paçoca", "Sucrilhos"] },
+            { t: "Deseja frutas?", max: 3, type: "checkbox", itens: ["Morango", "Uva", "Manga", "Banana"] },
+            { t: "Coberturas", max: 1, type: "radio", itens: ["Leite Condensado", "Morango", "Uva", "Chocolate"] }
         ]
     };
 
     let carrinho = [];
-    let itemSelecionado = null;
+    let itemAtual = null;
 
-    function renderizar() {
-        const listaCopos = document.getElementById('lista-copos');
-        const listaGarrafas = document.getElementById('lista-garrafas');
+    function renderizarMenu() {
+        const container = document.getElementById('lista-produtos');
+        let html = '<div class="section-title">Os mais pedidos</div>';
         
-        const htmlProd = (p) => `
-            <div class="produto-card" onclick='abrirOpcionais(${JSON.stringify(p)})'>
-                <div class="produto-info">
-                    <h3>${p.nome}</h3>
-                    <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+        PRODUTOS.forEach(p => {
+            html += `
+                <div class="produto-card" onclick="abrirPersonalizar(${p.id})">
+                    <div class="produto-info">
+                        <h3>${p.nome}</h3>
+                        <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                        <div class="cashback-badge">0% cashback</div>
+                    </div>
+                    <div class="img-container">
+                        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
+                    </div>
                 </div>
-                <div class="img-container">
-                    <img src="${GITHUB_BASE}${p.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    function abrirPersonalizar(id) {
+        itemAtual = PRODUTOS.find(p => p.id === id);
+        document.getElementById('modal-titulo').innerText = itemAtual.nome;
+        const body = document.getElementById('modal-body');
+        body.innerHTML = '';
+
+        const grupos = ESTRUTURA.copo; // Exemplo fixo para copos
+        grupos.forEach((grupo, gIdx) => {
+            let grupoHtml = `
+                <div class="secao-header">
+                    <div>${grupo.t}</div>
+                    <span>Escolha até ${grupo.max}</span>
                 </div>
-            </div>`;
+            `;
 
-        listaCopos.innerHTML = PRODUTOS.filter(p => p.cat === 'copo').map(htmlProd).join('');
-        listaGarrafas.innerHTML = PRODUTOS.filter(p => p.cat === 'garrafa').map(htmlProd).join('');
+            grupo.itens.forEach((opt, oIdx) => {
+                const inputId = `opt_${gIdx}_${oIdx}`;
+                grupoHtml += `
+                    <label class="opcao-item" for="${inputId}">
+                        <div class="opcao-label">
+                            <div class="opcao-icon"><i class="fas fa-ice-cream"></i></div>
+                            ${opt}
+                        </div>
+                        <div class="selection-control">
+                            <input type="${grupo.type}" name="grupo_${gIdx}" id="${inputId}" value="${opt}" 
+                                   onchange="validarSelecao(this, ${grupo.max})">
+                            <div class="check-circle"></div>
+                        </div>
+                    </label>
+                `;
+            });
+            body.innerHTML += grupoHtml;
+        });
+
+        document.getElementById('modalPersonalizar').style.display = 'flex';
     }
 
-    function scrollToCategory(id, el) {
-        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function abrirOpcionais(p) {
-        itemSelecionado = p;
-        document.getElementById('nomeProdModal').innerText = p.nome;
-        const lista = document.getElementById('lista-adicionais');
-        const estrutura = OPCOES[p.cat];
-        
-        lista.innerHTML = estrutura.map((sec, idx) => `
-            <div class="secao-titulo">${sec.t} (Máx: ${sec.l})</div>
-            ${sec.o.map(opt => {
-                const nome = typeof opt === 'string' ? opt : opt.n;
-                const preco = opt.p || 0;
-                return `
-                <label class="opcao-item">
-                    <span>${nome} ${preco > 0 ? `<small style="color:green">+ R$${preco}</small>` : ''}</span>
-                    <input type="checkbox" class="extra-item" data-secao="${idx}" data-preco="${preco}" value="${nome}" onclick="validarLimite(this, ${sec.l})">
-                </label>`;
-            }).join('')}
-        `).join('');
-        document.getElementById('modalOpcionais').style.display = 'flex';
-    }
-
-    function validarLimite(input, limite) {
-        const secao = input.getAttribute('data-secao');
-        const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
-        if (selecionados.length > limite) {
-            input.checked = false;
+    function validarSelecao(el, max) {
+        const pai = el.closest('.modal-content');
+        const selecionados = pai.querySelectorAll(`input[name="${el.name}"]:checked`);
+        if (selecionados.length > max) {
+            el.checked = false;
+            alert(`Você só pode escolher até ${max} itens nesta seção.`);
         }
     }
 
     function adicionarAoCarrinho() {
-        const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
-        const nomes = selecionados.map(el => el.value);
-        const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
-        
-        carrinho.push({
-            nome: itemSelecionado.nome,
-            precoFinal: itemSelecionado.preco + precoExtra,
-            detalhes: nomes.join(', ') || 'Tradicional'
-        });
-        
+        const selecionados = Array.from(document.querySelectorAll('#modal-body input:checked')).map(i => i.value);
+        carrinho.push({ ...itemAtual, extras: selecionados });
         atualizarBarra();
-        fecharModal('modalOpcionais');
+        fecharModal();
     }
 
     function atualizarBarra() {
-        const total = carrinho.reduce((acc, i) => acc + i.precoFinal, 0) + (carrinho.length > 0 ? TAXA_ENTREGA : 0);
-        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
-        document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
+        const barra = document.getElementById('barraCarrinho');
+        if(carrinho.length > 0) {
+            barra.style.display = 'flex';
+            document.getElementById('qtd-total').innerText = `${carrinho.length} itens`;
+            const total = carrinho.reduce((acc, i) => acc + i.preco, 0);
+            document.getElementById('preco-total').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
+        }
     }
 
-    function abrirCarrinho() {
-        const lista = document.getElementById('itensNoCarrinho');
-        lista.innerHTML = carrinho.map((i, idx) => `
-            <div style="padding:12px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                <div style="flex:1">
-                    <strong style="font-size:14px">${i.nome}</strong><br>
-                    <small style="color:#777">${i.detalhes}</small><br>
-                    <span class="remover-btn" onclick="removerItem(${idx})">Remover</span>
-                </div>
-                <div style="font-weight:700">R$ ${i.precoFinal.toFixed(2).replace('.',',')}</div>
-            </div>
-        `).join('');
-        document.getElementById('modalCarrinho').style.display = 'flex';
-    }
+    function fecharModal() { document.getElementById('modalPersonalizar').style.display = 'none'; }
 
-    function removerItem(idx) {
-        carrinho.splice(idx, 1);
-        carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho');
-        atualizarBarra();
-    }
-
-    function togglePagamento() {
-        const p = document.getElementById('formaPagamento').value;
-        document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
-        document.getElementById('areaTroco').style.display = p === 'Dinheiro' ? 'block' : 'none';
-    }
-
-    function finalizarPedido() {
-        const n = document.getElementById('nomeCliente').value;
-        const e = document.getElementById('enderecoCliente').value;
-        const p = document.getElementById('formaPagamento').value;
-        if(!n || !e || !p) return alert("Preencha todos os dados!");
-
-        let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
-        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A--------------------------%0A`;
-        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A`);
-        msg += `--------------------------%0A*Subtotal:* R$ ${subtotal.toFixed(2)}%0A*Entrega:* R$ ${TAXA_ENTREGA.toFixed(2)}%0A*TOTAL: R$ ${(subtotal+TAXA_ENTREGA).toFixed(2)}*`;
-        
-        window.open(`https://wa.me/5521988626495?text=${msg}`);
-    }
-
-    function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-    
-    renderizar();
+    renderizarMenu();
 </script>
 
 </body>
