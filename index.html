@@ -96,7 +96,6 @@
             object-fit: cover;
         }
 
-        /* Modais */
         .modal {
             display: none;
             position: fixed;
@@ -165,8 +164,7 @@
     <span class="status-badge">● Aberto Agora</span>
 </header>
 
-<div class="container" id="cardapio-container">
-    </div>
+<div class="container" id="cardapio-container"></div>
 
 <div id="modalOpcionais" class="modal">
     <div class="modal-content">
@@ -201,49 +199,62 @@
 </div>
 
 <script>
-    /* ===========================================================
-       MODO CRIADOR - AJUSTE TUDO AQUI!
-       ===========================================================
-    */
-
-    // 1. Caminho base das fotos no GitHub (confira se o final tem a /)
     const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
-
-    // 2. Taxa de entrega fixa
     const TAXA_ENTREGA = 3.00;
 
-    // 3. Suas categorias e produtos
     const CARDAPIO = [
-        {
-            categoria: "Açaí na Garrafa",
-            itens: [
-                { id: 1, nome: "Garrafa 300ml", preco: 9.00, img: "garrafa.jpg" },
-                { id: 2, nome: "Garrafa 500ml", preco: 12.00, img: "garrafa.jpg" }
-            ]
-        },
         {
             categoria: "Açaí no Copo",
             itens: [
-                { id: 3, nome: "Copo 250ml", preco: 6.00, img: "copo250.jpg" },
-                { id: 4, nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
-                { id: 5, nome: "Copo 400ml", preco: 12.00, img: "copo400.jpg" }
-            ]
-        },
-        {
-            categoria: "Especiais da Casa",
-            itens: [
-                { id: 6, nome: "Super Onmi 700ml", preco: 22.00, img: "copo700.jpg" }
+                { id: 1, nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
+                { id: 2, nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
+                { id: 3, nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg" },
+                { id: 4, nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg" },
+                { id: 5, nome: "Copo 700ml", preco: 17.00, img: "copo700.jpg" }
             ]
         }
     ];
 
-    // 4. Lista de Adicionais (Checkboxes)
-    const ADICIONAIS = ["Leite em Pó", "Granola", "Paçoca", "Banana", "Leite Condensado", "Morango", "Bis"];
-
-    /* ===========================================================
-       FIM DO MODO CRIADOR - ABAIXO É A LÓGICA DO SISTEMA
-       ===========================================================
-    */
+    const ESTRUTURA_ADICIONAIS = [
+        {
+            titulo: "Sabor do Açaí",
+            limite: 1,
+            opcoes: ["Açaí de Banana"]
+        },
+        {
+            titulo: "Onde deseja os Complementos?",
+            limite: 1,
+            opcoes: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"]
+        },
+        {
+            titulo: "Complementos",
+            limite: 6,
+            opcoes: [
+                "Granola", "Aveia", "Chocoboll", "Flocos de arroz", "Leite em pó", 
+                "Completo", "Paçoca", "Sucrilhos", "Jujuba", "Amendoim",
+                "Granulado preto", "Coco ralado", "Granulado colorido", "Marshmallow",
+                "Amendoim colorido", "Delicado (bala)", "Argola colorida"
+            ]
+        },
+        {
+            titulo: "Coberturas",
+            limite: 1,
+            opcoes: [
+                "Uva", "Morango", "Maçã verde", "Kiwi", "Chocolate suíço",
+                "TuttiFruit", "Milho", "Maracujá", "Leite condensado", "Menta"
+            ]
+        },
+        {
+            titulo: "Deseja frutas?",
+            limite: 3,
+            opcoes: ["Morango", "Banana"]
+        },
+        {
+            titulo: "Adicionais Extras",
+            limite: 5,
+            opcoes: ["Potinho de Nutella"]
+        }
+    ];
 
     let carrinho = [];
     let itemSelecionado = null;
@@ -251,11 +262,9 @@
     function renderizarCardapio() {
         const container = document.getElementById('cardapio-container');
         let html = '';
-
         CARDAPIO.forEach(cat => {
             html += `<div class="categoria-titulo">${cat.categoria}</div>`;
             cat.itens.forEach(prod => {
-                const fotoUrl = GITHUB_BASE + prod.img;
                 html += `
                     <div class="produto-card" onclick="abrirOpcionais('${prod.nome}', ${prod.preco})">
                         <div class="produto-info">
@@ -263,11 +272,10 @@
                             <span class="preco">R$ ${prod.preco.toFixed(2)}</span>
                         </div>
                         <div class="img-container">
-                            <img src="${fotoUrl}" class="produto-img" 
+                            <img src="${GITHUB_BASE}${prod.img}" class="produto-img" 
                                  onerror="this.parentElement.innerHTML='<i class=\'fas fa-ice-cream\' style=\'color:#ddd; font-size:24px\'></i>'">
                         </div>
-                    </div>
-                `;
+                    </div>`;
             });
         });
         container.innerHTML = html;
@@ -275,30 +283,51 @@
 
     function configurarAdicionais() {
         const lista = document.getElementById('lista-adicionais');
-        lista.innerHTML = ADICIONAIS.map(add => `
-            <label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #f0f0f0; cursor:pointer;">
-                <input type="checkbox" class="extra" value="${add}" style="width:20px; margin-right:15px;"> 
-                <span style="font-size:15px">${add}</span>
-            </label>
-        `).join('');
+        let html = '';
+        ESTRUTURA_ADICIONAIS.forEach((secao, idxSecao) => {
+            html += `
+                <div style="background:#f9f9f9; padding:10px; margin-top:15px; border-radius:10px;">
+                    <strong style="color:var(--roxo-principal); font-size:14px;">${secao.titulo}</strong><br>
+                    <small style="color:#666;">Escolha até ${secao.limite} item(ns)</small>
+                </div>
+            `;
+            secao.opcoes.forEach(opcao => {
+                html += `
+                    <label style="display:flex; align-items:center; padding:12px; border-bottom:1px solid #eee; cursor:pointer;">
+                        <input type="checkbox" class="extra-item" data-secao="${idxSecao}" value="${opcao}" 
+                               onclick="verificarLimite(this, ${secao.limite})" style="width:18px; height:18px; margin-right:12px;">
+                        <span style="font-size:14px;">${opcao}</span>
+                    </label>
+                `;
+            });
+        });
+        lista.innerHTML = html;
+    }
+
+    function verificarLimite(checkbox, limite) {
+        const secao = checkbox.getAttribute('data-secao');
+        const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secao}"]:checked`);
+        if (selecionados.length > limite) {
+            checkbox.checked = false;
+            alert(`Nesta seção você pode escolher no máximo ${limite} item(ns).`);
+        }
     }
 
     function abrirOpcionais(nome, preco) {
         itemSelecionado = { nome, preco };
         document.getElementById('nomeProdModal').innerText = nome;
         document.getElementById('modalOpcionais').style.display = 'flex';
+        document.querySelectorAll('.extra-item').forEach(el => el.checked = false);
     }
 
     function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
 
     function adicionarAoCarrinho() {
-        let extras = [];
-        document.querySelectorAll('.extra:checked').forEach(el => extras.push(el.value));
-        carrinho.push({ ...itemSelecionado, acompanhamentos: extras.join(', ') || 'Natural' });
-        
+        let escolhidos = [];
+        document.querySelectorAll('.extra-item:checked').forEach(el => escolhidos.push(el.value));
+        carrinho.push({ ...itemSelecionado, acompanhamentos: escolhidos.join(', ') || 'Natural' });
         atualizarInterface();
         fecharModal('modalOpcionais');
-        document.querySelectorAll('.extra').forEach(el => el.checked = false);
     }
 
     function atualizarInterface() {
@@ -314,12 +343,12 @@
             container.innerHTML = '<p style="text-align:center; color:#999">Sua sacola está vazia</p>';
         } else {
             container.innerHTML = carrinho.map((i, index) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px">
                     <div style="flex:1">
                         <div style="font-weight:bold; font-size:14px">${i.nome}</div>
-                        <div style="font-size:12px; color:#777">${i.acompanhamentos}</div>
+                        <div style="font-size:12px; color:#777; line-height:1.4;">${i.acompanhamentos}</div>
                     </div>
-                    <div style="text-align:right">
+                    <div style="text-align:right; margin-left:10px;">
                         <div style="font-size:14px; font-weight:bold">R$ ${i.preco.toFixed(2)}</div>
                         <small style="color:red; cursor:pointer" onclick="removerItem(${index})">Remover</small>
                     </div>
@@ -360,7 +389,7 @@
         msg += `*Cliente:* ${nome}%0A*Endereço:* ${endereco}%0A*Pagamento:* ${pag}%0A%0A`;
         msg += `*---------- ITENS ----------*%0A`;
         carrinho.forEach(i => {
-            msg += `✅ *${i.nome}*%0A   _Adicionais: ${i.acompanhamentos}_%0A   Preço: R$ ${i.preco.toFixed(2)}%0A%0A`;
+            msg += `✅ *${i.nome}*%0A   _Escolhas: ${i.acompanhamentos}_%0A   R$ ${i.preco.toFixed(2)}%0A%0A`;
         });
         msg += `*---------------------------*%0A`;
         msg += `*Subtotal:* R$ ${subtotal.toFixed(2)}%0A`;
@@ -375,10 +404,8 @@
         window.scrollY > 50 ? header.classList.add("scrolled") : header.classList.remove("scrolled");
     };
 
-    // Inicialização
     renderizarCardapio();
     configurarAdicionais();
 </script>
-
 </body>
 </html>
