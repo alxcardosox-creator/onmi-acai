@@ -1,276 +1,456 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onmi Açaí | Delivery</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onmi Açaí | Premium Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #5b0f73;
+            --primary-light: #f4e8f7;
+            --accent: #ffc107;
+            --success: #27ae60;
+            --bg: #f8f9fa;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --divider: #f1f2f6;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+        
+        body { 
+            margin: 0; 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--bg); 
+            color: var(--text);
+            padding-bottom: 100px;
+        }
 
-<style>
-:root{
---primary:#5b0f73;
---accent:#ffc107;
---success:#27ae60;
---bg:#f6f6f6;
---white:#fff;
---shadow:0 6px 20px rgba(0,0,0,.08);
-}
+        /* Header Modernizado */
+        header { 
+            background: var(--primary); 
+            padding: 15px 20px; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+        }
 
-*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif}
+        .header-info { display: flex; align-items: center; gap: 12px; }
+        .logo-img { 
+            width: 42px; height: 42px; 
+            border-radius: 50%; 
+            border: 2px solid var(--white);
+            background: var(--white);
+        }
+        .store-name { color: white; font-weight: 700; font-size: 1rem; }
 
-body{background:var(--bg);padding-bottom:120px}
+        .status-badge {
+            background: #afffcf22;
+            color: #afffcf;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            border: 1px solid #afffcf44;
+        }
 
-/* HEADER */
-header{
-background:linear-gradient(135deg,#5b0f73,#7b1fa2);
-color:#fff;
-padding:18px;
-position:sticky;
-top:0;
-z-index:1000;
-box-shadow:var(--shadow)
-}
+        /* Menu Categorias */
+        .nav-categories {
+            background: var(--white);
+            padding: 12px 0;
+            position: sticky;
+            top: 72px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            white-space: nowrap;
+            display: flex;
+            gap: 8px;
+            padding-left: 15px;
+            scrollbar-width: none;
+        }
+        .nav-categories::-webkit-scrollbar { display: none; }
 
-header h1{font-size:18px;font-weight:700}
-header small{font-size:12px;opacity:.8}
+        .cat-item {
+            padding: 6px 16px;
+            background: var(--divider);
+            border-radius: 18px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .cat-item.active { background: var(--primary); color: white; }
 
-/* PRODUTOS */
-.container{max-width:600px;margin:auto;padding:15px}
+        /* Container & Cards */
+        .container { max-width: 600px; margin: 0 auto; padding: 10px 15px; }
+        
+        .section-header { 
+            font-weight: 700; 
+            font-size: 0.9rem; 
+            color: #7f8c8d; 
+            margin: 25px 0 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-top: 100px;
+            margin-top: -80px;
+        }
 
-.produto{
-background:var(--white);
-border-radius:18px;
-padding:14px;
-margin-bottom:15px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-box-shadow:var(--shadow);
-transition:.2s;
-cursor:pointer
-}
+        .produto-card { 
+            display: flex; 
+            background: var(--white); 
+            margin-bottom: 12px; 
+            padding: 15px; 
+            border-radius: 16px; 
+            box-shadow: var(--shadow);
+            border: 1px solid transparent;
+            align-items: center;
+            transition: 0.2s;
+        }
+        .produto-card:active { transform: scale(0.98); border-color: var(--primary-light); }
 
-.produto:active{transform:scale(.96)}
+        .produto-info { flex: 1; }
+        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
+        .preco { color: var(--primary); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
+        
+        .img-container { 
+            width: 85px; height: 85px; 
+            border-radius: 12px; 
+            overflow: hidden; 
+            margin-left: 15px;
+            background: #f9f9f9;
+        }
+        .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
-.produto-info h3{font-size:15px}
-.produto-info span{color:var(--success);font-weight:700}
+        /* MODAL ESTILO ANOTA AI */
+        .modal { 
+            display: none; position: fixed; inset: 0; 
+            background: rgba(0,0,0,0.6); z-index: 2000; 
+            align-items: flex-end; backdrop-filter: blur(4px);
+        }
+        .modal-content { 
+            background: var(--white); width: 100%; 
+            border-radius: 25px 25px 0 0; 
+            padding-bottom: 30px;
+            max-height: 90vh; overflow-y: auto; 
+            animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-.produto img{
-width:80px;
-height:80px;
-border-radius:15px;
-object-fit:cover;
-margin-left:10px
-}
+        /* Cabeçalhos de Seção Coloridos */
+        .secao-titulo-box {
+            background: #f1f2f6;
+            padding: 12px 18px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+        .secao-info-text { display: flex; flex-direction: column; }
+        .secao-nome { font-size: 14px; font-weight: 700; color: #2d3436; }
+        .secao-sub { font-size: 11px; color: #636e72; }
+        
+        .secao-badge {
+            background: #2d3436;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
 
-/* BOTÃO FLUTUANTE */
-.carrinho-bar{
-position:fixed;
-bottom:20px;
-left:50%;
-transform:translateX(-50%);
-background:var(--primary);
-color:#fff;
-padding:15px 25px;
-border-radius:50px;
-display:none;
-align-items:center;
-justify-content:space-between;
-width:90%;
-max-width:500px;
-box-shadow:0 10px 25px rgba(0,0,0,.2);
-cursor:pointer;
-animation:slideUp .3s ease
-}
+        /* Itens de Opção (Radio e Checkbox) */
+        .opcao-item { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 16px 20px; border-bottom: 1px solid var(--divider);
+            cursor: pointer;
+        }
+        .opcao-nome { font-size: 14px; color: var(--text); font-weight: 400; }
+        .opcao-preco { font-size: 13px; color: var(--success); font-weight: 600; margin-left: 8px; }
 
-@keyframes slideUp{
-from{transform:translate(-50%,100%);opacity:0}
-to{transform:translate(-50%,0);opacity:1}
-}
+        /* Custom Input Styling */
+        input[type="checkbox"], input[type="radio"] {
+            appearance: none; -webkit-appearance: none;
+            width: 22px; height: 22px;
+            border: 2px solid #dfe6e9;
+            border-radius: 4px;
+            margin: 0; position: relative;
+            transition: 0.2s;
+        }
+        input[type="radio"] { border-radius: 50%; }
+        input:checked { background: var(--primary); border-color: var(--primary); }
+        input:checked::after {
+            content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900;
+            color: white; font-size: 12px; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
 
-/* MODAL */
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.5);
-z-index:2000;
-align-items:flex-end
-}
+        /* Botões */
+        .btn-acao { 
+            background: var(--primary); color: white; border: none; 
+            width: 90%; margin: 20px auto; display: block;
+            padding: 16px; border-radius: 14px; 
+            font-size: 15px; font-weight: 700;
+        }
 
-.modal-content{
-background:#fff;
-width:100%;
-border-radius:25px 25px 0 0;
-padding:20px;
-max-height:90vh;
-overflow:auto;
-animation:up .3s ease
-}
-
-@keyframes up{
-from{transform:translateY(100%)}
-to{transform:translateY(0)}
-}
-
-input,select{
-width:100%;
-padding:12px;
-margin-bottom:10px;
-border:1px solid #ddd;
-border-radius:10px
-}
-
-button{
-background:var(--primary);
-color:#fff;
-border:none;
-width:100%;
-padding:14px;
-border-radius:12px;
-font-weight:700;
-cursor:pointer
-}
-
-.qtd-box{
-display:flex;
-align-items:center;
-gap:10px;
-margin-top:10px
-}
-
-.qtd-box button{
-width:35px;
-height:35px;
-border-radius:50%;
-padding:0
-}
-</style>
+        /* Carrinho Flutuante Inferior */
+        .footer-carrinho { 
+            position: fixed; bottom: 15px; left: 50%; 
+            transform: translateX(-50%); width: 92%; 
+            background: var(--primary); color: white; 
+            padding: 14px 20px; border-radius: 12px; 
+            display: none; justify-content: space-between; 
+            align-items: center; z-index: 1500;
+            box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3);
+        }
+    </style>
 </head>
 <body>
 
 <header>
-<h1>Onmi Açaí 🍧</h1>
-<small>Delivery em Japeri • Taxa R$3</small>
+    <div class="header-info">
+        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img">
+        <span class="store-name">Onmi Açaí</span>
+    </div>
+    <span class="status-badge">Aberto</span>
 </header>
 
-<div class="container" id="lista"></div>
-
-<div class="carrinho-bar" id="barra" onclick="abrirCarrinho()">
-<span><i class="fas fa-shopping-bag"></i> <span id="qtd">0</span> itens</span>
-<span id="total">R$0,00</span>
+<div class="nav-categories" id="category-menu">
+    <div class="cat-item active" onclick="scrollToCategory('cat-copo', this)">Açaí no Copo</div>
+    <div class="cat-item" onclick="scrollToCategory('cat-garrafa', this)">Açaí na Garrafa</div>
 </div>
 
-<div class="modal" id="modalCarrinho">
-<div class="modal-content">
-<h2 style="margin-bottom:15px">Seu Pedido</h2>
-<div id="itens"></div>
+<div class="container" id="menu-content">
+    <div id="cat-copo" class="section-header">Açaí no Copo</div>
+    <div id="lista-copos"></div>
 
-<h3 style="margin-top:15px">Dados</h3>
-<input type="text" id="nome" placeholder="Seu nome">
-<input type="text" id="endereco" placeholder="Endereço completo">
-
-<select id="pagamento">
-<option value="">Forma de pagamento</option>
-<option>Pix</option>
-<option>Cartão</option>
-<option>Dinheiro</option>
-</select>
-
-<button onclick="finalizar()">Finalizar no WhatsApp</button>
-<p style="text-align:center;margin-top:10px;color:#777;cursor:pointer" onclick="fechar()">Continuar comprando</p>
+    <div id="cat-garrafa" class="section-header">Açaí na Garrafa</div>
+    <div id="lista-garrafas"></div>
 </div>
+
+<div id="modalOpcionais" class="modal">
+    <div class="modal-content">
+        <div style="padding:20px; display:flex; justify-content:space-between; align-items:center;">
+            <h2 id="nomeProdModal" style="margin:0; font-size:17px; font-weight:700;">Personalizar</h2>
+            <i class="fas fa-chevron-down" onclick="fecharModal('modalOpcionais')" style="color:#636e72;"></i>
+        </div>
+        <div id="lista-adicionais"></div>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao carrinho</button>
+    </div>
+</div>
+
+<div id="modalCarrinho" class="modal">
+    <div class="modal-content" style="padding: 20px; border-radius: 0;">
+        <h2 style="font-size:18px; margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Resumo do Pedido</h2>
+        <div id="itensNoCarrinho"></div>
+        <div style="margin-top:20px;">
+            <input type="text" id="nomeCliente" placeholder="Seu nome">
+            <input type="text" id="enderecoCliente" placeholder="Endereço Completo">
+            <select id="formaPagamento" onchange="togglePagamento()">
+                <option value="">Forma de Pagamento</option>
+                <option value="Pix">Pix</option>
+                <option value="Cartão">Cartão</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+            <div id="areaPix" style="display:none; font-size:12px; background:#f9f9f9; padding:10px; border-radius:8px; margin-bottom:10px;">
+                <strong>Alex Cardoso Sousa</strong><br>Pix: 200.769.057-80
+            </div>
+            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
+        </div>
+        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success); width:100%;">Finalizar Pedido</button>
+    </div>
+</div>
+
+<div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
+    <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
+    <span id="totalFlutuante" style="font-weight:800;">R$ 0,00</span>
 </div>
 
 <script>
-const TAXA=3;
-const WHATS="5521988626495";
+    const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
+    const TAXA_ENTREGA = 3.00;
+    
+    const PRODUTOS = [
+        { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
+        { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
+        { id: 3, cat: "copo", nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg" },
+        { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg" },
+        { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg" },
+        { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg" },
+        { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg" }
+    ];
 
-const PRODUTOS=[
-{nome:"Copo 200ml",preco:5,img:"https://via.placeholder.com/80"},
-{nome:"Copo 300ml",preco:7,img:"https://via.placeholder.com/80"},
-{nome:"Copo 400ml",preco:11,img:"https://via.placeholder.com/80"},
-{nome:"Copo 500ml",preco:13,img:"https://via.placeholder.com/80"},
-{nome:"Copo 700ml",preco:17,img:"https://via.placeholder.com/80"}
-];
+    const OPCOES = {
+        copo: [
+            { t: "Onde deseja os Complementos?", l: 1, o: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"] },
+            { t: "Complementos (Grátis)", l: 3, o: ["Granola", "Aveia", "Chocoboll", "Leite em pó", "Paçoca", "Jujuba", "Amendoim"] },
+            { t: "Caldas", l: 1, o: ["Uva", "Morango", "Leite condensado"] }
+        ],
+        garrafa: [
+            { t: "Adicionais", l: 2, o: [{n:"Leite Condensado",p:0}, {n:"Mousse de Maracujá",p:2}, {n:"Mousse de Morango",p:2}, {n:"Nutella",p:2}, {n:"Ninho",p:2}] }
+        ]
+    };
 
-let carrinho=JSON.parse(localStorage.getItem("onmi"))||[];
+    let carrinho = [];
+    let itemSelecionado = null;
 
-function render(){
-const lista=document.getElementById("lista");
-lista.innerHTML=PRODUTOS.map((p,i)=>`
-<div class="produto" onclick="add(${i})">
-<div class="produto-info">
-<h3>${p.nome}</h3>
-<span>R$ ${p.preco.toFixed(2).replace('.',',')}</span>
-</div>
-<img src="${p.img}">
-</div>
-`).join("");
-atualizar();
-}
+    function renderizar() {
+        const listaCopos = document.getElementById('lista-copos');
+        const listaGarrafas = document.getElementById('lista-garrafas');
+        
+        const htmlProd = (p) => `
+            <div class="produto-card" onclick='abrirOpcionais(${JSON.stringify(p)})'>
+                <div class="produto-info">
+                    <h3>${p.nome}</h3>
+                    <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                </div>
+                <div class="img-container">
+                    <img src="${GITHUB_BASE}${p.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
+                </div>
+            </div>`;
 
-function add(i){
-if(navigator.vibrate)navigator.vibrate(80);
-carrinho.push(PRODUTOS[i]);
-salvar();
-}
+        listaCopos.innerHTML = PRODUTOS.filter(p => p.cat === 'copo').map(htmlProd).join('');
+        listaGarrafas.innerHTML = PRODUTOS.filter(p => p.cat === 'garrafa').map(htmlProd).join('');
+    }
 
-function atualizar(){
-const barra=document.getElementById("barra");
-const qtd=document.getElementById("qtd");
-const total=document.getElementById("total");
+    function abrirOpcionais(p) {
+        itemSelecionado = p;
+        document.getElementById('nomeProdModal').innerText = p.nome;
+        const lista = document.getElementById('lista-adicionais');
+        const estrutura = OPCOES[p.cat];
+        
+        lista.innerHTML = estrutura.map((sec, idx) => {
+            const isRadio = sec.l === 1;
+            return `
+            <div class="secao-titulo-box">
+                <div class="secao-info-text">
+                    <span class="secao-nome">${sec.t}</span>
+                    <span class="secao-sub">${isRadio ? 'Escolha 1 opção' : 'Escolha até '+sec.l+' opções'}</span>
+                </div>
+                <div class="secao-badge" id="badge-sec-${idx}">0 / ${sec.l}</div>
+            </div>
+            ${sec.o.map(opt => {
+                const nome = typeof opt === 'string' ? opt : opt.n;
+                const preco = opt.p || 0;
+                return `
+                <label class="opcao-item">
+                    <span class="opcao-nome">${nome} ${preco > 0 ? `<span class="opcao-preco">+ R$${preco}</span>` : ''}</span>
+                    <input type="${isRadio ? 'radio' : 'checkbox'}" 
+                           name="secao-${idx}" 
+                           class="extra-item" 
+                           data-secao="${idx}" 
+                           data-limite="${sec.l}"
+                           data-preco="${preco}" 
+                           value="${nome}" 
+                           onclick="validarLimite(this)">
+                </label>`;
+            }).join('')}
+        `}).join('');
+        document.getElementById('modalOpcionais').style.display = 'flex';
+    }
 
-if(carrinho.length>0){
-barra.style.display="flex";
-qtd.innerText=carrinho.length;
-let soma=carrinho.reduce((a,b)=>a+b.preco,0);
-total.innerText="R$ "+(soma+TAXA).toFixed(2).replace('.',',');
-}else{
-barra.style.display="none";
-}
-}
+    function validarLimite(input) {
+        const secaoIdx = input.getAttribute('data-secao');
+        const limite = parseInt(input.getAttribute('data-limite'));
+        const selecionados = document.querySelectorAll(`.extra-item[data-secao="${secaoIdx}"]:checked`);
+        
+        if (selecionados.length > limite) {
+            input.checked = false;
+        }
 
-function abrirCarrinho(){
-document.getElementById("modalCarrinho").style.display="flex";
-const itens=document.getElementById("itens");
-itens.innerHTML=carrinho.map((i,idx)=>`
-<div style="display:flex;justify-content:space-between;margin-bottom:8px">
-<span>${i.nome}</span>
-<span>R$ ${i.preco.toFixed(2).replace('.',',')}</span>
-</div>
-`).join("");
-}
+        // Atualiza a barra de progresso/badge
+        const finalCount = document.querySelectorAll(`.extra-item[data-secao="${secaoIdx}"]:checked`).length;
+        document.getElementById(`badge-sec-${secaoIdx}`).innerText = `${finalCount} / ${limite}`;
+    }
 
-function fechar(){
-document.getElementById("modalCarrinho").style.display="none";
-}
+    function scrollToCategory(id, el) {
+        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-function finalizar(){
-const nome=document.getElementById("nome").value;
-const endereco=document.getElementById("endereco").value;
-const pag=document.getElementById("pagamento").value;
-if(!nome||!endereco||!pag) return alert("Preencha tudo");
+    function adicionarAoCarrinho() {
+        const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
+        const nomes = selecionados.map(el => el.value);
+        const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
+        
+        carrinho.push({
+            nome: itemSelecionado.nome,
+            precoFinal: itemSelecionado.preco + precoExtra,
+            detalhes: nomes.join(', ') || 'Tradicional'
+        });
+        
+        atualizarBarra();
+        fecharModal('modalOpcionais');
+    }
 
-let subtotal=carrinho.reduce((a,b)=>a+b.preco,0);
-let msg=`🟣 *NOVO PEDIDO ONMI*%0ACliente: ${nome}%0AEndereço: ${endereco}%0APagamento: ${pag}%0A----------------%0A`;
-carrinho.forEach(i=>msg+=`${i.nome} - R$${i.preco}%0A`);
-msg+=`----------------%0ASubtotal: R$${subtotal}%0ATaxa: R$${TAXA}%0ATOTAL: R$${subtotal+TAXA}`;
+    function atualizarBarra() {
+        const subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        const total = subtotal + (carrinho.length > 0 ? TAXA_ENTREGA : 0);
+        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
+        document.getElementById('qtdItens').innerText = carrinho.length;
+        document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
+    }
 
-window.open(`https://wa.me/${WHATS}?text=${msg}`);
-carrinho=[];
-salvar();
-fechar();
-}
+    function abrirCarrinho() {
+        const lista = document.getElementById('itensNoCarrinho');
+        lista.innerHTML = carrinho.map((i, idx) => `
+            <div style="padding:15px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
+                <div style="flex:1">
+                    <strong style="font-size:14px">${i.nome}</strong><br>
+                    <small style="color:#777">${i.detalhes}</small><br>
+                    <span class="remover-btn" onclick="removerItem(${idx})">Remover</span>
+                </div>
+                <div style="font-weight:700">R$ ${i.precoFinal.toFixed(2).replace('.',',')}</div>
+            </div>
+        `).join('');
+        document.getElementById('modalCarrinho').style.display = 'flex';
+    }
 
-function salvar(){
-localStorage.setItem("onmi",JSON.stringify(carrinho));
-atualizar();
-}
+    function removerItem(idx) {
+        carrinho.splice(idx, 1);
+        carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho');
+        atualizarBarra();
+    }
 
-render();
+    function togglePagamento() {
+        const p = document.getElementById('formaPagamento').value;
+        document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
+        document.getElementById('areaTroco').style.display = p === 'Dinheiro' ? 'block' : 'none';
+    }
+
+    function finalizarPedido() {
+        const n = document.getElementById('nomeCliente').value;
+        const e = document.getElementById('enderecoCliente').value;
+        const p = document.getElementById('formaPagamento').value;
+        if(!n || !e || !p) return alert("Preencha todos os dados!");
+
+        let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
+        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A--------------------------%0A`;
+        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A`);
+        msg += `--------------------------%0A*Subtotal:* R$ ${subtotal.toFixed(2)}%0A*Entrega:* R$ ${TAXA_ENTREGA.toFixed(2)}%0A*TOTAL: R$ ${(subtotal+TAXA_ENTREGA).toFixed(2)}*`;
+        
+        window.open(`https://wa.me/5521988626495?text=${msg}`);
+    }
+
+    function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+    
+    renderizar();
 </script>
+
 </body>
 </html>
