@@ -155,9 +155,6 @@
 </div>
 
 <script>
-    // ==========================================
-    // --- CENTRAL DE ESTOQUE ---
-    // ==========================================
     const PRODUTOS = [
         { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg", d: true },
         { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg", d: true },
@@ -166,7 +163,6 @@
         { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg", d: true },
         { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg", d: true },
         { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg", d: true },
-        // PASTÉIS (Ative ou Desative aqui em 'd')
         { 
             id: 8, cat: "pastel", nome: "Pastel Tradicional", preco: 7.00, d: true,
             desc: "Sabores: Queijo, Carne Moída, Calabresa ou Frango. (Informe o sabor no WhatsApp)", 
@@ -295,7 +291,13 @@
         const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
         
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
-        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A--------------------------%0A`;
+        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A`;
+        
+        if(p === 'Pix') {
+            msg += `--------------------------%0A*DADOS PARA PIX:*%0A*Nome:* Alex Cardoso Sousa%0A*Chave:* 200.769.057-80%0A`;
+        }
+        
+        msg += `--------------------------%0A`;
         carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
         msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
         
