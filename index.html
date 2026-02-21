@@ -37,182 +37,57 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 1100;
+            position: sticky; top: 0; z-index: 1100;
         }
 
         .header-info { display: flex; align-items: center; gap: 12px; }
-        .logo-img { 
-            width: 42px; height: 42px; 
-            border-radius: 50%; 
-            border: 2px solid var(--white);
-            background: var(--white);
-        }
+        .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--white); background: var(--white); }
         .store-name { color: white; font-weight: 700; font-size: 1rem; }
 
-        .status-badge {
-            background: #afffcf22;
-            color: #afffcf;
-            font-size: 10px;
-            font-weight: 700;
-            padding: 4px 12px;
-            border-radius: 20px;
-            text-transform: uppercase;
-            border: 1px solid #afffcf44;
-        }
+        .status-badge { background: #afffcf22; color: #afffcf; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; border: 1px solid #afffcf44; }
 
-        .nav-categories {
-            background: var(--white);
-            padding: 12px 0;
-            position: sticky;
-            top: 72px;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            overflow-x: auto;
-            white-space: nowrap;
-            display: flex;
-            gap: 8px;
-            padding-left: 15px;
-            scrollbar-width: none;
-        }
+        .nav-categories { background: var(--white); padding: 12px 0; position: sticky; top: 72px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; padding-left: 15px; scrollbar-width: none; }
         .nav-categories::-webkit-scrollbar { display: none; }
 
-        .cat-item {
-            padding: 6px 16px;
-            background: var(--divider);
-            border-radius: 18px;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-light);
-            cursor: pointer;
-            transition: 0.2s;
-        }
+        .cat-item { padding: 6px 16px; background: var(--divider); border-radius: 18px; font-size: 13px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; }
         .cat-item.active { background: var(--primary); color: white; }
 
         .container { max-width: 600px; margin: 0 auto; padding: 10px 15px; }
-        
-        .section-header { 
-            font-weight: 700; 
-            font-size: 0.9rem; 
-            color: #7f8c8d; 
-            margin: 25px 0 15px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            padding-top: 100px;
-            margin-top: -80px;
-        }
+        .section-header { font-weight: 700; font-size: 0.9rem; color: #7f8c8d; margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 1px; padding-top: 100px; margin-top: -80px; }
 
-        .produto-card { 
-            display: flex; 
-            background: var(--white); 
-            margin-bottom: 12px; 
-            padding: 15px; 
-            border-radius: 16px; 
-            box-shadow: var(--shadow);
-            border: 1px solid transparent;
-            align-items: center;
-            transition: 0.2s;
-        }
+        .produto-card { display: flex; background: var(--white); margin-bottom: 12px; padding: 15px; border-radius: 16px; box-shadow: var(--shadow); border: 1px solid transparent; align-items: center; transition: 0.2s; }
         .produto-card:active { transform: scale(0.98); border-color: var(--primary-light); }
 
         .produto-info { flex: 1; }
         .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
         .preco { color: var(--primary); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
         
-        .img-container { 
-            width: 85px; height: 85px; 
-            border-radius: 12px; 
-            overflow: hidden; 
-            margin-left: 15px;
-            background: #f9f9f9;
-        }
+        .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f9f9f9; }
         .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
-        .modal { 
-            display: none; position: fixed; inset: 0; 
-            background: rgba(0,0,0,0.6); z-index: 2000; 
-            align-items: flex-end; backdrop-filter: blur(4px);
-        }
-        .modal-content { 
-            background: var(--white); width: 100%; 
-            border-radius: 25px 25px 0 0; 
-            padding-bottom: 30px;
-            max-height: 90vh; overflow-y: auto; 
-            animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: flex-end; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--white); width: 100%; border-radius: 25px 25px 0 0; padding-bottom: 30px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
         @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        .secao-titulo-box {
-            background: #f1f2f6;
-            padding: 12px 18px;
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 5;
-        }
+        .secao-titulo-box { background: #f1f2f6; padding: 12px 18px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 5; }
         .secao-info-text { display: flex; flex-direction: column; }
         .secao-nome { font-size: 14px; font-weight: 700; color: #2d3436; }
         .secao-sub { font-size: 11px; color: #636e72; }
-        
-        .secao-badge {
-            background: #2d3436;
-            color: white;
-            padding: 2px 10px;
-            border-radius: 10px;
-            font-size: 10px;
-            font-weight: 600;
-        }
+        .secao-badge { background: #2d3436; color: white; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 600; }
 
-        .opcao-item { 
-            display: flex; justify-content: space-between; align-items: center; 
-            padding: 16px 20px; border-bottom: 1px solid var(--divider);
-            cursor: pointer;
-        }
+        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--divider); cursor: pointer; }
         .opcao-nome { font-size: 14px; color: var(--text); font-weight: 400; }
         .opcao-preco { font-size: 13px; color: var(--success); font-weight: 600; margin-left: 8px; }
 
-        input[type="checkbox"], input[type="radio"] {
-            appearance: none; -webkit-appearance: none;
-            width: 22px; height: 22px;
-            border: 2px solid #dfe6e9;
-            border-radius: 4px;
-            margin: 0; position: relative;
-            transition: 0.2s;
-        }
+        input[type="checkbox"], input[type="radio"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; border: 2px solid #dfe6e9; border-radius: 4px; margin: 0; position: relative; transition: 0.2s; }
         input[type="radio"] { border-radius: 50%; }
         input:checked { background: var(--primary); border-color: var(--primary); }
-        input:checked::after {
-            content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900;
-            color: white; font-size: 12px; position: absolute;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-        }
+        input:checked::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: white; font-size: 12px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
-        .btn-acao { 
-            background: var(--primary); color: white; border: none; 
-            width: 90%; margin: 20px auto; display: block;
-            padding: 16px; border-radius: 14px; 
-            font-size: 15px; font-weight: 700;
-        }
+        .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; }
+        .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); }
 
-        .footer-carrinho { 
-            position: fixed; bottom: 15px; left: 50%; 
-            transform: translateX(-50%); width: 92%; 
-            background: var(--primary); color: white; 
-            padding: 14px 20px; border-radius: 12px; 
-            display: none; justify-content: space-between; 
-            align-items: center; z-index: 1500;
-            box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3);
-        }
-
-        input[type="text"], input[type="number"], select {
-            width: 100%; padding: 14px; margin-bottom: 10px;
-            border: 1px solid #ddd; border-radius: 10px; font-family: inherit;
-        }
-
+        input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; }
         .remover-btn { color: #e74c3c; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
     </style>
 </head>
@@ -291,47 +166,77 @@
 </div>
 
 <script>
-    const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
-    const CHAVE_PIX = "200.769.057-80";
-    const NOME_PIX = "Alex Cardoso Sousa";
-    
+    // ==========================================
+    // --- CENTRAL DE ESTOQUE (MUDE AQUI) ---
+    // d: true (tem no estoque) | d: false (acabou)
+    // ==========================================
+
     const PRODUTOS = [
-        { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
-        { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
-        { id: 3, cat: "copo", nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg" },
-        { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg" },
-        { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg" },
-        { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg" },
-        { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg" }
+        { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg", d: true },
+        { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg", d: true },
+        { id: 3, cat: "copo", nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg", d: true },
+        { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg", d: true },
+        { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg", d: true },
+        { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg", d: true },
+        { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg", d: true }
     ];
 
     const OPCOES = {
         copo: [
-            { t: "Onde deseja os Complementos?", l: 1, o: ["Em cima", "Meio a Meio", "Só no meio", "Sem complementos", "Embaixo"] },
-            { t: "Complementos (Grátis)", l: 3, o: ["Granola", "Aveia", "Chocoboll", "Leite em pó", "Paçoca", "Jujuba", "Amendoim"] },
-            { t: "Caldas", l: 1, o: ["Uva", "Morango", "Leite condensado"] }
+            { 
+                t: "Onde deseja os Complementos?", l: 1, 
+                o: [
+                    {n: "Em cima", d: true}, {n: "Meio a Meio", d: true}, {n: "Só no meio", d: true}, 
+                    {n: "Sem complementos", d: true}, {n: "Embaixo", d: true}
+                ] 
+            },
+            { 
+                t: "Complementos (Grátis)", l: 3, 
+                o: [
+                    {n: "Granola", d: true}, {n: "Aveia", d: true}, {n: "Chocoboll", d: true}, 
+                    {n: "Leite em pó", d: true}, {n: "Paçoca", d: true}, {n: "Jujuba", d: true}, {n: "Amendoim", d: true}
+                ] 
+            },
+            { 
+                t: "Caldas", l: 1, 
+                o: [
+                    {n: "Uva", d: true}, {n: "Morango", d: true}, {n: "Leite condensado", d: true}
+                ] 
+            }
         ],
         garrafa: [
-            { t: "Adicionais", l: 2, o: [{n:"Leite Condensado",p:0}, {n:"Mousse de Maracujá",p:2}, {n:"Mousse de Morango",p:2}, {n:"Nutella",p:2}, {n:"Ninho",p:2}] }
+            { 
+                t: "Adicionais", l: 2, 
+                o: [
+                    {n: "Leite Condensado", p: 0, d: true}, 
+                    {n: "Mousse de Maracujá", p: 2, d: true}, 
+                    {n: "Mousse de Morango", p: 2, d: true}, 
+                    {n: "Nutella", p: 2, d: true}, 
+                    {n: "Ninho", p: 2, d: true}
+                ] 
+            }
         ]
     };
 
+    // --- FIM DA CENTRAL DE ESTOQUE ---
+
+    const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
+    const CHAVE_PIX = "200.769.057-80";
+    const NOME_PIX = "Alex Cardoso Sousa";
+    
     let carrinho = [];
     let itemSelecionado = null;
 
-    // Função inteligente para calcular a taxa baseada no endereço
     function calcularTaxaEntrega() {
         const endereco = document.getElementById('enderecoCliente').value.toLowerCase();
-        // Verifica se contém "beira rio" ou "beirario"
-        if (endereco.includes("beira rio") || endereco.includes("beirario")) {
-            return 2.00;
-        }
-        return 3.00; // Padrão Japeri
+        if (endereco.includes("beira rio") || endereco.includes("beirario")) return 2.00;
+        return 3.00;
     }
 
     function renderizar() {
         const listaCopos = document.getElementById('lista-copos');
         const listaGarrafas = document.getElementById('lista-garrafas');
+        
         const htmlProd = (p) => `
             <div class="produto-card" onclick='abrirOpcionais(${JSON.stringify(p)})'>
                 <div class="produto-info">
@@ -342,8 +247,14 @@
                     <img src="${GITHUB_BASE}${p.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
                 </div>
             </div>`;
-        listaCopos.innerHTML = PRODUTOS.filter(p => p.cat === 'copo').map(htmlProd).join('');
-        listaGarrafas.innerHTML = PRODUTOS.filter(p => p.cat === 'garrafa').map(htmlProd).join('');
+
+        // Aqui filtramos apenas os produtos que d: true (disponíveis)
+        listaCopos.innerHTML = PRODUTOS.filter(p => p.cat === 'copo' && p.d).map(htmlProd).join('');
+        listaGarrafas.innerHTML = PRODUTOS.filter(p => p.cat === 'garrafa' && p.d).map(htmlProd).join('');
+        
+        // Se a categoria inteira estiver vazia, esconde o título
+        document.getElementById('cat-copo').style.display = PRODUTOS.some(p => p.cat === 'copo' && p.d) ? 'block' : 'none';
+        document.getElementById('cat-garrafa').style.display = PRODUTOS.some(p => p.cat === 'garrafa' && p.d) ? 'block' : 'none';
     }
 
     function abrirOpcionais(p) {
@@ -351,8 +262,14 @@
         document.getElementById('nomeProdModal').innerText = p.nome;
         const lista = document.getElementById('lista-adicionais');
         const estrutura = OPCOES[p.cat];
+        
         lista.innerHTML = estrutura.map((sec, idx) => {
             const isRadio = sec.l === 1;
+            // Filtra apenas adicionais que d: true
+            const opcoesDisponiveis = sec.o.filter(opt => opt.d);
+            
+            if (opcoesDisponiveis.length === 0) return ''; // Não mostra seção vazia
+
             return `
             <div class="secao-titulo-box">
                 <div class="secao-info-text">
@@ -361,8 +278,8 @@
                 </div>
                 <div class="secao-badge" id="badge-sec-${idx}">0 / ${sec.l}</div>
             </div>
-            ${sec.o.map(opt => {
-                const nome = typeof opt === 'string' ? opt : opt.n;
+            ${opcoesDisponiveis.map(opt => {
+                const nome = opt.n;
                 const preco = opt.p || 0;
                 return `
                 <label class="opcao-item">
@@ -397,7 +314,6 @@
         const subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
         const taxaAtual = calcularTaxaEntrega();
         const total = subtotal + (carrinho.length > 0 ? taxaAtual : 0);
-        
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
         document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
@@ -431,31 +347,23 @@
         const e = document.getElementById('enderecoCliente').value;
         const p = document.getElementById('formaPagamento').value;
         const t = document.getElementById('trocoPara').value;
-        
         if(!n || !e || !p) return alert("Por favor, preencha nome, endereço e forma de pagamento.");
-
         const taxaFinal = calcularTaxaEntrega();
         let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
         let totalFinal = subtotal + taxaFinal;
-
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
         msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
-        
         if(p === 'Dinheiro' && t) msg += ` (Troco p/ R$ ${t})`;
         msg += `%0A--------------------------%0A`;
-
         carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
-
         msg += `--------------------------%0A`;
         msg += `*Subtotal:* R$ ${subtotal.toFixed(2).replace('.',',')}%0A`;
         msg += `*Entrega:* R$ ${taxaFinal.toFixed(2).replace('.',',')}%0A`;
         msg += `*TOTAL: R$ ${totalFinal.toFixed(2).replace('.',',')}*%0A`;
-
         if(p === 'Pix') {
             msg += `--------------------------%0A`;
             msg += `*DADOS PIX:*%0A${NOME_PIX}%0AChave CPF: ${CHAVE_PIX}`;
         }
-
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
