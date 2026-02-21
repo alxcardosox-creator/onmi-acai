@@ -60,6 +60,7 @@
 
         .produto-info { flex: 1; }
         .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
+        .produto-info p { margin: 4px 0 0; font-size: 11px; color: var(--text-light); line-height: 1.4; }
         .preco { color: var(--primary); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
         
         .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f9f9f9; }
@@ -73,16 +74,9 @@
         .secao-info-text { display: flex; flex-direction: column; }
         .secao-nome { font-size: 14px; font-weight: 700; color: #2d3436; }
         .secao-sub { font-size: 11px; color: #636e72; }
-        .secao-badge { background: #2d3436; color: white; padding: 2px 10px; border-radius: 10px; font-size: 10px; font-weight: 600; }
 
         .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--divider); cursor: pointer; }
         .opcao-nome { font-size: 14px; color: var(--text); font-weight: 400; }
-        .opcao-preco { font-size: 13px; color: var(--success); font-weight: 600; margin-left: 8px; }
-
-        input[type="checkbox"], input[type="radio"] { appearance: none; -webkit-appearance: none; width: 22px; height: 22px; border: 2px solid #dfe6e9; border-radius: 4px; margin: 0; position: relative; transition: 0.2s; }
-        input[type="radio"] { border-radius: 50%; }
-        input:checked { background: var(--primary); border-color: var(--primary); }
-        input:checked::after { content: '\f00c'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: white; font-size: 12px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
 
         .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; }
         .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); }
@@ -104,6 +98,7 @@
 <div class="nav-categories" id="category-menu">
     <div class="cat-item active" onclick="scrollToCategory('cat-copo', this)">Açaí no Copo</div>
     <div class="cat-item" onclick="scrollToCategory('cat-garrafa', this)">Açaí na Garrafa</div>
+    <div class="cat-item" onclick="scrollToCategory('cat-pastel', this)">Pastel da Nana</div>
 </div>
 
 <div class="container" id="menu-content">
@@ -112,48 +107,42 @@
 
     <div id="cat-garrafa" class="section-header">Açaí na Garrafa</div>
     <div id="lista-garrafas"></div>
+
+    <div id="cat-pastel" class="section-header">Pastel da Nana</div>
+    <div id="lista-pasteis"></div>
 </div>
 
-<div id="modalOpcionais" class="modal">
+<div id="modalConfirmacao" class="modal">
     <div class="modal-content">
-        <div style="padding:20px; display:flex; justify-content:space-between; align-items:center;">
-            <h2 id="nomeProdModal" style="margin:0; font-size:17px; font-weight:700;">Personalizar</h2>
-            <i class="fas fa-chevron-down" onclick="fecharModal('modalOpcionais')" style="color:#636e72;"></i>
+        <div style="padding:20px;">
+            <h2 id="nomeProdModal" style="margin:0; font-size:17px; font-weight:700;">Adicionar Item</h2>
+            <p id="descProdModal" style="font-size:13px; color:#666; margin-top:8px;"></p>
         </div>
-        <div id="lista-adicionais"></div>
-        <button class="btn-acao" onclick="adicionarAoCarrinho()">Confirmar</button>
+        <div id="opcionais-container"></div>
+        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao Pedido</button>
+        <p onclick="fecharModal('modalConfirmacao')" style="text-align:center; color:#999; font-size:13px; cursor:pointer;">Cancelar</p>
     </div>
 </div>
 
 <div id="modalCarrinho" class="modal">
     <div class="modal-content" style="padding: 20px;">
-        <h2 style="font-size:18px; margin-bottom:15px; color:var(--primary);"><i class="fas fa-shopping-basket"></i> Resumo do Pedido</h2>
+        <h2 style="font-size:18px; margin-bottom:15px; color:var(--primary);"><i class="fas fa-shopping-basket"></i> Resumo</h2>
         <div id="itensNoCarrinho"></div>
-        
         <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:15px;">
             <input type="text" id="nomeCliente" placeholder="Seu nome">
             <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)" oninput="atualizarBarra()">
-            
             <select id="formaPagamento" onchange="togglePagamento()">
                 <option value="">Forma de Pagamento</option>
                 <option value="Pix">Pix</option>
                 <option value="Cartão">Cartão</option>
                 <option value="Dinheiro">Dinheiro</option>
             </select>
-
             <div id="areaPix" style="display:none; font-size:12px; background:#fff; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:10px;">
-                <span style="color:var(--primary); font-weight:700;">DADOS PARA PAGAMENTO:</span><br>
-                <strong>Alex Cardoso Sousa</strong><br>
-                Chave Pix: 200.769.057-80 (CPF)
+                <strong>Alex Cardoso Sousa</strong><br>Pix: 200.769.057-80
             </div>
-
-            <div id="areaTroco" style="display:none;">
-                <input type="number" id="trocoPara" placeholder="Troco para quanto?">
-            </div>
+            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
         </div>
-
-        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success); margin-top:15px;">Finalizar no WhatsApp</button>
-        <p onclick="fecharModal('modalCarrinho')" style="text-align:center; color:#999; font-size:13px; margin-top:10px;">Adicionar mais itens</p>
+        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Finalizar no WhatsApp</button>
     </div>
 </div>
 
@@ -167,10 +156,8 @@
 
 <script>
     // ==========================================
-    // --- CENTRAL DE ESTOQUE (MUDE AQUI) ---
-    // d: true (tem no estoque) | d: false (acabou)
+    // --- CENTRAL DE ESTOQUE ---
     // ==========================================
-
     const PRODUTOS = [
         { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg", d: true },
         { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg", d: true },
@@ -178,154 +165,110 @@
         { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg", d: true },
         { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg", d: true },
         { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg", d: true },
-        { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg", d: true }
+        { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg", d: true },
+        // PASTÉIS (Ative ou Desative aqui em 'd')
+        { 
+            id: 8, cat: "pastel", nome: "Pastel Tradicional", preco: 7.00, d: true,
+            desc: "Sabores: Pizza, Queijo, Carne Moída, Calabresa ou Frango. (Informe o sabor no WhatsApp)", 
+            img: "https://via.placeholder.com/80?text=Pastel" 
+        },
+        { 
+            id: 9, cat: "pastel", nome: "Pastel Especial", preco: 8.00, d: true,
+            desc: "Sabores: Frango c/ Catupiry, Frango c/ Queijo, Carne c/ Queijo ou Carne Seca c/ Queijo.", 
+            img: "https://via.placeholder.com/80?text=Pastel" 
+        }
     ];
 
-    const OPCOES = {
+    const OPCOES_ACAI = {
         copo: [
-            { 
-                t: "Onde deseja os Complementos?", l: 1, 
-                o: [
-                    {n: "Em cima", d: true}, {n: "Meio a Meio", d: true}, {n: "Só no meio", d: true}, 
-                    {n: "Sem complementos", d: true}, {n: "Embaixo", d: true}
-                ] 
-            },
-            { 
-                t: "Complementos (Grátis)", l: 3, 
-                o: [
-                    {n: "Granola", d: true}, {n: "Aveia", d: true}, {n: "Chocoboll", d: true}, 
-                    {n: "Leite em pó", d: true}, {n: "Paçoca", d: true}, {n: "Jujuba", d: true}, {n: "Amendoim", d: true}
-                ] 
-            },
-            { 
-                t: "Caldas", l: 1, 
-                o: [
-                    {n: "Uva", d: true}, {n: "Morango", d: true}, {n: "Leite condensado", d: true}
-                ] 
-            }
+            { t: "Complementos (Grátis)", l: 3, o: [{n:"Granola", d:true}, {n:"Aveia", d:true}, {n:"Leite em pó", d:true}, {n:"Paçoca", d:true}] },
+            { t: "Caldas", l: 1, o: [{n:"Uva", d:true}, {n:"Morango", d:true}, {n:"Leite condensado", d:true}] }
         ],
         garrafa: [
-            { 
-                t: "Adicionais", l: 2, 
-                o: [
-                    {n: "Leite Condensado", p: 0, d: true}, 
-                    {n: "Mousse de Maracujá", p: 2, d: true}, 
-                    {n: "Mousse de Morango", p: 2, d: true}, 
-                    {n: "Nutella", p: 2, d: true}, 
-                    {n: "Ninho", p: 2, d: true}
-                ] 
-            }
+            { t: "Adicionais", l: 2, o: [{n:"Mousse de Maracujá", p:2, d:true}, {n:"Nutella", p:2, d:true}] }
         ]
     };
 
-    // --- FIM DA CENTRAL DE ESTOQUE ---
-
-    const GITHUB_BASE = "https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/";
-    const CHAVE_PIX = "200.769.057-80";
-    const NOME_PIX = "Alex Cardoso Sousa";
-    
     let carrinho = [];
     let itemSelecionado = null;
 
     function calcularTaxaEntrega() {
-        const endereco = document.getElementById('enderecoCliente').value.toLowerCase();
-        if (endereco.includes("beira rio") || endereco.includes("beirario")) return 2.00;
-        return 3.00;
+        const e = document.getElementById('enderecoCliente').value.toLowerCase();
+        return (e.includes("beira rio") || e.includes("beirario")) ? 2.00 : 3.00;
     }
 
     function renderizar() {
-        const listaCopos = document.getElementById('lista-copos');
-        const listaGarrafas = document.getElementById('lista-garrafas');
-        
-        const htmlProd = (p) => `
-            <div class="produto-card" onclick='abrirOpcionais(${JSON.stringify(p)})'>
-                <div class="produto-info">
-                    <h3>${p.nome}</h3>
-                    <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
-                </div>
-                <div class="img-container">
-                    <img src="${GITHUB_BASE}${p.img}" class="produto-img" onerror="this.src='https://via.placeholder.com/80?text=Acai'">
-                </div>
-            </div>`;
-
-        // Aqui filtramos apenas os produtos que d: true (disponíveis)
-        listaCopos.innerHTML = PRODUTOS.filter(p => p.cat === 'copo' && p.d).map(htmlProd).join('');
-        listaGarrafas.innerHTML = PRODUTOS.filter(p => p.cat === 'garrafa' && p.d).map(htmlProd).join('');
-        
-        // Se a categoria inteira estiver vazia, esconde o título
-        document.getElementById('cat-copo').style.display = PRODUTOS.some(p => p.cat === 'copo' && p.d) ? 'block' : 'none';
-        document.getElementById('cat-garrafa').style.display = PRODUTOS.some(p => p.cat === 'garrafa' && p.d) ? 'block' : 'none';
+        const cats = ['copo', 'garrafa', 'pastel'];
+        cats.forEach(c => {
+            const lista = document.getElementById(`lista-${c === 'copo' ? 'copos' : c === 'garrafa' ? 'garrafas' : 'pasteis'}`);
+            const itens = PRODUTOS.filter(p => p.cat === c && p.d);
+            lista.innerHTML = itens.map(p => `
+                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
+                    <div class="produto-info">
+                        <h3>${p.nome}</h3>
+                        ${p.desc ? `<p>${p.desc}</p>` : ''}
+                        <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                    </div>
+                    <div class="img-container">
+                        <img src="${p.img.startsWith('http') ? p.img : 'https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/'+p.img}" class="produto-img">
+                    </div>
+                </div>`).join('');
+            document.getElementById(`cat-${c}`).style.display = itens.length ? 'block' : 'none';
+        });
     }
 
-    function abrirOpcionais(p) {
+    function abrirModal(p) {
         itemSelecionado = p;
         document.getElementById('nomeProdModal').innerText = p.nome;
-        const lista = document.getElementById('lista-adicionais');
-        const estrutura = OPCOES[p.cat];
-        
-        lista.innerHTML = estrutura.map((sec, idx) => {
-            const isRadio = sec.l === 1;
-            // Filtra apenas adicionais que d: true
-            const opcoesDisponiveis = sec.o.filter(opt => opt.d);
-            
-            if (opcoesDisponiveis.length === 0) return ''; // Não mostra seção vazia
+        document.getElementById('descProdModal').innerText = p.desc || "Personalize seu item abaixo:";
+        const container = document.getElementById('opcionais-container');
+        container.innerHTML = "";
 
-            return `
-            <div class="secao-titulo-box">
-                <div class="secao-info-text">
+        if(p.cat !== 'pastel' && OPCOES_ACAI[p.cat]) {
+            container.innerHTML = OPCOES_ACAI[p.cat].map((sec, idx) => `
+                <div class="secao-titulo-box">
                     <span class="secao-nome">${sec.t}</span>
-                    <span class="secao-sub">${isRadio ? 'Escolha 1 opção' : 'Escolha até '+sec.l+' opções'}</span>
                 </div>
-                <div class="secao-badge" id="badge-sec-${idx}">0 / ${sec.l}</div>
-            </div>
-            ${opcoesDisponiveis.map(opt => {
-                const nome = opt.n;
-                const preco = opt.p || 0;
-                return `
-                <label class="opcao-item">
-                    <span class="opcao-nome">${nome} ${preco > 0 ? `<span class="opcao-preco">+ R$${preco}</span>` : ''}</span>
-                    <input type="${isRadio ? 'radio' : 'checkbox'}" name="secao-${idx}" class="extra-item" 
-                           data-secao="${idx}" data-limite="${sec.l}" data-preco="${preco}" value="${nome}" onclick="validarLimite(this)">
-                </label>`;
-            }).join('')}`
-        }).join('');
-        document.getElementById('modalOpcionais').style.display = 'flex';
-    }
-
-    function validarLimite(input) {
-        const secaoIdx = input.getAttribute('data-secao');
-        const limite = parseInt(input.getAttribute('data-limite'));
-        let selecionados = document.querySelectorAll(`.extra-item[data-secao="${secaoIdx}"]:checked`);
-        if (selecionados.length > limite) { input.checked = false; }
-        const finalCount = document.querySelectorAll(`.extra-item[data-secao="${secaoIdx}"]:checked`).length;
-        document.getElementById(`badge-sec-${secaoIdx}`).innerText = `${finalCount} / ${limite}`;
+                ${sec.o.filter(o => o.d).map(o => `
+                    <label class="opcao-item">
+                        <span class="opcao-nome">${o.n} ${o.p ? '+R$'+o.p : ''}</span>
+                        <input type="${sec.l===1?'radio':'checkbox'}" name="sec-${idx}" class="extra-item" data-preco="${o.p||0}" value="${o.n}">
+                    </label>`).join('')}`).join('');
+        }
+        document.getElementById('modalConfirmacao').style.display = 'flex';
     }
 
     function adicionarAoCarrinho() {
         const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
         const nomes = selecionados.map(el => el.value);
         const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
-        carrinho.push({ nome: itemSelecionado.nome, precoFinal: itemSelecionado.preco + precoExtra, detalhes: nomes.join(', ') || 'Tradicional' });
+        
+        carrinho.push({ 
+            nome: itemSelecionado.nome, 
+            precoFinal: itemSelecionado.preco + precoExtra, 
+            detalhes: nomes.length > 0 ? nomes.join(', ') : (itemSelecionado.cat === 'pastel' ? 'Sabor a combinar' : 'Tradicional')
+        });
+        
         atualizarBarra();
-        fecharModal('modalOpcionais');
+        fecharModal('modalConfirmacao');
     }
 
     function atualizarBarra() {
-        const subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        const taxaAtual = calcularTaxaEntrega();
-        const total = subtotal + (carrinho.length > 0 ? taxaAtual : 0);
+        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        const taxa = calcularTaxaEntrega();
+        const total = sub + (carrinho.length > 0 ? taxa : 0);
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
         document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
-        document.getElementById('labelTaxa').innerText = `+ Entrega: R$ ${taxaAtual.toFixed(2).replace('.',',')}`;
+        document.getElementById('labelTaxa').innerText = `+ Entrega: R$ ${taxa.toFixed(2).replace('.',',')}`;
     }
 
     function abrirCarrinho() {
         const lista = document.getElementById('itensNoCarrinho');
         lista.innerHTML = carrinho.map((i, idx) => `
-            <div style="padding:12px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between; align-items:center;">
-                <div style="flex:1"><strong style="font-size:14px">${i.nome}</strong><br><small style="color:#777">${i.detalhes}</small><br><span class="remover-btn" onclick="removerItem(${idx})">Remover</span></div>
-                <div style="font-weight:700">R$ ${i.precoFinal.toFixed(2).replace('.',',')}</div>
+            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span class="remover-btn" onclick="removerItem(${idx})">Remover</span></div>
+                <strong>R$ ${i.precoFinal.toFixed(2).replace('.',',')}</strong>
             </div>`).join('');
         document.getElementById('modalCarrinho').style.display = 'flex';
     }
@@ -346,24 +289,16 @@
         const n = document.getElementById('nomeCliente').value;
         const e = document.getElementById('enderecoCliente').value;
         const p = document.getElementById('formaPagamento').value;
-        const t = document.getElementById('trocoPara').value;
-        if(!n || !e || !p) return alert("Por favor, preencha nome, endereço e forma de pagamento.");
-        const taxaFinal = calcularTaxaEntrega();
-        let subtotal = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        let totalFinal = subtotal + taxaFinal;
+        if(!n || !e || !p) return alert("Preencha os dados de entrega!");
+
+        const taxa = calcularTaxaEntrega();
+        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
-        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
-        if(p === 'Dinheiro' && t) msg += ` (Troco p/ R$ ${t})`;
-        msg += `%0A--------------------------%0A`;
+        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A--------------------------%0A`;
         carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
-        msg += `--------------------------%0A`;
-        msg += `*Subtotal:* R$ ${subtotal.toFixed(2).replace('.',',')}%0A`;
-        msg += `*Entrega:* R$ ${taxaFinal.toFixed(2).replace('.',',')}%0A`;
-        msg += `*TOTAL: R$ ${totalFinal.toFixed(2).replace('.',',')}*%0A`;
-        if(p === 'Pix') {
-            msg += `--------------------------%0A`;
-            msg += `*DADOS PIX:*%0A${NOME_PIX}%0AChave CPF: ${CHAVE_PIX}`;
-        }
+        msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
+        
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
