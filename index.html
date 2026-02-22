@@ -79,14 +79,14 @@
         .opcao-nome { font-size: 13px; color: var(--text); }
 
         .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; }
+
         .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); }
 
         input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; }
 
-        /* Admin Styles */
         #adminPanel { padding: 20px; }
         .admin-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; align-items: center; }
-        .admin-scroller { max-height: 250px; overflow-y: auto; border: 1px solid #eee; padding: 10px; border-radius: 10px; margin-bottom: 15px; }
+        .admin-scroller { max-height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 10px; border-radius: 10px; margin-bottom: 15px; }
         .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
@@ -167,10 +167,10 @@
         <div class="admin-item"><span>Aberto</span><label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
         <div class="admin-item"><span>Fechado</span><label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
         
-        <h3 style="font-size: 14px; margin-top: 15px;">Categorias/Produtos</h3>
+        <h3 style="font-size: 14px; margin-top: 15px;">Produtos</h3>
         <div class="admin-scroller" id="listaControleProdutos"></div>
         
-        <h3 style="font-size: 14px;">Complementos e Sabores</h3>
+        <h3 style="font-size: 14px;">Complementos</h3>
         <div class="admin-scroller" id="listaControleComplementos"></div>
         
         <button class="btn-acao" onclick="fecharModal('modalAdmin')">Salvar</button>
@@ -196,49 +196,60 @@
     ];
 
     const COMPLEMENTOS_BASE = [
-        // Copos
+        // COPO COMPLEMENTOS ORIGINAIS
         { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', cat: 'copo', unico: true, obrigar: true },
         { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', cat: 'copo', unico: true, obrigar: true },
         { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', cat: 'copo', unico: true, obrigar: true },
         { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', cat: 'copo', unico: true, obrigar: true },
         { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', cat: 'copo', unico: true, obrigar: true },
-        
         { idc: 201, sec: 'Complementos', n: 'Granola', cat: 'copo' },
         { idc: 202, sec: 'Complementos', n: 'Aveia', cat: 'copo' },
         { idc: 203, sec: 'Complementos', n: 'Sucrilhos', cat: 'copo' },
         { idc: 204, sec: 'Complementos', n: 'Granulado', cat: 'copo' },
+        { idc: 205, sec: 'Complementos', n: 'Bolinha de arroz', cat: 'copo' },
+        { idc: 206, sec: 'Complementos', n: 'Amendoim', cat: 'copo' },
+        { idc: 207, sec: 'Complementos', n: 'Marshmallow', cat: 'copo' },
         { idc: 208, sec: 'Complementos', n: 'Leite em pó', cat: 'copo' },
         { idc: 209, sec: 'Complementos', n: 'Paçoca', cat: 'copo' },
-        
         { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo' },
         { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo' },
         { idc: 303, sec: 'Deseja Frutas?', n: 'Uva', cat: 'copo' },
-        
+        { idc: 304, sec: 'Deseja Frutas?', n: 'Manga', cat: 'copo' },
+        { idc: 305, sec: 'Deseja Frutas?', n: 'Kiwi', cat: 'copo' },
         { idc: 401, sec: 'Caldas', n: 'Chocolate', cat: 'copo' },
         { idc: 402, sec: 'Caldas', n: 'Morango', cat: 'copo' },
         { idc: 403, sec: 'Caldas', n: 'Leite Condensado', cat: 'copo' },
-        
+        { idc: 404, sec: 'Caldas', n: 'Tutti Frutti', cat: 'copo' },
+        { idc: 405, sec: 'Caldas', n: 'Amora', cat: 'copo' },
+        { idc: 406, sec: 'Caldas', n: 'Doce de Leite', cat: 'copo' },
+        { idc: 407, sec: 'Caldas', n: 'Menta', cat: 'copo' },
+        { idc: 408, sec: 'Caldas', n: 'Uva', cat: 'copo' },
+        { idc: 409, sec: 'Caldas', n: 'Maracujá', cat: 'copo' },
+        { idc: 410, sec: 'Caldas', n: 'Caramelo', cat: 'copo' },
+        { idc: 411, sec: 'Caldas', n: 'Graviola', cat: 'copo' },
+        { idc: 412, sec: 'Caldas', n: 'Maçã Verde', cat: 'copo' },
         { idc: 501, sec: 'Especiais', n: 'Nutella', p: 3, cat: 'copo' },
         { idc: 502, sec: 'Especiais', n: 'Mousse de Maracujá', p: 2, cat: 'copo' },
 
-        // Garrafa
+        // GARRAFA ADICIONAIS ORIGINAIS
         { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', p: 0, cat: 'garrafa' },
         { idc: 602, sec: 'Adicionais', n: 'Nutella', p: 3.00, cat: 'garrafa' },
         { idc: 603, sec: 'Adicionais', n: 'Mousse de Maracujá', p: 1.00, cat: 'garrafa' },
+        { idc: 604, sec: 'Adicionais', n: 'Mousse de Morango', p: 1.00, cat: 'garrafa' },
 
-        // PASTEL TRADICIONAL
-        { idc: 701, sec: 'Escolha o Sabor', n: 'Carne Moída', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
-        { idc: 702, sec: 'Escolha o Sabor', n: 'Frango', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
-        { idc: 703, sec: 'Escolha o Sabor', n: 'Calabresa', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
-        { idc: 704, sec: 'Escolha o Sabor', n: 'Carne Seca', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
-        { idc: 705, sec: 'Escolha o Sabor', n: 'Pizza', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
-        { idc: 706, sec: 'Escolha o Sabor', n: 'Queijo', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
+        // NOVAS OPÇÕES DE PASTEL TRADICIONAL
+        { idc: 701, sec: 'Sabor do Pastel', n: 'Carne Moída', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
+        { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
+        { idc: 703, sec: 'Sabor do Pastel', n: 'Calabresa', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
+        { idc: 704, sec: 'Sabor do Pastel', n: 'Carne Seca', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
+        { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
+        { idc: 706, sec: 'Sabor do Pastel', n: 'Queijo', cat: 'pastel', p_id: 8, unico: true, obrigar: true },
 
-        // PASTEL ESPECIAL
-        { idc: 801, sec: 'Escolha o Sabor', n: 'Frango com Queijo', cat: 'pastel', p_id: 9, unico: true, obrigar: true },
-        { idc: 802, sec: 'Escolha o Sabor', n: 'Carne com Queijo', cat: 'pastel', p_id: 9, unico: true, obrigar: true },
-        { idc: 803, sec: 'Escolha o Sabor', n: 'Frango com Catupiry', cat: 'pastel', p_id: 9, unico: true, obrigar: true },
-        { idc: 804, sec: 'Escolha o Sabor', n: 'Calabresa com Queijo', cat: 'pastel', p_id: 9, unico: true, obrigar: true }
+        // NOVAS OPÇÕES DE PASTEL ESPECIAL
+        { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Frango com Queijo', cat: 'pastel', p_id: 9, unico: true, obrigar: true },
+        { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Carne com Queijo', cat: 'pastel', p_id: 9, unico: true, obrigar: true },
+        { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango com Catupiry', cat: 'pastel', p_id: 9, unico: true, obrigar: true },
+        { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa com Queijo', cat: 'pastel', p_id: 9, unico: true, obrigar: true }
     ];
 
     let estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod')) || PRODUTOS_BASE.map(p => ({id: p.id, d: true}));
@@ -262,10 +273,12 @@
     function renderizarAdmin() {
         document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto;
         document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado;
+        
         document.getElementById('listaControleProdutos').innerHTML = PRODUTOS_BASE.map(p => {
             const status = estoqueProd.find(e => e.id === p.id).d;
             return `<div class="admin-item"><span>${p.nome}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleProduto(${p.id})"><span class="slider"></span></label></div>`;
         }).join('');
+
         document.getElementById('listaControleComplementos').innerHTML = COMPLEMENTOS_BASE.map(c => {
             const status = estoqueComp.find(e => e.idc === c.idc).d;
             return `<div class="admin-item"><span><small>[${c.cat}]</small> ${c.n}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleComplemento(${c.idc})"><span class="slider"></span></label></div>`;
@@ -310,7 +323,7 @@
         const container = document.getElementById('opcionais-container');
         container.innerHTML = "";
 
-        // Filtra complementos por categoria e, se for pastel, pelo ID do produto específico
+        // Filtro para saber se o complemento pertence a este produto específico (p_id) ou categoria geral
         const secoes = [...new Set(COMPLEMENTOS_BASE.filter(c => {
             if(p.cat === 'pastel') return c.p_id === p.id;
             return c.cat === p.cat;
@@ -318,10 +331,11 @@
 
         container.innerHTML = secoes.map(secNome => {
             const itens = COMPLEMENTOS_BASE.filter(c => {
-                const basico = c.sec === secNome && c.cat === p.cat && estoqueComp.find(e => e.idc === c.idc).d;
-                if(p.cat === 'pastel') return basico && c.p_id === p.id;
-                return basico;
+                const condicaoGeral = c.sec === secNome && c.cat === p.cat && estoqueComp.find(e => e.idc === c.idc).d;
+                if(p.cat === 'pastel') return condicaoGeral && c.p_id === p.id;
+                return condicaoGeral;
             });
+            
             if(itens.length === 0) return '';
             
             const htmlItens = itens.map(item => `
@@ -332,10 +346,12 @@
                 </label>`).join('');
             return `<div class="secao-titulo-box"><span class="secao-nome">${secNome}</span><span class="secao-ajuda">${itens[0].obrigar ? 'Obrigatório' : 'Opcional'}</span></div>${htmlItens}`;
         }).join('');
+        
         document.getElementById('modalConfirmacao').style.display = 'flex';
     }
 
     function adicionarAoCarrinho() {
+        // Validação de itens obrigatórios
         const checks = document.querySelectorAll('.extra-item');
         const secs = [...new Set(Array.from(checks).map(c => c.dataset.sec))];
         
@@ -343,14 +359,20 @@
             const itensDessaSec = Array.from(checks).filter(c => c.dataset.sec === sec);
             if(itensDessaSec[0].dataset.obrigar === "true") {
                 const selecionado = itensDessaSec.find(c => c.checked);
-                if(!selecionado) return alert(`Escolha uma opção em: ${sec}`);
+                if(!selecionado) return alert(`Por favor, selecione uma opção em: ${sec}`);
             }
         }
 
         const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
         const nomes = selecionados.map(el => el.value);
         const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
-        carrinho.push({ nome: itemSelecionado.nome, precoFinal: itemSelecionado.preco + precoExtra, detalhes: nomes.join(', ') || 'Tradicional' });
+        
+        carrinho.push({ 
+            nome: itemSelecionado.nome, 
+            precoFinal: itemSelecionado.preco + precoExtra, 
+            detalhes: nomes.join(', ') || 'Sem adicionais' 
+        });
+        
         atualizarBarra();
         fecharModal('modalConfirmacao');
     }
@@ -366,13 +388,14 @@
     function abrirCarrinho() {
         document.getElementById('itensNoCarrinho').innerHTML = carrinho.map((i, idx) => `
             <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span style="color:red; font-size:11px;" onclick="removerItem(${idx})">Remover</span></div>
+                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span style="color:red; font-size:11px; cursor:pointer;" onclick="removerItem(${idx})">Remover</span></div>
                 <strong>R$ ${i.precoFinal.toFixed(2).replace('.',',')}</strong>
             </div>`).join('');
         document.getElementById('modalCarrinho').style.display = 'flex';
     }
 
     function removerItem(idx) { carrinho.splice(idx, 1); carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho'); atualizarBarra(); }
+    
     function togglePagamento() {
         const p = document.getElementById('formaPagamento').value;
         document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
@@ -389,7 +412,7 @@
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
         if(p === 'Pix') msg += `%0A%0A*CHAVE PIX:* 200.769.057-80 (Alex Cardoso)`;
         msg += `%0A--------------------------%0A`;
-        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _Sabor: ${i.detalhes}_%0A%0A`);
+        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
         msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
