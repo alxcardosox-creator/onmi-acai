@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Onmi Açaí · Peça online</title>
-    <!-- Fontes e ícones -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* (mesmo estilo, não houve alteração) */
         * {
             margin: 0;
             padding: 0;
@@ -23,7 +23,6 @@
             scroll-behavior: smooth;
         }
 
-        /* Header com efeito vidro */
         header {
             background: rgba(91, 15, 115, 0.98);
             backdrop-filter: blur(8px);
@@ -88,7 +87,6 @@
             color: white;
         }
 
-        /* Navegação por categorias */
         .nav-categories {
             background: white;
             padding: 12px 20px;
@@ -131,14 +129,12 @@
             transform: scale(0.96);
         }
 
-        /* Container principal */
         .container {
             max-width: 640px;
             margin: 0 auto;
             padding: 16px 20px;
         }
 
-        /* Seções */
         .section-header {
             font-weight: 700;
             font-size: 1.1rem;
@@ -150,7 +146,6 @@
             scroll-margin-top: 140px;
         }
 
-        /* Card de produto */
         .produto-card {
             display: flex;
             background: white;
@@ -218,7 +213,6 @@
             transform: scale(1.05);
         }
 
-        /* Modal estilo bottom sheet */
         .modal {
             display: none;
             position: fixed;
@@ -331,7 +325,6 @@
             box-shadow: 0 5px 15px rgba(91,15,115,0.4);
         }
 
-        /* Carrinho flutuante */
         .footer-carrinho {
             position: fixed;
             bottom: 20px;
@@ -369,7 +362,6 @@
             font-weight: 800;
         }
 
-        /* Formulários no carrinho */
         input, select {
             width: 100%;
             padding: 16px 20px;
@@ -397,7 +389,6 @@
             color: #2d2d3a;
         }
 
-        /* Admin panel */
         #adminPanel {
             background: #ffffff;
         }
@@ -462,7 +453,6 @@
             border: 1px solid #eceaf0;
         }
 
-        /* Aviso de fechado */
         #avisoFechado {
             background: linear-gradient(145deg, #fff0f0, #ffe7e7);
             border-radius: 40px;
@@ -471,7 +461,6 @@
             border: 1px solid #ffcdcd;
         }
 
-        /* Responsividade */
         @media (min-width: 640px) {
             .modal-content {
                 border-radius: 30px 30px 0 0;
@@ -632,6 +621,19 @@
         // Inicializa estoques com base
         PRODUTOS_BASE.forEach(p => { if(!estoqueProd.find(e => e.id === p.id)) estoqueProd.push({id: p.id, d: true}); });
         COMPLEMENTOS_BASE.forEach(c => { if(!estoqueComp.find(e => e.idc === c.idc)) estoqueComp.push({idc: c.idc, d: true}); });
+
+        // --------------------- NOVO: LER PARÂMETRO DA URL -------------------------
+        const urlParams = new URLSearchParams(window.location.search);
+        const forcarUrl = urlParams.get('forcar');
+        if (forcarUrl === 'aberto') {
+            configLoja.forcarAberto = true;
+            configLoja.forcarFechado = false;
+            localStorage.setItem('onmi_config', JSON.stringify(configLoja));
+        } else if (forcarUrl === 'fechado') {
+            configLoja.forcarAberto = false;
+            configLoja.forcarFechado = true;
+            localStorage.setItem('onmi_config', JSON.stringify(configLoja));
+        }
 
         // --------------------- FUNÇÕES DE UI -------------------------
         function renderizarProdutos() {
@@ -863,7 +865,7 @@
             configLoja.forcarAberto = abertoCheck.checked;
             if (configLoja.forcarAberto) {
                 configLoja.forcarFechado = false;
-                fechadoCheck.checked = false; // desmarca o outro visualmente
+                fechadoCheck.checked = false;
             }
             salvarConfig();
         };
@@ -874,7 +876,7 @@
             configLoja.forcarFechado = fechadoCheck.checked;
             if (configLoja.forcarFechado) {
                 configLoja.forcarAberto = false;
-                abertoCheck.checked = false; // desmarca o outro visualmente
+                abertoCheck.checked = false;
             }
             salvarConfig();
         };
@@ -884,10 +886,8 @@
             checarStatusLoja();
         }
 
-        // Função para fechar modal admin e garantir atualização visual
         window.fecharModalEAtualizar = function() {
             fecharModal('modalAdmin');
-            // Pequeno atraso para garantir que o modal feche e o badge seja visível
             setTimeout(() => {
                 checarStatusLoja();
             }, 50);
