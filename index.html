@@ -63,7 +63,6 @@
 
         .produto-info { flex: 1; }
         .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
-        .produto-info p { margin: 4px 0 0; font-size: 11px; color: var(--text-light); line-height: 1.4; }
         .preco { color: var(--primary); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
         
         .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f9f9f9; }
@@ -154,7 +153,8 @@
                 <option value="Dinheiro">Dinheiro</option>
             </select>
             <div id="areaPix" style="display:none; font-size:12px; background:#fff; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:10px;">
-                <strong>Pix: 200.769.057-80</strong> (Alex Cardoso)
+                <strong>Alex Cardoso Sousa</strong><br>
+                Pix: 200.769.057-80
             </div>
             <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
         </div>
@@ -191,12 +191,10 @@
     ];
 
     const COMPLEMENTOS_BASE = [
-        // Montagem (Aparece Primeiro)
+        // Copo
         { sec: 'Onde deseja os Complementos?', n: 'Em cima', cat: 'copo', unico: true },
         { sec: 'Onde deseja os Complementos?', n: 'No Meio', cat: 'copo', unico: true },
         { sec: 'Onde deseja os Complementos?', n: 'Embaixo', cat: 'copo', unico: true },
-
-        // Complementos
         { sec: 'Complementos', n: 'Granola', cat: 'copo' },
         { sec: 'Complementos', n: 'Aveia', cat: 'copo' },
         { sec: 'Complementos', n: 'Sucrilhos', cat: 'copo' },
@@ -206,15 +204,11 @@
         { sec: 'Complementos', n: 'Marshmallow', cat: 'copo' },
         { sec: 'Complementos', n: 'Leite em pó', cat: 'copo' },
         { sec: 'Complementos', n: 'Paçoca', cat: 'copo' },
-
-        // Frutas
         { sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo' },
         { sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo' },
         { sec: 'Deseja Frutas?', n: 'Uva', cat: 'copo' },
         { sec: 'Deseja Frutas?', n: 'Manga', cat: 'copo' },
         { sec: 'Deseja Frutas?', n: 'Kiwi', cat: 'copo' },
-
-        // Caldas
         { sec: 'Caldas', n: 'Chocolate', cat: 'copo' },
         { sec: 'Caldas', n: 'Morango', cat: 'copo' },
         { sec: 'Caldas', n: 'Leite Condensado', cat: 'copo' },
@@ -227,10 +221,14 @@
         { sec: 'Caldas', n: 'Caramelo', cat: 'copo' },
         { sec: 'Caldas', n: 'Graviola', cat: 'copo' },
         { sec: 'Caldas', n: 'Maçã Verde', cat: 'copo' },
-
-        // Especiais
         { sec: 'Especiais', n: 'Nutella', p: 3, cat: 'copo' },
-        { sec: 'Especiais', n: 'Mousse de Maracujá', p: 2, cat: 'copo' }
+        { sec: 'Especiais', n: 'Mousse de Maracujá', p: 2, cat: 'copo' },
+
+        // Garrafa (Atualizado conforme solicitado)
+        { sec: 'Adicionais', n: 'Leite Condensado', p: 0, cat: 'garrafa' },
+        { sec: 'Adicionais', n: 'Nutella', p: 3.00, cat: 'garrafa' },
+        { sec: 'Adicionais', n: 'Mousse de Maracujá', p: 1.00, cat: 'garrafa' },
+        { sec: 'Adicionais', n: 'Mousse de Morango', p: 1.00, cat: 'garrafa' }
     ];
 
     let estoque = JSON.parse(localStorage.getItem('onmi_estoque')) || PRODUTOS_BASE.map(p => ({id: p.id, d: true}));
@@ -238,7 +236,6 @@
     let carrinho = [];
     let itemSelecionado = null;
 
-    // Abrir Admin (Toque longo na logo)
     let timerLogo;
     const logoBtn = document.getElementById('masterLogo');
     logoBtn.addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
@@ -303,7 +300,7 @@
                 const itens = COMPLEMENTOS_BASE.filter(c => c.sec === secNome && c.cat === p.cat);
                 const htmlItens = itens.map(item => `
                     <label class="opcao-item">
-                        <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2)+'</b>' : ''}</span>
+                        <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
                         <input type="${item.unico ? 'radio' : 'checkbox'}" name="sec-${secNome}" class="extra-item" data-preco="${item.p||0}" value="${item.n}">
                     </label>`).join('');
                 return `<div class="secao-titulo-box"><span class="secao-nome">${secNome}</span><span class="secao-ajuda">${itens[0].unico ? 'Escolha 1' : 'Opcional'}</span></div>${htmlItens}`;
@@ -349,12 +346,22 @@
         const n = document.getElementById('nomeCliente').value;
         const e = document.getElementById('enderecoCliente').value;
         const p = document.getElementById('formaPagamento').value;
-        if(!n || !e || !p) return alert("Preencha tudo!");
+        const troco = document.getElementById('trocoPara').value;
+        if(!n || !e || !p) return alert("Preencha todos os campos!");
+        
         const taxa = (e.toLowerCase().includes("beira rio")) ? 2 : 3;
         const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        let msg = `*NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A--------------------------%0A`;
+        const total = sub + taxa;
+        
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
+        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
+        if(p === 'Dinheiro' && troco) msg += ` (Troco para R$ ${troco})`;
+        if(p === 'Pix') msg += `%0A%0A*CHAVE PIX:* 200.769.057-80 (Alex Cardoso)`;
+        
+        msg += `%0A--------------------------%0A`;
         carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
-        msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
+        msg += `--------------------------%0A*TOTAL: R$ ${total.toFixed(2).replace('.',',')}*`;
+        
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
