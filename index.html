@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* (mesmo estilo, não houve alteração) */
         * {
             margin: 0;
             padding: 0;
@@ -559,8 +558,8 @@
 <div id="modalAdmin" class="modal">
     <div class="modal-content" id="adminPanel">
         <h2>🛠️ Configurações</h2>
-        <div class="admin-item"><span>Forçar loja <strong>Aberta</strong></span> <label class="switch"><input type="checkbox" id="btnForcarAberto"><span class="slider"></span></label></div>
-        <div class="admin-item"><span>Forçar loja <strong>Fechada</strong></span> <label class="switch"><input type="checkbox" id="btnForcarFechado"><span class="slider"></span></label></div>
+        <div class="admin-item"><span>Forçar loja <strong>Aberta</strong></span> <label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
+        <div class="admin-item"><span>Forçar loja <strong>Fechada</strong></span> <label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
 
         <h3 style="margin-top:20px;">📦 Produtos disponíveis</h3>
         <div class="admin-scroller" id="listaControleProdutos"></div>
@@ -568,7 +567,7 @@
         <h3>🥄 Sabores / Extras</h3>
         <div class="admin-scroller" id="listaControleComplementos"></div>
 
-        <button class="btn-acao" onclick="fecharModal('modalAdmin')" style="background:#5f5f6f;">Fechar</button>
+        <button class="btn-acao" onclick="fecharModalEAtualizar()" style="background:#5f5f6f;">Fechar</button>
         <p onclick="resetarTudo()" style="text-align:center; color:#c0392b; font-size:13px; margin:15px 0; cursor:pointer;">⚠️ Resetar dados do site</p>
     </div>
 </div>
@@ -884,6 +883,15 @@
             localStorage.setItem('onmi_config', JSON.stringify(configLoja));
             checarStatusLoja();
         }
+
+        // Função para fechar modal admin e garantir atualização visual
+        window.fecharModalEAtualizar = function() {
+            fecharModal('modalAdmin');
+            // Pequeno atraso para garantir que o modal feche e o badge seja visível
+            setTimeout(() => {
+                checarStatusLoja();
+            }, 50);
+        };
 
         window.resetarTudo = function() {
             if (confirm("Resetar todos os dados e recarregar?")) {
