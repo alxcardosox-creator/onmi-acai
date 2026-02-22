@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onmi Açaí | Admin Total v9</title>
+    <title>Onmi Açaí | Gestão Completa</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
             --primary: #5b0f73;
+            --primary-light: #f4e8f7;
             --success: #27ae60;
             --danger: #e74c3c;
             --bg: #f8f9fa;
@@ -20,34 +21,41 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 100px; }
 
+        /* Header e Nav */
         header { background: var(--primary); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1100; color: white; }
         .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid white; cursor: pointer; background: white; }
         
-        .nav-categories { background: white; padding: 12px; position: sticky; top: 72px; z-index: 1000; display: flex; gap: 8px; overflow-x: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.05); scrollbar-width: none; }
-        .nav-categories::-webkit-scrollbar { display: none; }
-        .cat-item { padding: 6px 16px; background: #eee; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.3s; }
+        .nav-categories { background: white; padding: 12px; position: sticky; top: 72px; z-index: 1000; display: flex; gap: 8px; overflow-x: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .cat-item { padding: 6px 16px; background: #eee; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
         .cat-item.active { background: var(--primary); color: white; }
 
+        /* Lista de Produtos */
         .container { max-width: 600px; margin: 0 auto; padding: 15px; }
         .section-header { font-weight: 800; color: #7f8c8d; margin: 25px 0 10px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
 
-        .produto-card { display: flex; background: white; margin-bottom: 12px; padding: 15px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); align-items: center; cursor: pointer; }
+        .produto-card { display: flex; background: white; margin-bottom: 12px; padding: 15px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); align-items: center; cursor: pointer; border: 1px solid transparent; }
+        .produto-card:active { transform: scale(0.98); background: #fafafa; }
         .produto-info { flex: 1; }
-        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; }
+        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
         .preco { color: var(--primary); font-weight: 700; font-size: 16px; margin-top: 4px; display: block; }
-        .img-container { width: 75px; height: 75px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #ccc; }
+        .img-container { width: 80px; height: 80px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
+        .img-container i { font-size: 30px; color: #ccc; }
 
+        /* Modais */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: flex-end; backdrop-filter: blur(3px); }
         .modal-content { background: white; width: 100%; border-radius: 25px 25px 0 0; max-height: 85vh; overflow-y: auto; padding-bottom: 30px; }
-        
-        .admin-box { background: #f8f0fb; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #e1bee7; }
+        .secao-titulo { background: #f1f2f6; padding: 10px 20px; font-size: 13px; font-weight: 700; color: var(--primary); display: flex; justify-content: space-between; }
+
+        /* Admin Layout */
+        .admin-box { background: #f8f0fb; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed var(--primary); }
         .admin-item-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; font-size: 13px; }
         
-        input, select { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; }
-        .btn { width: 90%; margin: 10px auto; display: block; padding: 15px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        input, select { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; }
+        .btn { width: 90%; margin: 10px auto; display: block; padding: 15px; border: none; border-radius: 12px; font-weight: 700; font-size: 15px; cursor: pointer; }
         .btn-add { background: var(--success); color: white; }
-        .btn-primary { background: var(--primary); color: white; }
+        .btn-close { background: var(--primary); color: white; }
 
+        /* Switch */
         .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; inset: 0; background: #ccc; border-radius: 20px; transition: .4s; }
@@ -55,239 +63,214 @@
         input:checked + .slider { background: var(--success); }
         input:checked + .slider:before { transform: translateX(16px); }
 
-        .footer-cart { position: fixed; bottom: 15px; left: 5%; width: 90%; background: var(--primary); color: white; padding: 16px; border-radius: 15px; display: none; justify-content: space-between; align-items: center; z-index: 1500; font-weight: 700; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        
-        /* Overlay de loja fechada */
-        #avisoFechado { display: none; position: fixed; top: 120px; left: 0; width: 100%; background: var(--danger); color: white; text-align: center; padding: 10px; font-weight: bold; z-index: 900; }
+        .footer-cart { position: fixed; bottom: 15px; left: 5%; width: 90%; background: var(--primary); color: white; padding: 16px; border-radius: 15px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 10px 20px rgba(91,15,115,0.3); z-index: 1500; font-weight: 700; }
     </style>
 </head>
 <body>
 
-<div id="avisoFechado">LOJA FECHADA NO MOMENTO</div>
-
 <header>
-    <div style="display:flex; align-items:center; gap:10px;">
-        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" id="logoAdmin">
+    <div style="display:flex; align-items:center; gap:12px;">
+        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" id="logoClick">
         <span style="font-weight:800; font-size:18px;">ONMI AÇAÍ</span>
     </div>
-    <div id="statusTag" style="font-size:10px; padding:4px 12px; border-radius:20px; font-weight:700;">CARREGANDO...</div>
+    <div id="statusTag" style="font-size:10px; padding:5px 12px; border-radius:20px; background:#27ae60; font-weight:700;">ABERTO</div>
 </header>
 
-<div class="nav-categories" id="navCategorias"></div>
+<div class="nav-categories" id="menuCats"></div>
 
 <div class="container" id="vitrine"></div>
 
 <div id="modalAdmin" class="modal">
     <div class="modal-content" style="padding: 20px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <h2 style="color:var(--primary); margin:0;">Painel Admin</h2>
-            <div style="display:flex; align-items:center; gap:10px; background:#eee; padding:5px 15px; border-radius:20px;">
-                <span id="txtStatusAdmin" style="font-size:12px; font-weight:bold;">FECHADA</span>
-                <label class="switch">
-                    <input type="checkbox" id="checkStatusLoja" onchange="toggleLoja()">
-                    <span class="slider"></span>
-                </label>
-            </div>
-        </div>
+        <h2 style="color:var(--primary); margin:0 0 15px 0;">Painel de Controle</h2>
         
         <div class="admin-box">
-            <h4 style="margin:0 0 10px 0;"><i class="fas fa-tags"></i> 1. Categorias</h4>
-            <input type="text" id="catNome" placeholder="Nova Categoria">
-            <button class="btn btn-primary" onclick="addCategoria()">Criar</button>
-            <div id="listaCategoriasAdmin"></div>
+            <h4 style="margin:0 0 10px 0; color:var(--primary);"><i class="fas fa-box"></i> Novo Produto na Vitrine</h4>
+            <input type="text" id="newProdNome" placeholder="Ex: Copo 1 Litro / Coca-Cola">
+            <input type="number" id="newProdPreco" placeholder="Preço (ex: 25.00)">
+            <select id="newProdCat">
+                <option value="copo">Açaí no Copo</option>
+                <option value="garrafa">Açaí na Garrafa</option>
+                <option value="pastel">Pastel da Nana</option>
+                <option value="bebida">Bebidas</option>
+            </select>
+            <button class="btn btn-add" onclick="salvarProdutoPrincipal()">Cadastrar Produto</button>
         </div>
 
         <div class="admin-box">
-            <h4 style="margin:0 0 10px 0;"><i class="fas fa-box"></i> 2. Produto</h4>
-            <input type="text" id="pNome" placeholder="Nome">
-            <input type="number" id="pPreco" placeholder="Preço">
-            <select id="pCatSelect"></select>
-            <button class="btn btn-add" onclick="addProduto()">Salvar</button>
+            <h4 style="margin:0 0 10px 0; color:var(--primary);"><i class="fas fa-plus"></i> Novo Adicional/Sabor</h4>
+            <input type="text" id="newExtraNome" placeholder="Ex: KitKat / Frango">
+            <input type="number" id="newExtraPreco" placeholder="Preço Extra (0 se grátis)">
+            <select id="newExtraPai">
+                <option value="copo">Para Açaí</option>
+                <option value="pastel_t">Para Pastel Tradicional</option>
+                <option value="pastel_e">Para Pastel Especial</option>
+            </select>
+            <input type="text" id="newExtraSec" placeholder="Categoria (Ex: Caldas, Frutas, Sabores)">
+            <button class="btn btn-close" onclick="salvarExtra()">Cadastrar Adicional</button>
         </div>
 
-        <h3>Itens Ativos</h3>
-        <div id="listaGeralAdmin" style="max-height: 200px; overflow-y: auto;"></div>
+        <h3 style="font-size:14px;">Gerenciar Itens (On/Off)</h3>
+        <div id="listaAdminGeral" style="max-height: 250px; overflow-y: auto; background:white; border-radius:10px;"></div>
         
-        <button class="btn btn-primary" onclick="fecharModal('modalAdmin')">Fechar Painel</button>
+        <button class="btn btn-close" onclick="fecharModal('modalAdmin')">Voltar ao Site</button>
+        <p onclick="limparTudo()" style="color:red; text-align:center; font-size:11px; cursor:pointer; margin-top:15px;">Resetar Todo o Sistema</p>
     </div>
 </div>
 
 <div id="modalCompra" class="modal">
     <div class="modal-content">
-        <div style="padding:20px;"><h2 id="viewNome" style="margin:0;"></h2></div>
-        <div id="viewOpcoes"></div>
-        <button class="btn btn-add" onclick="confirmarPedido()">Adicionar ao Carrinho</button>
-        <p onclick="fecharModal('modalCompra')" style="text-align:center; color:#999; cursor:pointer;">Cancelar</p>
+        <div style="padding:20px;"><h2 id="modalTitle" style="margin:0; font-size:18px;"></h2></div>
+        <div id="modalOpcoes"></div>
+        <button class="btn btn-add" onclick="adicionarPedido()">Confirmar e Adicionar</button>
+        <p onclick="fecharModal('modalCompra')" style="text-align:center; color:#999; cursor:pointer; font-size:13px;">Agora não</p>
     </div>
 </div>
 
-<div id="footerCart" class="footer-cart" onclick="finalizarNoZap()">
+<div id="footerCart" class="footer-cart" onclick="abrirFinalizacao()">
     <span>🛒 <span id="cartQtd">0</span> itens</span>
     <span id="cartTotal">R$ 0,00</span>
 </div>
 
 <script>
-    // --- CONFIGURAÇÃO DA NUVEM (ID ÚNICO DA SUA LOJA) ---
-    const STORE_KEY = "onmi_acai_status_99"; 
-    
-    let db_cats = JSON.parse(localStorage.getItem('onmi_cats_v9')) || { "copo": "Açaí no Copo" };
-    let db_prods = JSON.parse(localStorage.getItem('onmi_prods_v9')) || [];
-    let db_exts = JSON.parse(localStorage.getItem('onmi_exts_v9')) || [];
-    let lojaAberta = true;
+    // --- DADOS INICIAIS ---
+    const DEFAULTS_PRODS = [
+        { id: 1, nome: "Copo 250ml", preco: 5.00, cat: "copo", d: true },
+        { id: 2, nome: "Copo 300ml", preco: 8.00, cat: "copo", d: true },
+        { id: 3, nome: "Copo 400ml", preco: 11.00, cat: "copo", d: true },
+        { id: 4, nome: "Copo 500ml", preco: 13.00, cat: "copo", d: true },
+        { id: 8, nome: "Pastel Tradicional", preco: 7.00, cat: "pastel", d: true },
+        { id: 9, nome: "Pastel Especial", preco: 8.00, cat: "pastel", d: true }
+    ];
+
+    const DEFAULTS_EXTRAS = [
+        { id: 101, n: "Granola", p: 0, cat: "copo", sec: "Complementos", d: true },
+        { id: 102, n: "Leite em Pó", p: 0, cat: "copo", sec: "Complementos", d: true },
+        { id: 103, n: "Morango", p: 0, cat: "copo", sec: "Frutas", d: true },
+        { id: 104, n: "Banana", p: 0, cat: "copo", sec: "Frutas", d: true },
+        { id: 105, n: "Nutella", p: 3.00, cat: "copo", sec: "Especiais", d: true },
+        { id: 106, n: "Leite Condensado", p: 0, cat: "copo", sec: "Caldas", d: true },
+        { id: 201, n: "Carne", p: 0, cat: "pastel_t", sec: "Sabores", d: true },
+        { id: 202, n: "Frango", p: 0, cat: "pastel_t", sec: "Sabores", d: true },
+        { id: 301, n: "Carne c/ Queijo", p: 0, cat: "pastel_e", sec: "Sabores", d: true }
+    ];
+
+    let prods = JSON.parse(localStorage.getItem('onmi_p_v6')) || DEFAULTS_PRODS;
+    let extras = JSON.parse(localStorage.getItem('onmi_e_v6')) || DEFAULTS_EXTRAS;
     let carrinho = [];
-    let atual = null;
-
-    // --- SINCRONIZAÇÃO GLOBAL ---
-    // Esta função avisa a internet que a loja abriu ou fechou
-    async function syncLojaCloud(status) {
-        try {
-            await fetch(`https://api.jsonbin.io/v3/b/65d898431f56771c92404e54`, { // Bin público para exemplo ou npoint
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'X-Bin-Meta': 'false' },
-                body: JSON.stringify({ aberta: status })
-            });
-        } catch(e) { console.error("Erro sync"); }
-    }
-
-    // Esta função checa se você fechou a loja em outro aparelho
-    async function checkLojaStatus() {
-        try {
-            const res = await fetch(`https://api.npoint.io/066f1255e2d140e6917c`); // Exemplo de ID
-            const data = await res.json();
-            if (data.aberta !== undefined) {
-                lojaAberta = data.aberta;
-                updateStatusUI();
-            }
-        } catch(e) {}
-    }
-
-    // --- INTERFACE ---
-    function updateStatusUI() {
-        const tag = document.getElementById('statusTag');
-        const aviso = document.getElementById('avisoFechado');
-        const check = document.getElementById('checkStatusLoja');
-        const txt = document.getElementById('txtStatusAdmin');
-        
-        if(lojaAberta) {
-            tag.innerText = "ABERTO"; tag.style.background = "#27ae60";
-            aviso.style.display = "none";
-            if(txt) txt.innerText = "ABERTA";
-            if(check) check.checked = true;
-        } else {
-            tag.innerText = "FECHADO"; tag.style.background = "#e74c3c";
-            aviso.style.display = "block";
-            if(txt) txt.innerText = "FECHADA";
-            if(check) check.checked = false;
-        }
-    }
-
-    async function toggleLoja() {
-        lojaAberta = !lojaAberta;
-        localStorage.setItem('onmi_status_v9', JSON.stringify(lojaAberta));
-        updateStatusUI();
-        
-        // Manda o comando para a nuvem para todos os clientes verem
-        try {
-            await fetch('https://api.npoint.io/066f1255e2d140e6917c', {
-                method: 'POST',
-                body: JSON.stringify({ aberta: lojaAberta })
-            });
-        } catch(e) {}
-    }
+    let itemAtual = null;
 
     // --- ADMIN ---
-    let pressTimer;
-    document.getElementById('logoAdmin').onmousedown = () => pressTimer = setTimeout(abrirAdmin, 2000);
-    document.getElementById('logoAdmin').ontouchstart = () => pressTimer = setTimeout(abrirAdmin, 2000);
+    let tLogo;
+    document.getElementById('logoClick').onmousedown = () => tLogo = setTimeout(openAdmin, 2000);
+    document.getElementById('logoClick').ontouchstart = () => tLogo = setTimeout(openAdmin, 2000);
+    document.getElementById('logoClick').onmouseup = () => clearTimeout(tLogo);
 
-    function abrirAdmin() { if(prompt("Senha:") === "onmi123") { document.getElementById('modalAdmin').style.display="flex"; renderAdmin(); } }
+    function openAdmin() { if(prompt("Senha Admin:") === "onmi123") { document.getElementById('modalAdmin').style.display="flex"; renderAdmin(); } }
 
-    function addCategoria() {
-        const n = document.getElementById('catNome').value;
-        if(!n) return;
-        const id = n.toLowerCase().replace(/\s+/g, '-');
-        db_cats[id] = n;
-        salvarEAtualizar();
+    function salvarProdutoPrincipal() {
+        const n = document.getElementById('newProdNome').value;
+        const p = parseFloat(document.getElementById('newProdPreco').value);
+        const c = document.getElementById('newProdCat').value;
+        if(!n || !p) return alert("Preencha Nome e Preço!");
+        prods.push({ id: Date.now(), nome: n, preco: p, cat: c, d: true });
+        save(); renderAdmin(); alert("Produto adicionado à vitrine!");
     }
 
-    function addProduto() {
-        const n = document.getElementById('pNome').value;
-        const p = parseFloat(document.getElementById('pPreco').value);
-        const c = document.getElementById('pCatSelect').value;
-        if(n && p) {
-            db_prods.push({ id: Date.now(), nome: n, preco: p, cat: c, d: true });
-            salvarEAtualizar();
-        }
+    function salvarExtra() {
+        const n = document.getElementById('newExtraNome').value;
+        const p = parseFloat(document.getElementById('newExtraPreco').value) || 0;
+        const c = document.getElementById('newExtraPai').value;
+        const s = document.getElementById('newExtraSec').value || "Adicionais";
+        if(!n) return alert("Nome do adicional vazio!");
+        extras.push({ id: Date.now(), n, p, cat: c, sec: s, d: true });
+        save(); renderAdmin(); alert("Adicional cadastrado!");
     }
 
     function renderAdmin() {
-        let drop = ""; for (let k in db_cats) drop += `<option value="${k}">${db_cats[k]}</option>`;
-        document.getElementById('pCatSelect').innerHTML = drop;
-
-        let h = '';
-        db_prods.forEach(p => {
-            h += `<div class="admin-item-row">${p.nome} <button onclick="delP(${p.id})" style="color:red; border:none; background:none;">X</button></div>`;
-        });
-        document.getElementById('listaGeralAdmin').innerHTML = h;
+        let h = '<div style="padding:10px; font-weight:bold; color:var(--primary)">Produtos Principais</div>';
+        prods.forEach(p => h += `<div class="admin-item-row"><span>${p.nome}</span><label class="switch"><input type="checkbox" ${p.d?'checked':''} onchange="tglP(${p.id})"><span class="slider"></span></label></div>`);
+        h += '<div style="padding:10px; font-weight:bold; color:var(--primary)">Adicionais/Sabores</div>';
+        extras.forEach(e => h += `<div class="admin-item-row"><span>${e.n} <small>(${e.sec})</small></span><label class="switch"><input type="checkbox" ${e.d?'checked':''} onchange="tglE(${e.id})"><span class="slider"></span></label></div>`);
+        document.getElementById('listaAdminGeral').innerHTML = h;
     }
 
-    function delP(id) { db_prods = db_prods.filter(x=>x.id!==id); salvarEAtualizar(); }
-
-    function salvarEAtualizar() {
-        localStorage.setItem('onmi_cats_v9', JSON.stringify(db_cats));
-        localStorage.setItem('onmi_prods_v9', JSON.stringify(db_prods));
-        renderAdmin();
-        draw();
-    }
+    function tglP(id) { const i = prods.find(x=>x.id===id); i.d = !i.d; save(); }
+    function tglE(id) { const i = extras.find(x=>x.id===id); i.d = !i.d; save(); }
+    function save() { localStorage.setItem('onmi_p_v6', JSON.stringify(prods)); localStorage.setItem('onmi_e_v6', JSON.stringify(extras)); draw(); }
+    function limparTudo() { if(confirm("Isso apagará todas as suas modificações. Continuar?")) { localStorage.clear(); location.reload(); } }
 
     // --- VITRINE ---
     function draw() {
-        let nHtml = ""; let vHtml = "";
-        for (let k in db_cats) {
-            const list = db_prods.filter(p => p.cat === k);
-            nHtml += `<div class="cat-item" onclick="document.getElementById('sec-${k}').scrollIntoView()">${db_cats[k]}</div>`;
-            vHtml += `<div id="sec-${k}" class="section-header">${db_cats[k]}</div>`;
-            list.forEach(p => {
-                vHtml += `
-                <div class="produto-card" onclick="abrirCompra(${p.id})">
-                    <div class="produto-info"><h3>${p.nome}</h3><span class="preco">R$ ${p.preco.toFixed(2)}</span></div>
-                </div>`;
-            });
+        const catNames = { copo: "Açaí no Copo", garrafa: "Açaí na Garrafa", pastel: "Pastel da Nana", bebida: "Bebidas" };
+        let vHtml = ""; let cHtml = "";
+
+        for (let k in catNames) {
+            const list = prods.filter(p => p.cat === k && p.d);
+            if(list.length > 0) {
+                cHtml += `<div class="cat-item" onclick="document.getElementById('sec-${k}').scrollIntoView()">${catNames[k]}</div>`;
+                vHtml += `<div id="sec-${k}" class="section-header">${catNames[k]}</div>`;
+                list.forEach(p => {
+                    vHtml += `
+                    <div class="produto-card" onclick="buy(${p.id})">
+                        <div class="produto-info">
+                            <h3>${p.nome}</h3>
+                            <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                        </div>
+                        <div class="img-container"><i class="fas fa-ice-cream"></i></div>
+                    </div>`;
+                });
+            }
         }
-        document.getElementById('navCategorias').innerHTML = nHtml;
+        document.getElementById('menuCats').innerHTML = cHtml;
         document.getElementById('vitrine').innerHTML = vHtml;
     }
 
-    function abrirCompra(id) {
-        if(!lojaAberta) return alert("Loja Fechada!");
-        atual = db_prods.find(x=>x.id===id);
-        document.getElementById('viewNome').innerText = atual.nome;
+    function buy(id) {
+        itemAtual = prods.find(x=>x.id===id);
+        document.getElementById('modalTitle').innerText = itemAtual.nome;
+        
+        let filter = itemAtual.cat;
+        if(itemAtual.nome.toLowerCase().includes("tradicional")) filter = 'pastel_t';
+        if(itemAtual.nome.toLowerCase().includes("especial")) filter = 'pastel_e';
+
+        const avail = extras.filter(e => e.cat === filter && e.d);
+        const sections = [...new Set(avail.map(e => e.sec))];
+
+        document.getElementById('modalOpcoes').innerHTML = sections.map(s => `
+            <div class="secao-titulo"><span>${s}</span> ${filter.includes('pastel')?'<span>(Escolha 1)</span>':''}</div>
+            ${avail.filter(e => e.sec === s).map(e => `
+                <label class="admin-item-row" style="padding:15px 20px;">
+                    <span>${e.n} ${e.p>0?'<b style="color:var(--success)">+ R$'+e.p+'</b>':''}</span>
+                    <input type="${filter.includes('pastel')?'radio':'checkbox'}" name="opt" value="${e.n}" data-p="${e.p}">
+                </label>
+            `).join('')}
+        `).join('');
         document.getElementById('modalCompra').style.display = "flex";
     }
 
-    function confirmarPedido() {
-        carrinho.push({ nome: atual.nome, total: atual.preco });
+    function adicionarPedido() {
+        const sel = Array.from(document.querySelectorAll('input[name="opt"]:checked'));
+        const extraP = sel.reduce((a, b) => a + parseFloat(b.dataset.p), 0);
+        carrinho.push({ nome: itemAtual.nome, total: itemAtual.preco + extraP });
+        
         document.getElementById('footerCart').style.display = "flex";
         document.getElementById('cartQtd').innerText = carrinho.length;
-        const total = carrinho.reduce((a,b)=>a+b.total, 0);
-        document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2)}`;
+        const total = carrinho.reduce((a, b) => a + b.total, 0);
+        document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
         fecharModal('modalCompra');
     }
 
     function fecharModal(id) { document.getElementById(id).style.display = "none"; }
-
-    function finalizarNoZap() {
-        let msg = "*NOVO PEDIDO ONMI*%0A";
-        carrinho.forEach(i => msg += `- ${i.nome}%0A`);
+    
+    function abrirFinalizacao() {
+        let msg = "*PEDIDO ONMI AÇAÍ*%0A%0A";
+        carrinho.forEach(i => msg += `✅ ${i.nome}%0A`);
+        msg += `%0A*TOTAL: ${document.getElementById('cartTotal').innerText}*`;
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
-    // Inicialização
     draw();
-    updateStatusUI();
-    
-    // Checa o status na nuvem a cada 20 segundos
-    setInterval(checkLojaStatus, 20000);
 </script>
 </body>
 </html>
