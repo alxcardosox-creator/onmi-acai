@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onmi Açaí | Admin Total</title>
+    <title>Onmi Açaí | Admin Total v8</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
@@ -65,7 +65,7 @@
         <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" id="logoAdmin">
         <span style="font-weight:800; font-size:18px;">ONMI AÇAÍ</span>
     </div>
-    <div id="statusLoja" style="font-size:10px; padding:4px 12px; border-radius:20px; background:#27ae60; font-weight:700;">ABERTO</div>
+    <div id="statusTag" style="font-size:10px; padding:4px 12px; border-radius:20px; font-weight:700;">CARREGANDO...</div>
 </header>
 
 <div class="nav-categories" id="navCategorias"></div>
@@ -74,12 +74,21 @@
 
 <div id="modalAdmin" class="modal">
     <div class="modal-content" style="padding: 20px;">
-        <h2 style="color:var(--primary); margin:0 0 15px 0;">Painel Administrativo</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="color:var(--primary); margin:0;">Painel Admin</h2>
+            <div style="display:flex; align-items:center; gap:10px; background:#eee; padding:5px 15px; border-radius:20px;">
+                <span id="txtStatusAdmin" style="font-size:12px; font-weight:bold;">LOJA FECHADA</span>
+                <label class="switch">
+                    <input type="checkbox" id="checkStatusLoja" onchange="toggleLoja()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
         
         <div class="admin-box">
             <h4 style="margin:0 0 10px 0;"><i class="fas fa-tags"></i> 1. Criar Nova Categoria</h4>
-            <input type="text" id="catNome" placeholder="Ex: Sorvetes, Bebidas, Combos">
-            <button class="btn btn-primary" onclick="addCategoria()" style="margin: 5px 0;">Criar Categoria</button>
+            <input type="text" id="catNome" placeholder="Ex: Sorvetes, Bebidas">
+            <button class="btn btn-primary" onclick="addCategoria()">Criar Categoria</button>
             <div id="listaCategoriasAdmin" style="font-size: 11px; color: #666; margin-top: 10px;"></div>
         </div>
 
@@ -94,7 +103,7 @@
         <div class="admin-box">
             <h4 style="margin:0 0 10px 0;"><i class="fas fa-plus"></i> 3. Cadastrar Adicional</h4>
             <input type="text" id="eNome" placeholder="Ex: Nutella, Morango">
-            <input type="number" id="ePreco" placeholder="Preço Adicional (0 se grátis)">
+            <input type="number" id="ePreco" placeholder="Preço Adicional">
             <select id="ePai">
                 <option value="copo">Para Açaí</option>
                 <option value="pastel_t">Para Pastel Tradicional</option>
@@ -128,29 +137,41 @@
 
 <script>
     // --- DADOS ---
-    const CATEGORIAS_PADRAO = {
-        "copo": "Açaí no Copo",
-        "pastel": "Pastel da Nana"
-    };
+    const CATEGORIAS_PADRAO = { "copo": "Açaí no Copo", "pastel": "Pastel da Nana" };
+    const PRODUTOS_PADRAO = [ { id: 1, nome: "Copo 300ml", preco: 8.00, cat: "copo", d: true }, { id: 2, nome: "Copo 500ml", preco: 13.00, cat: "copo", d: true } ];
+    const EXTRAS_PADRAO = [ { id: 101, n: "Granola", p: 0, cat: "copo", sec: "Complementos", d: true }, { id: 103, n: "Nutella", p: 3.00, cat: "copo", sec: "Caldas", d: true } ];
 
-    const PRODUTOS_PADRAO = [
-        { id: 1, nome: "Copo 300ml", preco: 8.00, cat: "copo", d: true },
-        { id: 2, nome: "Copo 500ml", preco: 13.00, cat: "copo", d: true },
-        { id: 3, nome: "Pastel Tradicional", preco: 7.00, cat: "pastel", d: true }
-    ];
-
-    const EXTRAS_PADRAO = [
-        { id: 101, n: "Granola", p: 0, cat: "copo", sec: "Complementos", d: true },
-        { id: 102, n: "Morango", p: 0, cat: "copo", sec: "Frutas", d: true },
-        { id: 103, n: "Nutella", p: 3.00, cat: "copo", sec: "Caldas", d: true },
-        { id: 201, n: "Carne", p: 0, cat: "pastel_t", sec: "Sabores", d: true }
-    ];
-
-    let db_cats = JSON.parse(localStorage.getItem('onmi_cats_v7')) || CATEGORIAS_PADRAO;
-    let db_prods = JSON.parse(localStorage.getItem('onmi_prods_v7')) || PRODUTOS_PADRAO;
-    let db_exts = JSON.parse(localStorage.getItem('onmi_exts_v7')) || EXTRAS_PADRAO;
+    let db_cats = JSON.parse(localStorage.getItem('onmi_cats_v8')) || CATEGORIAS_PADRAO;
+    let db_prods = JSON.parse(localStorage.getItem('onmi_prods_v8')) || PRODUTOS_PADRAO;
+    let db_exts = JSON.parse(localStorage.getItem('onmi_exts_v8')) || EXTRAS_PADRAO;
+    let lojaAberta = JSON.parse(localStorage.getItem('onmi_status_v8')) ?? true;
     let carrinho = [];
     let atual = null;
+
+    // --- LOGICA STATUS LOJA ---
+    function updateStatusUI() {
+        const tag = document.getElementById('statusTag');
+        const check = document.getElementById('checkStatusLoja');
+        const txt = document.getElementById('txtStatusAdmin');
+        
+        if(lojaAberta) {
+            tag.innerText = "ABERTO";
+            tag.style.background = "#27ae60";
+            if(txt) txt.innerText = "LOJA ABERTA";
+            if(check) check.checked = true;
+        } else {
+            tag.innerText = "FECHADO";
+            tag.style.background = "#e74c3c";
+            if(txt) txt.innerText = "LOJA FECHADA";
+            if(check) check.checked = false;
+        }
+    }
+
+    function toggleLoja() {
+        lojaAberta = !lojaAberta;
+        localStorage.setItem('onmi_status_v8', JSON.stringify(lojaAberta));
+        updateStatusUI();
+    }
 
     // --- LOGICA ADMIN ---
     let pressTimer;
@@ -158,7 +179,7 @@
     document.getElementById('logoAdmin').ontouchstart = () => pressTimer = setTimeout(abrirAdmin, 2000);
     document.getElementById('logoAdmin').onmouseup = () => clearTimeout(pressTimer);
 
-    function abrirAdmin() { if(prompt("Senha:") === "onmi123") { document.getElementById('modalAdmin').style.display="flex"; renderAdmin(); } }
+    function abrirAdmin() { if(prompt("Senha:") === "onmi123") { document.getElementById('modalAdmin').style.display="flex"; renderAdmin(); updateStatusUI(); } }
 
     function addCategoria() {
         const nome = document.getElementById('catNome').value;
@@ -189,17 +210,14 @@
     }
 
     function renderAdmin() {
-        // Dropdown de categorias no cadastro
         let drop = "";
         for (let k in db_cats) drop += `<option value="${k}">${db_cats[k]}</option>`;
         document.getElementById('pCatSelect').innerHTML = drop;
 
-        // Lista de Categorias para apagar
         let catLista = "Categorias: ";
         for (let k in db_cats) catLista += `<span onclick="delCat('${k}')" style="background:#ddd; padding:2px 6px; margin-right:5px; border-radius:5px; cursor:pointer;">${db_cats[k]} x</span> `;
         document.getElementById('listaCategoriasAdmin').innerHTML = catLista;
 
-        // Lista Geral de Ativação
         let h = '<div style="padding:10px; font-weight:bold;">Produtos na Vitrine</div>';
         db_prods.forEach(p => h += `<div class="admin-item-row"><span>${p.nome}</span><div><i class="fas fa-trash" style="color:red; margin-right:10px" onclick="delProd(${p.id})"></i><label class="switch"><input type="checkbox" ${p.d?'checked':''} onchange="tglP(${p.id})"><span class="slider"></span></label></div></div>`);
         
@@ -216,16 +234,16 @@
     function tglE(id) { const i = db_exts.find(x=>x.id===id); i.d = !i.d; salvarEAtualizar(); }
 
     function salvarEAtualizar() {
-        localStorage.setItem('onmi_cats_v7', JSON.stringify(db_cats));
-        localStorage.setItem('onmi_prods_v7', JSON.stringify(db_prods));
-        localStorage.setItem('onmi_exts_v7', JSON.stringify(db_exts));
+        localStorage.setItem('onmi_cats_v8', JSON.stringify(db_cats));
+        localStorage.setItem('onmi_prods_v8', JSON.stringify(db_prods));
+        localStorage.setItem('onmi_exts_v8', JSON.stringify(db_exts));
         renderAdmin();
         draw();
     }
 
     function resetarSistema() { if(confirm("Resetar tudo?")) { localStorage.clear(); location.reload(); } }
 
-    // --- LOGICA VITRINE ---
+    // --- VITRINE ---
     function draw() {
         let nHtml = ""; let vHtml = "";
         for (let k in db_cats) {
@@ -250,6 +268,7 @@
     }
 
     function abrirCompra(id) {
+        if(!lojaAberta) return alert("Desculpe, a loja está fechada no momento!");
         atual = db_prods.find(x=>x.id===id);
         document.getElementById('viewNome').innerText = atual.nome;
         
@@ -273,6 +292,7 @@
     }
 
     function confirmarPedido() {
+        if(!lojaAberta) return;
         const sel = Array.from(document.querySelectorAll('input[name="opt"]:checked'));
         const extraP = sel.reduce((a, b) => a + parseFloat(b.dataset.p), 0);
         carrinho.push({ nome: atual.nome, total: atual.preco + extraP });
@@ -287,6 +307,7 @@
     function fecharModal(id) { document.getElementById(id).style.display = "none"; }
 
     function finalizarNoZap() {
+        if(!lojaAberta) return alert("Loja Fechada!");
         let msg = "*NOVO PEDIDO ONMI AÇAÍ*%0A%0A";
         carrinho.forEach(i => msg += `✅ ${i.nome}%0A`);
         msg += `%0A*TOTAL: ${document.getElementById('cartTotal').innerText}*`;
@@ -294,6 +315,7 @@
     }
 
     draw();
+    updateStatusUI();
 </script>
 </body>
 </html>
