@@ -3,413 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Onmi Açaí · Peça online</title>
+    <title>Onmi Açaí · Painel Admin</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* (mesmo estilo, mantido) */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f5f3f7;
-            color: #1e1e2f;
-            padding-bottom: 90px;
-            scroll-behavior: smooth;
-        }
-        header {
-            background: rgba(91, 15, 115, 0.98);
-            backdrop-filter: blur(8px);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 1200;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        .header-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .logo-img {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            border: 2px solid #ffffffaa;
-            background: white;
-            object-fit: cover;
-            transition: transform 0.2s;
-            cursor: pointer;
-        }
-        .logo-img:active {
-            transform: scale(0.95);
-        }
-        .store-name {
-            color: white;
-            font-weight: 700;
-            font-size: 1.3rem;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        .status-badge {
-            font-size: 0.7rem;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 40px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        .status-aberto {
-            background: #1f8532;
-            color: white;
-        }
-        .status-fechado {
-            background: #b13e3e;
-            color: white;
-        }
-        .nav-categories {
-            background: white;
-            padding: 12px 20px;
-            position: sticky;
-            top: 70px;
-            z-index: 1100;
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            white-space: nowrap;
-            scrollbar-width: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-            border-bottom: 1px solid #eeeef5;
-        }
-        .nav-categories::-webkit-scrollbar {
-            display: none;
-        }
-        .cat-item {
-            padding: 8px 18px;
-            background: #f0eef2;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #4a4a5e;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 1px solid transparent;
-        }
-        .cat-item.active {
-            background: #5b0f73;
-            color: white;
-            box-shadow: 0 4px 12px rgba(91,15,115,0.3);
-            border-color: #7b2c9f;
-        }
-        .cat-item:active {
-            transform: scale(0.96);
-        }
-        .container {
-            max-width: 640px;
-            margin: 0 auto;
-            padding: 16px 20px;
-        }
-        .section-header {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: #5b0f73;
-            margin: 30px 0 18px 0;
-            padding-left: 8px;
-            border-left: 5px solid #ffb347;
-            letter-spacing: -0.3px;
-            scroll-margin-top: 140px;
-        }
-        .produto-card {
-            display: flex;
-            background: white;
-            margin-bottom: 16px;
-            padding: 16px;
-            border-radius: 24px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05);
-            align-items: center;
-            transition: all 0.25s;
-            border: 1px solid #ffffff50;
-            cursor: pointer;
-        }
-        .produto-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 30px rgba(91,15,115,0.08);
-            border-color: #f0d9ff;
-        }
-        .produto-card:active {
-            transform: scale(0.99);
-        }
-        .produto-info {
-            flex: 1;
-        }
-        .produto-info h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #1e1e2f;
-            margin-bottom: 6px;
-        }
-        .preco {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #5b0f73;
-            background: #f4e9fa;
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 40px;
-            letter-spacing: -0.5px;
-        }
-        .img-container {
-            width: 90px;
-            height: 90px;
-            border-radius: 20px;
-            overflow: hidden;
-            margin-left: 16px;
-            background: #fafafa;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            border: 1px solid #f0f0f0;
-        }
-        .produto-img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-        .produto-card:hover .produto-img {
-            transform: scale(1.05);
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            z-index: 2000;
-            align-items: flex-end;
-            justify-content: center;
-        }
-        .modal-content {
-            background: white;
-            width: 100%;
-            max-width: 480px;
-            border-radius: 30px 30px 0 0;
-            padding: 24px 20px 30px;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
-            animation: slideUp 0.3s ease;
-        }
-        @keyframes slideUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        .modal h2 {
-            font-size: 1.3rem;
-            margin-bottom: 20px;
-            color: #5b0f73;
-            font-weight: 700;
-        }
-        .secao-titulo-box {
-            background: #f8f3ff;
-            padding: 14px 18px;
-            margin: 20px 0 8px;
-            border-radius: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid #ffb347;
-        }
-        .secao-nome {
-            font-weight: 700;
-            color: #2d2d3a;
-        }
-        .secao-ajuda {
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #5b0f73;
-            background: #e3d1f0;
-            padding: 4px 12px;
-            border-radius: 30px;
-        }
-        .opcao-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px 18px;
-            border-bottom: 1px solid #f0eef5;
-            cursor: pointer;
-            transition: background 0.15s;
-        }
-        .opcao-item:active {
-            background: #faf5ff;
-        }
-        .opcao-nome {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: #1e1e2f;
-        }
-        .opcao-nome b {
-            color: #d48806;
-            font-weight: 700;
-        }
-        input[type="radio"], input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            accent-color: #5b0f73;
-            transform: scale(1.1);
-        }
-        .btn-acao {
-            background: #5b0f73;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 18px;
-            border-radius: 60px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin: 24px 0 12px;
-            cursor: pointer;
-            box-shadow: 0 10px 25px rgba(91,15,115,0.3);
-            transition: all 0.2s;
-        }
-        .btn-acao:active {
-            transform: scale(0.97);
-            box-shadow: 0 5px 15px rgba(91,15,115,0.4);
-        }
-        .footer-carrinho {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 40px);
-            max-width: 560px;
-            background: #5b0f73;
-            color: white;
-            padding: 16px 24px;
-            border-radius: 80px;
-            display: none;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1500;
-            box-shadow: 0 15px 40px rgba(91,15,115,0.4);
-            backdrop-filter: blur(10px);
-            border: 1px solid #ffffff30;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .footer-carrinho:active {
-            transform: translateX(-50%) scale(0.97);
-        }
-        .footer-carrinho span:first-child i {
-            margin-right: 10px;
-            font-size: 1.2rem;
-        }
-        .footer-carrinho span:last-child {
-            font-size: 1.3rem;
-            font-weight: 800;
-        }
-        input, select {
-            width: 100%;
-            padding: 16px 20px;
-            margin-bottom: 12px;
-            border: 1.5px solid #eceaf0;
-            border-radius: 40px;
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            background: #fcfaff;
-            transition: border 0.2s;
-        }
-        input:focus, select:focus {
-            outline: none;
-            border-color: #5b0f73;
-            background: white;
-        }
-        #areaPix {
-            background: #f2eaf7;
-            border-radius: 20px;
-            padding: 16px;
-            font-size: 0.9rem;
-            border: 1px dashed #9b6db7;
-            color: #2d2d3a;
-        }
-        #adminPanel {
-            background: #ffffff;
-        }
-        .admin-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #efefef;
-        }
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 46px;
-            height: 24px;
-        }
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .3s;
-            border-radius: 34px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 2px;
-            bottom: 2px;
-            background-color: white;
-            transition: .3s;
-            border-radius: 50%;
-        }
-        input:checked + .slider {
-            background-color: #5b0f73;
-        }
-        input:checked + .slider:before {
-            transform: translateX(22px);
-        }
-        .admin-scroller {
-            max-height: 250px;
-            overflow-y: auto;
-            background: #faf9fc;
-            padding: 15px;
-            border-radius: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #eceaf0;
-        }
-        #avisoFechado {
-            background: linear-gradient(145deg, #fff0f0, #ffe7e7);
-            border-radius: 40px;
-            padding: 40px 20px;
-            color: #a55555;
-            border: 1px solid #ffcdcd;
-        }
-        @media (min-width: 640px) {
-            .modal-content {
-                border-radius: 30px 30px 0 0;
-                margin: 0 auto;
-            }
-        }
+        /* ========== SEU CSS (MANTIDO) ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Inter', sans-serif; background: #f5f3f7; color: #1e1e2f; padding-bottom: 90px; scroll-behavior: smooth; }
+        header { background: rgba(91, 15, 115, 0.98); backdrop-filter: blur(8px); padding: 12px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1200; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .header-info { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 44px; height: 44px; border-radius: 50%; border: 2px solid #ffffffaa; background: white; object-fit: cover; transition: transform 0.2s; cursor: pointer; }
+        .logo-img:active { transform: scale(0.95); }
+        .store-name { color: white; font-weight: 700; font-size: 1.3rem; letter-spacing: -0.5px; text-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .status-badge { font-size: 0.7rem; font-weight: 700; padding: 6px 14px; border-radius: 40px; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.3); }
+        .status-aberto { background: #1f8532; color: white; }
+        .status-fechado { background: #b13e3e; color: white; }
+        .nav-categories { background: white; padding: 12px 20px; position: sticky; top: 70px; z-index: 1100; display: flex; gap: 8px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; box-shadow: 0 4px 12px rgba(0,0,0,0.02); border-bottom: 1px solid #eeeef5; }
+        .nav-categories::-webkit-scrollbar { display: none; }
+        .cat-item { padding: 8px 18px; background: #f0eef2; border-radius: 40px; font-size: 0.85rem; font-weight: 600; color: #4a4a5e; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
+        .cat-item.active { background: #5b0f73; color: white; box-shadow: 0 4px 12px rgba(91,15,115,0.3); border-color: #7b2c9f; }
+        .cat-item:active { transform: scale(0.96); }
+        .container { max-width: 640px; margin: 0 auto; padding: 16px 20px; }
+        .section-header { font-weight: 700; font-size: 1.1rem; color: #5b0f73; margin: 30px 0 18px 0; padding-left: 8px; border-left: 5px solid #ffb347; letter-spacing: -0.3px; scroll-margin-top: 140px; }
+        .produto-card { display: flex; background: white; margin-bottom: 16px; padding: 16px; border-radius: 24px; box-shadow: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05); align-items: center; transition: all 0.25s; border: 1px solid #ffffff50; cursor: pointer; }
+        .produto-card:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(91,15,115,0.08); border-color: #f0d9ff; }
+        .produto-card:active { transform: scale(0.99); }
+        .produto-info { flex: 1; }
+        .produto-info h3 { font-size: 1.1rem; font-weight: 700; color: #1e1e2f; margin-bottom: 6px; }
+        .preco { font-size: 1.2rem; font-weight: 800; color: #5b0f73; background: #f4e9fa; display: inline-block; padding: 4px 12px; border-radius: 40px; letter-spacing: -0.5px; }
+        .img-container { width: 90px; height: 90px; border-radius: 20px; overflow: hidden; margin-left: 16px; background: #fafafa; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 1px solid #f0f0f0; }
+        .produto-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s; }
+        .produto-card:hover .produto-img { transform: scale(1.05); }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); z-index: 2000; align-items: flex-end; justify-content: center; }
+        .modal-content { background: white; width: 100%; max-width: 480px; border-radius: 30px 30px 0 0; padding: 24px 20px 30px; max-height: 85vh; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.2); animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .modal h2 { font-size: 1.3rem; margin-bottom: 20px; color: #5b0f73; font-weight: 700; }
+        .secao-titulo-box { background: #f8f3ff; padding: 14px 18px; margin: 20px 0 8px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #ffb347; }
+        .secao-nome { font-weight: 700; color: #2d2d3a; }
+        .secao-ajuda { font-size: 0.7rem; font-weight: 600; color: #5b0f73; background: #e3d1f0; padding: 4px 12px; border-radius: 30px; }
+        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 18px; border-bottom: 1px solid #f0eef5; cursor: pointer; transition: background 0.15s; }
+        .opcao-item:active { background: #faf5ff; }
+        .opcao-nome { font-size: 0.95rem; font-weight: 500; color: #1e1e2f; }
+        .opcao-nome b { color: #d48806; font-weight: 700; }
+        input[type="radio"], input[type="checkbox"] { width: 20px; height: 20px; accent-color: #5b0f73; transform: scale(1.1); }
+        .btn-acao { background: #5b0f73; color: white; border: none; width: 100%; padding: 18px; border-radius: 60px; font-size: 1.1rem; font-weight: 700; margin: 24px 0 12px; cursor: pointer; box-shadow: 0 10px 25px rgba(91,15,115,0.3); transition: all 0.2s; }
+        .btn-acao:active { transform: scale(0.97); box-shadow: 0 5px 15px rgba(91,15,115,0.4); }
+        .footer-carrinho { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: calc(100% - 40px); max-width: 560px; background: #5b0f73; color: white; padding: 16px 24px; border-radius: 80px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 15px 40px rgba(91,15,115,0.4); backdrop-filter: blur(10px); border: 1px solid #ffffff30; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+        .footer-carrinho:active { transform: translateX(-50%) scale(0.97); }
+        .footer-carrinho span:first-child i { margin-right: 10px; font-size: 1.2rem; }
+        .footer-carrinho span:last-child { font-size: 1.3rem; font-weight: 800; }
+        input, select { width: 100%; padding: 16px 20px; margin-bottom: 12px; border: 1.5px solid #eceaf0; border-radius: 40px; font-family: 'Inter', sans-serif; font-size: 0.95rem; background: #fcfaff; transition: border 0.2s; }
+        input:focus, select:focus { outline: none; border-color: #5b0f73; background: white; }
+        #areaPix { background: #f2eaf7; border-radius: 20px; padding: 16px; font-size: 0.9rem; border: 1px dashed #9b6db7; color: #2d2d3a; }
+        #adminPanel { background: #ffffff; }
+        .admin-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #efefef; }
+        .switch { position: relative; display: inline-block; width: 46px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; }
+        input:checked + .slider { background-color: #5b0f73; }
+        input:checked + .slider:before { transform: translateX(22px); }
+        .admin-scroller { max-height: 250px; overflow-y: auto; background: #faf9fc; padding: 15px; border-radius: 20px; margin-bottom: 20px; border: 1px solid #eceaf0; }
+        #avisoFechado { background: linear-gradient(145deg, #fff0f0, #ffe7e7); border-radius: 40px; padding: 40px 20px; color: #a55555; border: 1px solid #ffcdcd; }
+        @media (min-width: 640px) { .modal-content { border-radius: 30px 30px 0 0; margin: 0 auto; } }
+
+        /* Estilos extras para admin */
+        .admin-form { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+        .admin-form input, .admin-form select { margin-bottom: 0; }
+        .produto-admin-card { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed #ccc; }
+        .produto-admin-card button { background: none; border: none; color: #c0392b; font-size: 1.2rem; cursor: pointer; margin-left: 10px; }
+        .btn-pequeno { background: #5b0f73; color: white; border: none; padding: 8px 12px; border-radius: 30px; font-size: 0.8rem; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -447,7 +110,7 @@
     </div>
 </div>
 
-<!-- Modal de personalização -->
+<!-- Modal de personalização (mantido igual) -->
 <div id="modalConfirmacao" class="modal">
     <div class="modal-content">
         <h2 id="nomeProdModal">Carregando...</h2>
@@ -457,12 +120,11 @@
     </div>
 </div>
 
-<!-- Modal do carrinho -->
+<!-- Modal do carrinho (mantido igual) -->
 <div id="modalCarrinho" class="modal">
     <div class="modal-content">
         <h2 style="display:flex; align-items:center; gap:8px;"><i class="fas fa-shopping-basket"></i> Seu pedido</h2>
         <div id="itensNoCarrinho"></div>
-
         <div style="margin:20px 0;">
             <input type="text" id="nomeCliente" placeholder="Seu nome *">
             <input type="text" id="enderecoCliente" placeholder="Endereço completo (rua, nº, bairro) *" oninput="atualizarBarra()">
@@ -473,34 +135,49 @@
                 <option value="Dinheiro">Dinheiro</option>
             </select>
             <div id="areaPix" style="display:none;">
-                <i class="fas fa-qrcode"></i> <strong>Alex Cardoso Sousa</strong><br>
-                Pix CPF: <strong>200.769.057-80</strong>
+                <i class="fas fa-qrcode"></i> <strong>Alex Cardoso Sousa</strong><br> Pix CPF: <strong>200.769.057-80</strong>
             </div>
             <div id="areaTroco" style="display:none;">
                 <input type="number" id="trocoPara" placeholder="Troco para quanto?">
             </div>
         </div>
-
         <button class="btn-acao" onclick="finalizarPedido()" style="background:#27ae60;">Enviar WhatsApp</button>
         <p onclick="fecharModal('modalCarrinho')" style="text-align:center; color:#999; font-size:14px; cursor:pointer;">Fechar</p>
     </div>
 </div>
 
-<!-- Modal administrativo -->
+<!-- Modal administrativo (AGORA COM GERENCIAMENTO DE PRODUTOS) -->
 <div id="modalAdmin" class="modal">
     <div class="modal-content" id="adminPanel">
-        <h2>🛠️ Configurações</h2>
+        <h2>🛠️ Painel Administrativo</h2>
+        
+        <!-- Controle de status da loja -->
         <div class="admin-item"><span>Forçar loja <strong>Aberta</strong></span> <label class="switch"><input type="checkbox" id="btnForcarAberto"><span class="slider"></span></label></div>
         <div class="admin-item"><span>Forçar loja <strong>Fechada</strong></span> <label class="switch"><input type="checkbox" id="btnForcarFechado"><span class="slider"></span></label></div>
 
-        <h3 style="margin-top:20px;">📦 Produtos disponíveis</h3>
+        <h3 style="margin-top:20px;">➕ Adicionar novo produto</h3>
+        <div class="admin-form">
+            <input type="text" id="novoProdNome" placeholder="Nome do produto (ex: Copo 300ml)">
+            <input type="number" id="novoProdPreco" placeholder="Preço (ex: 8.00)" step="0.01">
+            <select id="novoProdCategoria">
+                <option value="copo">Açaí no Copo</option>
+                <option value="garrafa">Açaí na Garrafa</option>
+                <option value="pastel">Pastel da Nana</option>
+            </select>
+            <input type="text" id="novoProdImg" placeholder="URL da imagem (ex: copo300.jpg)">
+            <button class="btn-pequeno" onclick="adicionarProduto()">Adicionar produto</button>
+        </div>
+
+        <h3>📦 Gerenciar produtos</h3>
         <div class="admin-scroller" id="listaControleProdutos"></div>
 
-        <h3>🥄 Sabores / Extras</h3>
-        <div class="admin-scroller" id="listaControleComplementos"></div>
+        <h3>🥄 Complementos (em breve)</h3>
+        <div class="admin-scroller" id="listaControleComplementos">
+            <p style="color:#999; text-align:center;">Em desenvolvimento...</p>
+        </div>
 
         <button class="btn-acao" onclick="fecharModal('modalAdmin')" style="background:#5f5f6f;">Fechar</button>
-        <p onclick="resetarTudo()" style="text-align:center; color:#c0392b; font-size:13px; margin:15px 0; cursor:pointer;">⚠️ Resetar dados do site</p>
+        <p onclick="resetarTudo()" style="text-align:center; color:#c0392b; font-size:13px; margin:15px 0; cursor:pointer;">⚠️ Resetar dados do site (Firebase)</p>
     </div>
 </div>
 
@@ -510,99 +187,100 @@
     <span id="totalFlutuante">R$ 0,00</span>
 </div>
 
+<!-- Firebase SDK -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue, push, remove, update } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBqQceIX98UUOV6XA1zOx0v9L6n1lcKD90",
+        authDomain: "onmi-80ddb.firebaseapp.com",
+        projectId: "onmi-80ddb",
+        storageBucket: "onmi-80ddb.firebasestorage.app",
+        messagingSenderId: "898270717185",
+        appId: "1:898270717185:web:a994eaad9caf7b00c6a700",
+        measurementId: "G-67MCMCJ79B"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Referências principais
+    window.firebase = {
+        configRef: ref(database, 'configLoja'),
+        produtosRef: ref(database, 'produtos'),
+        complementosRef: ref(database, 'complementos'),
+        push, set, onValue, remove, update
+    };
+</script>
+
 <script>
     (function() {
-        // ========== CONTROLE MANUAL DO STATUS DA LOJA ==========
-        // Altere esta variável para true (aberto) ou false (fechado)
-        const LOJA_ABERTA = true;  // <--- MUDE AQUI
-        // =======================================================
-
-        // --------------------- BASE DE DADOS -------------------------
-        const PRODUTOS_BASE = [
-            { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
-            { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
-            { id: 3, cat: "copo", nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg" },
-            { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg" },
-            { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg" },
-            { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg" },
-            { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg" },
-            { id: 8, cat: "pastel", nome: "Pastel Tradicional", preco: 7.00, img: "Pastel Tradicional.jpg" },
-            { id: 9, cat: "pastel", nome: "Pastel Especial", preco: 8.00, img: "Pastel Especial.jpg" }
-        ];
-
-        const COMPLEMENTOS_BASE = [
-            { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', cat: 'copo', unico: true, obrigar: true },
-            { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', cat: 'copo', unico: true, obrigar: true },
-            { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', cat: 'copo', unico: true, obrigar: true },
-            { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', cat: 'copo', unico: true, obrigar: true },
-            { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', cat: 'copo', unico: true, obrigar: true },
-            { idc: 201, sec: 'Complementos', n: 'Granola', cat: 'copo' },
-            { idc: 202, sec: 'Complementos', n: 'Aveia', cat: 'copo' },
-            { idc: 203, sec: 'Complementos', n: 'Sucrilhos', cat: 'copo' },
-            { idc: 204, sec: 'Complementos', n: 'Granulado', cat: 'copo' },
-            { idc: 208, sec: 'Complementos', n: 'Leite em pó', cat: 'copo' },
-            { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo' },
-            { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo' },
-            { idc: 403, sec: 'Caldas', n: 'Leite Condensado', cat: 'copo' },
-            { idc: 501, sec: 'Especiais', n: 'Nutella', p: 3, cat: 'copo' },
-            { idc: 701, sec: 'Sabor do Pastel', n: 'Carne', cat: 'pastel_t', unico: true, obrigar: true },
-            { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', cat: 'pastel_t', unico: true, obrigar: true },
-            { idc: 703, sec: 'Sabor do Pastel', n: 'Queijo', cat: 'pastel_t', unico: true, obrigar: true },
-            { idc: 704, sec: 'Sabor do Pastel', n: 'Calabresa', cat: 'pastel_t', unico: true, obrigar: true },
-            { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', cat: 'pastel_t', unico: true, obrigar: true },
-            { idc: 706, sec: 'Sabor do Pastel', n: 'Misto', cat: 'pastel_t', unico: true, obrigar: true },
-            { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Carne c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
-            { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
-            { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Catupiry', cat: 'pastel_e', unico: true, obrigar: true },
-            { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
-            { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', p: 0, cat: 'garrafa' },
-            { idc: 602, sec: 'Adicionais', n: 'Nutella', p: 3.00, cat: 'garrafa' }
-        ];
-
-        // --------------------- ESTADO GLOBAL -------------------------
-        let estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod')) || [];
-        let estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp')) || [];
+        // ========== ESTADO GLOBAL ==========
+        let configLoja = { forcarAberto: false, forcarFechado: false };
+        let produtos = [];          // será preenchido pelo Firebase
+        let complementos = [];      // (para futura implementação)
         let carrinho = [];
         let itemSelecionado = null;
 
-        // Inicializa estoques com base
-        PRODUTOS_BASE.forEach(p => { if(!estoqueProd.find(e => e.id === p.id)) estoqueProd.push({id: p.id, d: true}); });
-        COMPLEMENTOS_BASE.forEach(c => { if(!estoqueComp.find(e => e.idc === c.idc)) estoqueComp.push({idc: c.idc, d: true}); });
-
-        // --------------------- FUNÇÕES DE UI -------------------------
+        // ========== FUNÇÕES DE UI ==========
         function renderizarProdutos() {
-            ['copo', 'garrafa', 'pastel'].forEach(cat => {
-                const listaId = cat === 'copo' ? 'lista-copos' : cat === 'garrafa' ? 'lista-garrafas' : 'lista-pasteis';
-                const listaEl = document.getElementById(listaId);
-                if (!listaEl) return;
-                listaEl.innerHTML = PRODUTOS_BASE.filter(p => p.cat === cat).map(p => {
-                    if (!estoqueProd.find(e => e.id === p.id)?.d) return '';
-                    return `
-                        <div class="produto-card" data-produto-id="${p.id}">
-                            <div class="produto-info">
-                                <h3>${p.nome}</h3>
-                                <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
-                            </div>
-                            <div class="img-container">
-                                <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img" loading="lazy">
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            });
+            // Agrupa produtos por categoria
+            const copos = produtos.filter(p => p.cat === 'copo' && p.ativo !== false);
+            const garrafas = produtos.filter(p => p.cat === 'garrafa' && p.ativo !== false);
+            const pasteis = produtos.filter(p => p.cat === 'pastel' && p.ativo !== false);
 
+            document.getElementById('lista-copos').innerHTML = copos.map(p => `
+                <div class="produto-card" data-produto-id="${p.id}">
+                    <div class="produto-info">
+                        <h3>${p.nome}</h3>
+                        <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                    </div>
+                    <div class="img-container">
+                        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img" loading="lazy">
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('lista-garrafas').innerHTML = garrafas.map(p => `
+                <div class="produto-card" data-produto-id="${p.id}">
+                    <div class="produto-info">
+                        <h3>${p.nome}</h3>
+                        <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                    </div>
+                    <div class="img-container">
+                        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img" loading="lazy">
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('lista-pasteis').innerHTML = pasteis.map(p => `
+                <div class="produto-card" data-produto-id="${p.id}">
+                    <div class="produto-info">
+                        <h3>${p.nome}</h3>
+                        <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                    </div>
+                    <div class="img-container">
+                        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img" loading="lazy">
+                    </div>
+                </div>
+            `).join('');
+
+            // Reatribui eventos de clique
             document.querySelectorAll('.produto-card').forEach(card => {
                 card.addEventListener('click', (e) => {
-                    const id = Number(card.dataset.produtoId);
-                    const produto = PRODUTOS_BASE.find(p => p.id === id);
+                    const id = card.dataset.produtoId;
+                    const produto = produtos.find(p => p.id === id);
                     if (produto) abrirModal(produto);
                 });
             });
         }
 
         function checarStatusLoja() {
-            // Usa a variável manual LOJA_ABERTA
-            const aberto = LOJA_ABERTA;
+            const hora = new Date().getHours();
+            let aberto = (hora >= 13 && hora < 22);
+            if (configLoja.forcarAberto) aberto = true;
+            if (configLoja.forcarFechado) aberto = false;
             const badge = document.getElementById('badgeStatus');
             badge.innerText = aberto ? "Aberto" : "Fechado";
             badge.className = "status-badge " + (aberto ? "status-aberto" : "status-fechado");
@@ -620,66 +298,22 @@
             document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
         }
 
-        // --------------------- MODAIS -------------------------
+        // ========== MODAIS (personalização e carrinho) ==========
         function abrirModal(produto) {
             itemSelecionado = produto;
             document.getElementById('nomeProdModal').innerText = produto.nome;
             const container = document.getElementById('opcionais-container');
-            container.innerHTML = "";
-
-            let buscaCat = produto.cat;
-            if (produto.id === 8) buscaCat = 'pastel_t';
-            if (produto.id === 9) buscaCat = 'pastel_e';
-
-            const secoes = [...new Set(COMPLEMENTOS_BASE.filter(c => c.cat === buscaCat).map(c => c.sec))];
-            container.innerHTML = secoes.map(secNome => {
-                const itens = COMPLEMENTOS_BASE.filter(c => {
-                    const disp = estoqueComp.find(e => e.idc === c.idc)?.d ?? true;
-                    return c.sec === secNome && c.cat === buscaCat && disp;
-                });
-                if (!itens.length) return '';
-
-                const htmlItens = itens.map(item => `
-                    <label class="opcao-item">
-                        <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
-                        <input type="${item.unico ? 'radio' : 'checkbox'}" name="sec-${secNome.replace(/\s/g,'')}" class="extra-item"
-                               data-preco="${item.p || 0}" data-obrigar="${item.obrigar || false}" value="${item.n}">
-                    </label>
-                `).join('');
-
-                return `
-                    <div class="secao-titulo-box">
-                        <span class="secao-nome">${secNome}</span>
-                        <span class="secao-ajuda">${itens[0]?.obrigar ? 'Obrigatório' : 'Opcional'}</span>
-                    </div>
-                    ${htmlItens}
-                `;
-            }).join('');
-
+            container.innerHTML = "<p style='text-align:center; color:#999;'>Nenhum complemento disponível no momento.</p>";
+            // Futuramente buscar complementos do Firebase para este produto
             document.getElementById('modalConfirmacao').style.display = 'flex';
         }
 
         window.adicionarAoCarrinho = function() {
             if (!itemSelecionado) return;
-            let buscaCat = itemSelecionado.cat;
-            if (itemSelecionado.id === 8) buscaCat = 'pastel_t';
-            if (itemSelecionado.id === 9) buscaCat = 'pastel_e';
-
-            const obrigatorios = [...new Set(COMPLEMENTOS_BASE.filter(c => c.obrigar && c.cat === buscaCat).map(c => c.sec))];
-            for (let sec of obrigatorios) {
-                if (!document.querySelector(`input[name="sec-${sec.replace(/\s/g,'')}"]:checked`)) {
-                    alert(`Escolha uma opção para "${sec}"`);
-                    return;
-                }
-            }
-
-            const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
-            const nomes = selecionados.map(el => el.value);
-            const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
             carrinho.push({
                 nome: itemSelecionado.nome,
-                precoFinal: itemSelecionado.preco + precoExtra,
-                detalhes: nomes.join(', ') || 'Tradicional'
+                precoFinal: itemSelecionado.preco,
+                detalhes: 'Sem complementos'
             });
             atualizarBarra();
             fecharModal('modalConfirmacao');
@@ -752,66 +386,147 @@
         }
         window.fecharModal = fecharModal;
 
-        // --------------------- ADMIN (agora apenas visual, sem efeito no status) -------------------------
+        // ========== FIREBASE ==========
+        function iniciarFirebaseListeners() {
+            // Configuração da loja
+            window.firebase.onValue(window.firebase.configRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    configLoja = data;
+                } else {
+                    configLoja = { forcarAberto: false, forcarFechado: false };
+                    window.firebase.set(window.firebase.configRef, configLoja);
+                }
+                checarStatusLoja();
+                // Atualiza os toggles no admin se estiver aberto
+                if (document.getElementById('modalAdmin').style.display === 'flex') {
+                    document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto || false;
+                    document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado || false;
+                }
+            });
+
+            // Produtos
+            window.firebase.onValue(window.firebase.produtosRef, (snapshot) => {
+                const data = snapshot.val();
+                produtos = [];
+                if (data) {
+                    // Converte objeto em array e adiciona id
+                    Object.keys(data).forEach(key => {
+                        produtos.push({ id: key, ...data[key] });
+                    });
+                }
+                renderizarProdutos();
+                // Se o admin estiver aberto, atualiza a lista de gerenciamento
+                if (document.getElementById('modalAdmin').style.display === 'flex') {
+                    renderizarAdminProdutos();
+                }
+            });
+        }
+
+        // ========== ADMIN ==========
         window.abrirAdmin = function() {
             const senha = prompt("Senha do admin:");
             if (senha === "onmi123") {
                 document.getElementById('modalAdmin').style.display = 'flex';
-                renderizarAdmin();
+                // Atualiza os toggles de status
+                document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto || false;
+                document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado || false;
+                renderizarAdminProdutos();
             }
         };
 
-        function renderizarAdmin() {
-            // Os toggles agora não fazem nada, apenas mostram o estado atual (mas não alteram)
-            document.getElementById('btnForcarAberto').checked = LOJA_ABERTA;
-            document.getElementById('btnForcarFechado').checked = !LOJA_ABERTA;
-
-            document.getElementById('listaControleProdutos').innerHTML = PRODUTOS_BASE.map(p => {
-                const ativo = estoqueProd.find(e => e.id === p.id)?.d ?? true;
-                return `<div class="admin-item"><span>${p.nome}</span><label class="switch"><input type="checkbox" ${ativo ? 'checked' : ''} onchange="toggleProduto(${p.id})"><span class="slider"></span></label></div>`;
-            }).join('');
-
-            document.getElementById('listaControleComplementos').innerHTML = COMPLEMENTOS_BASE.map(c => {
-                const ativo = estoqueComp.find(e => e.idc === c.idc)?.d ?? true;
-                return `<div class="admin-item"><span><small>[${c.cat}]</small> ${c.n}</span><label class="switch"><input type="checkbox" ${ativo ? 'checked' : ''} onchange="toggleComplemento(${c.idc})"><span class="slider"></span></label></div>`;
-            }).join('');
+        function renderizarAdminProdutos() {
+            const container = document.getElementById('listaControleProdutos');
+            container.innerHTML = produtos.map(p => `
+                <div class="produto-admin-card">
+                    <span>
+                        <strong>${p.nome}</strong> - R$ ${p.preco.toFixed(2).replace('.',',')} 
+                        <small style="color:#666;">[${p.cat}]</small>
+                    </span>
+                    <div>
+                        <label class="switch" style="transform: scale(0.8);">
+                            <input type="checkbox" ${p.ativo !== false ? 'checked' : ''} onchange="toggleAtivoProduto('${p.id}', this.checked)">
+                            <span class="slider"></span>
+                        </label>
+                        <button onclick="removerProduto('${p.id}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
         }
 
-        window.toggleProduto = (id) => {
-            const item = estoqueProd.find(e => e.id === id);
-            if (item) item.d = !item.d;
-            localStorage.setItem('onmi_estoque_prod', JSON.stringify(estoqueProd));
-            renderizarProdutos();
+        window.toggleAtivoProduto = function(id, ativo) {
+            window.firebase.update(window.firebase.produtosRef, { [id + '/ativo']: ativo });
         };
 
-        window.toggleComplemento = (idc) => {
-            const item = estoqueComp.find(e => e.idc === idc);
-            if (item) item.d = !item.d;
-            localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp));
+        window.removerProduto = function(id) {
+            if (confirm('Tem certeza que deseja remover este produto?')) {
+                window.firebase.remove(window.firebase.produtosRef, { [id]: null });
+            }
         };
 
-        // Os toggles de forçar aberto/fechado agora apenas exibem o status, mas não alteram
+        window.adicionarProduto = function() {
+            const nome = document.getElementById('novoProdNome').value.trim();
+            const preco = parseFloat(document.getElementById('novoProdPreco').value);
+            const cat = document.getElementById('novoProdCategoria').value;
+            const img = document.getElementById('novoProdImg').value.trim();
+
+            if (!nome || isNaN(preco) || preco <= 0) {
+                alert('Preencha nome e preço válido.');
+                return;
+            }
+
+            const novoProduto = {
+                nome,
+                preco,
+                cat,
+                img: img || 'default.jpg',
+                ativo: true
+            };
+
+            const novaRef = window.firebase.push(window.firebase.produtosRef);
+            window.firebase.set(novaRef, novoProduto);
+
+            // Limpa campos
+            document.getElementById('novoProdNome').value = '';
+            document.getElementById('novoProdPreco').value = '';
+            document.getElementById('novoProdImg').value = '';
+        };
+
         window.toggleForcarAberto = function() {
-            alert("Para alterar o status da loja, edite a variável LOJA_ABERTA no código e publique novamente.");
-            // Reverte visualmente
-            document.getElementById('btnForcarAberto').checked = LOJA_ABERTA;
-            document.getElementById('btnForcarFechado').checked = !LOJA_ABERTA;
+            const checked = document.getElementById('btnForcarAberto').checked;
+            window.firebase.set(window.firebase.configRef, {
+                forcarAberto: checked,
+                forcarFechado: checked ? false : configLoja.forcarFechado
+            });
         };
 
         window.toggleForcarFechado = function() {
-            alert("Para alterar o status da loja, edite a variável LOJA_ABERTA no código e publique novamente.");
-            document.getElementById('btnForcarAberto').checked = LOJA_ABERTA;
-            document.getElementById('btnForcarFechado').checked = !LOJA_ABERTA;
+            const checked = document.getElementById('btnForcarFechado').checked;
+            window.firebase.set(window.firebase.configRef, {
+                forcarFechado: checked,
+                forcarAberto: checked ? false : configLoja.forcarAberto
+            });
         };
 
         window.resetarTudo = function() {
-            if (confirm("Resetar todos os dados e recarregar?")) {
-                localStorage.clear();
+            if (confirm('Isso vai apagar TODOS os produtos e configurações do Firebase. Continuar?')) {
+                window.firebase.set(window.firebase.configRef, { forcarAberto: false, forcarFechado: false });
+                window.firebase.set(window.firebase.produtosRef, null);
+                // Opcional: recarregar a página
                 location.reload();
             }
         };
 
-        // --------------------- CATEGORIAS SCROLL -------------------------
+        // ========== ACESSO ADMIN PELO LOGO ==========
+        let timerLogo;
+        const logo = document.getElementById('masterLogo');
+        logo.addEventListener('mousedown', () => timerLogo = setTimeout(abrirAdmin, 3000));
+        logo.addEventListener('mouseup', () => clearTimeout(timerLogo));
+        logo.addEventListener('mouseleave', () => clearTimeout(timerLogo));
+        logo.addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
+        logo.addEventListener('touchend', () => clearTimeout(timerLogo));
+
+        // ========== CATEGORIAS SCROLL ==========
         document.querySelectorAll('.cat-item').forEach(item => {
             item.addEventListener('click', function(e) {
                 document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
@@ -822,19 +537,8 @@
             });
         });
 
-        // --------------------- ACESSO ADMIN PELO LOGO -------------------------
-        let timerLogo;
-        const logo = document.getElementById('masterLogo');
-        logo.addEventListener('mousedown', () => timerLogo = setTimeout(abrirAdmin, 3000));
-        logo.addEventListener('mouseup', () => clearTimeout(timerLogo));
-        logo.addEventListener('mouseleave', () => clearTimeout(timerLogo));
-        logo.addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
-        logo.addEventListener('touchend', () => clearTimeout(timerLogo));
-
-        // --------------------- INICIALIZAÇÃO -------------------------
-        renderizarProdutos();
-        checarStatusLoja(); // usa LOJA_ABERTA
-        // Não precisa de setInterval porque o status não muda sozinho
+        // ========== INICIALIZAÇÃO ==========
+        iniciarFirebaseListeners();
 
         document.getElementById('btnAdicionar').addEventListener('click', window.adicionarAoCarrinho);
         document.getElementById('enderecoCliente')?.addEventListener('input', atualizarBarra);
