@@ -3,276 +3,416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onmi Açaí | Admin Full</title>
+    <title>Onmi Açaí | Premium Delivery</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root { --primary: #5b0f73; --success: #27ae60; --danger: #e74c3c; --bg: #f8f9fa; --white: #ffffff; }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; font-family: 'Poppins', sans-serif; }
-        body { margin: 0; background: var(--bg); padding-bottom: 100px; }
+        :root {
+            --primary: #5b0f73;
+            --primary-light: #f4e8f7;
+            --accent: #ffc107;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --bg: #f8f9fa;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --divider: #f1f2f6;
+        }
 
-        header { background: var(--primary); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1100; color: white; }
-        .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid white; cursor: pointer; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+        
+        body { 
+            margin: 0; 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--bg); 
+            color: var(--text);
+            padding-bottom: 100px;
+        }
 
-        .nav-categories { background: white; padding: 12px; position: sticky; top: 72px; z-index: 1000; display: flex; gap: 8px; overflow-x: auto; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .cat-item { padding: 6px 15px; background: #eee; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; }
+        header { 
+            background: var(--primary); 
+            padding: 15px 20px; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky; top: 0; z-index: 1100;
+        }
+
+        .header-info { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--white); background: var(--white); cursor: pointer; }
+        .store-name { color: white; font-weight: 700; font-size: 1rem; }
+
+        .status-badge { font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; border: 1px solid currentColor; }
+        .status-aberto { background: #afffcf22; color: #afffcf; }
+        .status-fechado { background: #ffafaf22; color: #ffafaf; }
+
+        .nav-categories { background: var(--white); padding: 12px 0; position: sticky; top: 72px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; padding-left: 15px; scrollbar-width: none; }
+        .nav-categories::-webkit-scrollbar { display: none; }
+
+        .cat-item { padding: 6px 16px; background: var(--divider); border-radius: 18px; font-size: 13px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; }
         .cat-item.active { background: var(--primary); color: white; }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 15px; }
-        .section-header { font-weight: 800; color: #7f8c8d; margin: 20px 0 10px; text-transform: uppercase; font-size: 12px; }
+        .container { max-width: 600px; margin: 0 auto; padding: 10px 15px; }
+        .section-header { font-weight: 700; font-size: 0.9rem; color: #7f8c8d; margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 1px; padding-top: 100px; margin-top: -80px; }
 
-        .produto-card { display: flex; background: white; margin-bottom: 12px; padding: 15px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); align-items: center; }
+        .produto-card { display: flex; background: var(--white); margin-bottom: 12px; padding: 15px; border-radius: 16px; box-shadow: var(--shadow); border: 1px solid transparent; align-items: center; transition: 0.2s; cursor: pointer; }
+        .produto-card:active { transform: scale(0.98); border-color: var(--primary-light); }
+
         .produto-info { flex: 1; }
-        .produto-info h3 { margin: 0; font-size: 15px; }
-        .preco { color: var(--primary); font-weight: 700; }
-        .img-prod { width: 70px; height: 70px; border-radius: 10px; object-fit: cover; margin-left: 10px; }
+        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
+        .preco { color: var(--primary); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
+        
+        .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f9f9f9; }
+        .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: flex-end; }
-        .modal-content { background: white; width: 100%; border-radius: 20px 20px 0 0; max-height: 90vh; overflow-y: auto; padding-bottom: 30px; }
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: flex-end; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--white); width: 100%; border-radius: 25px 25px 0 0; padding-bottom: 30px; max-height: 90vh; overflow-y: auto; }
 
-        .admin-section { background: #f1f2f6; padding: 15px; border-radius: 15px; margin-bottom: 15px; }
-        .admin-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #ddd; align-items: center; font-size: 13px; }
+        .secao-titulo-box { background: #f1f2f6; padding: 12px 18px; margin-top: 10px; display: flex; flex-direction: column; position: sticky; top: 0; z-index: 5; }
+        .secao-nome { font-size: 14px; font-weight: 700; color: #2d3436; }
+        .secao-ajuda { font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 2px; }
 
-        input, select { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ccc; border-radius: 8px; }
-        .btn { width: 90%; margin: 10px auto; display: block; padding: 15px; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-success { background: var(--success); color: white; }
+        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--divider); cursor: pointer; }
+        .opcao-nome { font-size: 13px; color: var(--text); }
 
+        .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; }
+
+        .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); }
+
+        input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; }
+
+        #adminPanel { padding: 20px; }
+        .admin-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; align-items: center; }
+        .admin-scroller { max-height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 10px; border-radius: 10px; margin-bottom: 15px; }
         .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; inset: 0; background: #ccc; border-radius: 20px; transition: .4s; }
-        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
-        input:checked + .slider { background: var(--success); }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
         input:checked + .slider:before { transform: translateX(16px); }
-
-        .footer-cart { position: fixed; bottom: 15px; left: 5%; width: 90%; background: var(--primary); color: white; padding: 15px; border-radius: 12px; display: none; justify-content: space-between; font-weight: 700; z-index: 1500; }
     </style>
 </head>
 <body>
 
 <header>
-    <div style="display:flex; align-items:center; gap:10px;">
-        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" id="logoAdmin">
-        <span style="font-weight:800;">ONMI AÇAÍ</span>
+    <div class="header-info">
+        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" id="masterLogo">
+        <span class="store-name">Onmi Açaí</span>
     </div>
-    <div id="statusLoja" style="font-size:10px; padding:4px 10px; border-radius:10px; background:#27ae60;">ABERTO</div>
+    <span id="badgeStatus" class="status-badge">Verificando...</span>
 </header>
 
-<div class="nav-categories" id="navCats">
+<div class="nav-categories" id="category-menu">
+    <div class="cat-item active" onclick="scrollToCategory('cat-copo', this)">Açaí no Copo</div>
+    <div class="cat-item" onclick="scrollToCategory('cat-garrafa', this)">Açaí na Garrafa</div>
+    <div class="cat-item" onclick="scrollToCategory('cat-pastel', this)">Pastel da Nana</div>
+</div>
+
+<div class="container" id="menu-content">
+    <div id="avisoFechado" style="display:none; text-align:center; padding:40px 20px; background:white; border-radius:20px; margin-top:20px;">
+        <i class="fas fa-moon" style="font-size:40px; color:var(--primary); margin-bottom:15px;"></i>
+        <h2 style="margin:0;">Estamos Fechados!</h2>
+        <p style="color:#666; font-size:14px;">Voltamos às 13:00.</p>
     </div>
 
-<div class="container" id="cardapioHome">
+    <div id="conteudoCardapio">
+        <div id="cat-copo" class="section-header">Açaí no Copo</div>
+        <div id="lista-copos"></div>
+        <div id="cat-garrafa" class="section-header">Açaí na Garrafa</div>
+        <div id="lista-garrafas"></div>
+        <div id="cat-pastel" class="section-header">Pastel da Nana</div>
+        <div id="lista-pasteis"></div>
     </div>
+</div>
+
+<div id="modalConfirmacao" class="modal">
+    <div class="modal-content">
+        <div style="padding:20px;">
+            <h2 id="nomeProdModal" style="margin:0; font-size:17px;">Personalizar</h2>
+        </div>
+        <div id="opcionais-container"></div>
+        <button class="btn-acao" id="btnAdicionar" onclick="adicionarAoCarrinho()">Adicionar ao Pedido</button>
+        <p onclick="fecharModal('modalConfirmacao')" style="text-align:center; color:#999; font-size:13px; cursor:pointer;">Cancelar</p>
+    </div>
+</div>
+
+<div id="modalCarrinho" class="modal">
+    <div class="modal-content" style="padding: 20px;">
+        <h2 style="font-size:18px; color:var(--primary); margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Resumo</h2>
+        <div id="itensNoCarrinho"></div>
+        <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:15px;">
+            <input type="text" id="nomeCliente" placeholder="Seu nome">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)" oninput="atualizarBarra()">
+            <select id="formaPagamento" onchange="togglePagamento()">
+                <option value="">Forma de Pagamento</option>
+                <option value="Pix">Pix</option>
+                <option value="Cartão">Cartão</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+            <div id="areaPix" style="display:none; font-size:12px; background:#fff; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:10px;">
+                <strong>Alex Cardoso Sousa</strong><br>Pix: 200.769.057-80
+            </div>
+            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
+        </div>
+        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Enviar via WhatsApp</button>
+    </div>
+</div>
 
 <div id="modalAdmin" class="modal">
-    <div class="modal-content" style="padding: 20px;">
-        <h2 style="color:var(--primary); margin-top:0;">Painel Admin</h2>
+    <div class="modal-content" id="adminPanel">
+        <h2 style="font-size:18px; color:var(--primary);">Configurações</h2>
+        <div class="admin-item"><span>Aberto</span><label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
+        <div class="admin-item"><span>Fechado</span><label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
         
-        <div class="admin-section">
-            <h4 style="margin:0;">📦 NOVO PRODUTO PRINCIPAL</h4>
-            <p style="font-size:10px;">(Ex: Copo 1 Litro, Refrigerante, etc)</p>
-            <input type="text" id="pNome" placeholder="Nome do Produto">
-            <input type="number" id="pPreco" placeholder="Preço (ex: 15.00)">
-            <select id="pCat">
-                <option value="copo">Açaí no Copo</option>
-                <option value="garrafa">Açaí na Garrafa</option>
-                <option value="pastel">Pastel da Nana</option>
-                <option value="bebida">Bebidas</option>
-            </select>
-            <button class="btn btn-success" onclick="addProdutoPrincipal()">Cadastrar Produto</button>
-        </div>
-
-        <div class="admin-section">
-            <h4 style="margin:0;">✨ NOVO COMPLEMENTO/SABOR</h4>
-            <input type="text" id="cNome" placeholder="Nome (Ex: Leite Ninho)">
-            <input type="number" id="cPreco" placeholder="Preço Adicional">
-            <select id="cPai">
-                <option value="copo">Para Açaí (Copo)</option>
-                <option value="pastel_t">Para Pastel Tradicional</option>
-                <option value="pastel_e">Para Pastel Especial</option>
-            </select>
-            <input type="text" id="cSec" placeholder="Categoria (Ex: Caldas, Frutas, Sabores)">
-            <button class="btn btn-primary" onclick="addExtra()">Cadastrar Complemento</button>
-        </div>
-
-        <h3>Gerenciar Itens</h3>
-        <div id="listaGerenciar" style="max-height: 200px; overflow-y: auto; background: white; border-radius: 10px;"></div>
+        <h3 style="font-size: 14px; margin-top: 15px;">Disponibilidade de Produtos</h3>
+        <div class="admin-scroller" id="listaControleProdutos"></div>
         
-        <button class="btn btn-primary" onclick="fecharModal('modalAdmin')">Fechar Admin</button>
-        <p onclick="resetarTudo()" style="color:red; text-align:center; font-size:11px; cursor:pointer;">Resetar Sistema</p>
+        <h3 style="font-size: 14px;">Disponibilidade de Sabores/Extras</h3>
+        <div class="admin-scroller" id="listaControleComplementos"></div>
+        
+        <button class="btn-acao" onclick="fecharModal('modalAdmin')">Fechar</button>
+        <p onclick="resetarTudo()" style="text-align:center; color:red; font-size:11px; cursor:pointer; margin-top:10px;">Resetar Memória do Site</p>
     </div>
 </div>
 
-<div id="modalCompra" class="modal">
-    <div class="modal-content">
-        <div style="padding: 20px;"><h2 id="viewNome" style="margin:0;">Personalizar</h2></div>
-        <div id="viewOpcoes"></div>
-        <button class="btn btn-primary" onclick="adicionarAoCarrinho()">Adicionar ao Pedido</button>
-        <p onclick="fecharModal('modalCompra')" style="text-align:center; color:#999; cursor:pointer;">Cancelar</p>
-    </div>
-</div>
-
-<div id="barraCarrinho" class="footer-cart" onclick="alert('Funcionalidade de finalizar pedido ativa!')">
-    <span>🛒 <span id="cartQtd">0</span> itens</span>
-    <span id="cartTotal">R$ 0,00</span>
+<div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
+    <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
+    <span id="totalFlutuante" style="font-weight:800;">R$ 0,00</span>
 </div>
 
 <script>
-    // --- BANCO DE DADOS INICIAL (FORÇADO) ---
-    const PRODUTOS_DEFAULT = [
-        { id: 1, nome: "Copo 250ml", preco: 5.00, cat: "copo", d: true },
-        { id: 2, nome: "Copo 300ml", preco: 8.00, cat: "copo", d: true },
-        { id: 3, nome: "Copo 400ml", preco: 11.00, cat: "copo", d: true },
-        { id: 4, nome: "Copo 500ml", preco: 13.00, cat: "copo", d: true },
-        { id: 5, nome: "Copo 700ml", preco: 16.00, cat: "copo", d: true },
-        { id: 8, nome: "Pastel Tradicional", preco: 7.00, cat: "pastel", d: true },
-        { id: 9, nome: "Pastel Especial", preco: 8.00, cat: "pastel", d: true }
+    const PRODUTOS_BASE = [
+        { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
+        { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
+        { id: 3, cat: "copo", nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg" },
+        { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg" },
+        { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg" },
+        { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg" },
+        { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg" },
+        { id: 8, cat: "pastel", nome: "Pastel Tradicional", preco: 7.00, img: "Pastel Tradicional.jpg" },
+        { id: 9, cat: "pastel", nome: "Pastel Especial", preco: 8.00, img: "Pastel Especial.jpg" }
     ];
 
-    const EXTRAS_DEFAULT = [
-        { id: 101, n: "Granola", p: 0, cat: "copo", sec: "Complementos", d: true },
-        { id: 102, n: "Leite em Pó", p: 0, cat: "copo", sec: "Complementos", d: true },
-        { id: 103, n: "Amendoim", p: 0, cat: "copo", sec: "Complementos", d: true },
-        { id: 104, n: "Morango", p: 0, cat: "copo", sec: "Frutas", d: true },
-        { id: 105, n: "Banana", p: 0, cat: "copo", sec: "Frutas", d: true },
-        { id: 106, n: "Leite Condensado", p: 0, cat: "copo", sec: "Caldas", d: true },
-        { id: 107, n: "Nutella", p: 3.00, cat: "copo", sec: "Especiais", d: true },
-        { id: 201, n: "Carne", p: 0, cat: "pastel_t", sec: "Sabores", d: true },
-        { id: 202, n: "Frango", p: 0, cat: "pastel_t", sec: "Sabores", d: true },
-        { id: 203, n: "Queijo", p: 0, cat: "pastel_t", sec: "Sabores", d: true },
-        { id: 301, n: "Carne c/ Queijo", p: 0, cat: "pastel_e", sec: "Sabores", d: true },
-        { id: 302, n: "Frango c/ Catupiry", p: 0, cat: "pastel_e", sec: "Sabores", d: true }
+    const COMPLEMENTOS_BASE = [
+        { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', cat: 'copo', unico: true, obrigar: true },
+        { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', cat: 'copo', unico: true, obrigar: true },
+        { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', cat: 'copo', unico: true, obrigar: true },
+        { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', cat: 'copo', unico: true, obrigar: true },
+        { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', cat: 'copo', unico: true, obrigar: true },
+        { idc: 201, sec: 'Complementos', n: 'Granola', cat: 'copo' },
+        { idc: 202, sec: 'Complementos', n: 'Aveia', cat: 'copo' },
+        { idc: 203, sec: 'Complementos', n: 'Sucrilhos', cat: 'copo' },
+        { idc: 204, sec: 'Complementos', n: 'Granulado', cat: 'copo' },
+        { idc: 208, sec: 'Complementos', n: 'Leite em pó', cat: 'copo' },
+        { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo' },
+        { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo' },
+        { idc: 403, sec: 'Caldas', n: 'Leite Condensado', cat: 'copo' },
+        { idc: 501, sec: 'Especiais', n: 'Nutella', p: 3, cat: 'copo' },
+        { idc: 701, sec: 'Sabor do Pastel', n: 'Carne', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 703, sec: 'Sabor do Pastel', n: 'Queijo', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 704, sec: 'Sabor do Pastel', n: 'Calabresa', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 706, sec: 'Sabor do Pastel', n: 'Misto', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Carne c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
+        { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
+        { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Catupiry', cat: 'pastel_e', unico: true, obrigar: true },
+        { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
+        { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', p: 0, cat: 'garrafa' },
+        { idc: 602, sec: 'Adicionais', n: 'Nutella', p: 3.00, cat: 'garrafa' }
     ];
 
-    // Carregamento Seguro
-    let db_produtos = JSON.parse(localStorage.getItem('onmi_prods_v5')) || PRODUTOS_DEFAULT;
-    let db_extras = JSON.parse(localStorage.getItem('onmi_exts_v5')) || EXTRAS_DEFAULT;
+    // INICIALIZAÇÃO BLINDADA (Mescla o salvo com o novo)
+    let estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod')) || [];
+    PRODUTOS_BASE.forEach(p => { if(!estoqueProd.find(e => e.id === p.id)) estoqueProd.push({id: p.id, d: true}) });
+
+    let estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp')) || [];
+    COMPLEMENTOS_BASE.forEach(c => { if(!estoqueComp.find(e => e.idc === c.idc)) estoqueComp.push({idc: c.idc, d: true}) });
+
+    let configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { forcarAberto: false, forcarFechado: false };
     let carrinho = [];
-    let selecionado = null;
+    let itemSelecionado = null;
 
-    // --- FUNÇÕES ADMIN ---
-    let pressTimer;
-    document.getElementById('logoAdmin').onmousedown = () => pressTimer = setTimeout(abrirAdmin, 2000);
-    document.getElementById('logoAdmin').onmouseup = () => clearTimeout(pressTimer);
-    document.getElementById('logoAdmin').ontouchstart = () => pressTimer = setTimeout(abrirAdmin, 2000);
+    let timerLogo;
+    const logoBtn = document.getElementById('masterLogo');
+    logoBtn.addEventListener('mousedown', () => timerLogo = setTimeout(abrirAdmin, 3000));
+    logoBtn.addEventListener('mouseup', () => clearTimeout(timerLogo));
+    logoBtn.addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
+    logoBtn.addEventListener('touchend', () => clearTimeout(timerLogo));
 
-    function abrirAdmin() { if(prompt("Senha:") === "onmi123") { document.getElementById('modalAdmin').style.display="flex"; renderAdminList(); } }
-
-    function addProdutoPrincipal() {
-        const nome = document.getElementById('pNome').value;
-        const preco = parseFloat(document.getElementById('pPreco').value);
-        const cat = document.getElementById('pCat').value;
-        if(!nome || !preco) return alert("Preencha tudo!");
-        db_produtos.push({ id: Date.now(), nome, preco, cat, d: true });
-        salvar(); renderAdminList();
+    function abrirAdmin() {
+        const senha = prompt("Senha:");
+        if(senha === "onmi123") { document.getElementById('modalAdmin').style.display = "flex"; renderizarAdmin(); }
     }
 
-    function addExtra() {
-        const n = document.getElementById('cNome').value;
-        const p = parseFloat(document.getElementById('cPreco').value) || 0;
-        const cat = document.getElementById('cPai').value;
-        const sec = document.getElementById('cSec').value || "Adicionais";
-        if(!n) return alert("Nome vazio!");
-        db_extras.push({ id: Date.now(), n, p, cat, sec, d: true });
-        salvar(); renderAdminList();
-    }
-
-    function renderAdminList() {
-        let html = '<div style="padding:10px"><b>Produtos Principais</b></div>';
-        db_produtos.forEach(p => {
-            html += `<div class="admin-item">
-                <span>${p.nome}</span>
-                <label class="switch"><input type="checkbox" ${p.d?'checked':''} onchange="toggleP(${p.id})"><span class="slider"></span></label>
-            </div>`;
-        });
-        html += '<div style="padding:10px"><b>Complementos/Sabores</b></div>';
-        db_extras.forEach(e => {
-            html += `<div class="admin-item">
-                <span>${e.n} (${e.sec})</span>
-                <label class="switch"><input type="checkbox" ${e.d?'checked':''} onchange="toggleE(${e.id})"><span class="slider"></span></label>
-            </div>`;
-        });
-        document.getElementById('listaGerenciar').innerHTML = html;
-    }
-
-    function toggleP(id) { const p = db_produtos.find(x=>x.id===id); p.d = !p.d; salvar(); }
-    function toggleE(id) { const e = db_extras.find(x=>x.id===id); e.d = !e.d; salvar(); }
-    function salvar() { 
-        localStorage.setItem('onmi_prods_v5', JSON.stringify(db_produtos)); 
-        localStorage.setItem('onmi_exts_v5', JSON.stringify(db_extras)); 
-        renderMenu(); 
-    }
-    function resetarTudo() { localStorage.clear(); location.reload(); }
-
-    // --- FUNÇÕES CARDÁPIO ---
-    function renderMenu() {
-        const cats = { copo: "Açaí no Copo", garrafa: "Açaí na Garrafa", pastel: "Pastel da Nana", bebida: "Bebidas" };
-        let menuHtml = "";
-        let navHtml = "";
-
-        for (let key in cats) {
-            const prods = db_produtos.filter(p => p.cat === key && p.d);
-            if(prods.length > 0) {
-                navHtml += `<div class="cat-item" onclick="document.getElementById('sec-${key}').scrollIntoView()">${cats[key]}</div>`;
-                menuHtml += `<div id="sec-${key}" class="section-header">${cats[key]}</div>`;
-                prods.forEach(p => {
-                    menuHtml += `
-                    <div class="produto-card" onclick="abrirCompra(${p.id})">
-                        <div class="produto-info">
-                            <h3>${p.nome}</h3>
-                            <span class="preco">R$ ${p.preco.toFixed(2)}</span>
-                        </div>
-                        <img src="https://via.placeholder.com/70?text=Onmi" class="img-prod">
-                    </div>`;
-                });
-            }
-        }
-        document.getElementById('navCats').innerHTML = navHtml;
-        document.getElementById('cardapioHome').innerHTML = menuHtml;
-    }
-
-    function abrirCompra(id) {
-        const p = db_produtos.find(x=>x.id===id);
-        selecionado = p;
-        document.getElementById('viewNome').innerText = p.nome;
+    function renderizarAdmin() {
+        document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto;
+        document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado;
         
-        let filtro = p.cat;
-        if(p.nome.includes("Tradicional")) filtro = 'pastel_t';
-        if(p.nome.includes("Especial")) filtro = 'pastel_e';
+        document.getElementById('listaControleProdutos').innerHTML = PRODUTOS_BASE.map(p => {
+            const item = estoqueProd.find(e => e.id === p.id);
+            const status = item ? item.d : true;
+            return `<div class="admin-item"><span>${p.nome}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleProduto(${p.id})"><span class="slider"></span></label></div>`;
+        }).join('');
 
-        const extrasDisponiveis = db_extras.filter(e => e.cat === filtro && e.d);
-        const secoes = [...new Set(extrasDisponiveis.map(e => e.sec))];
+        document.getElementById('listaControleComplementos').innerHTML = COMPLEMENTOS_BASE.map(c => {
+            const item = estoqueComp.find(e => e.idc === c.idc);
+            const status = item ? item.d : true;
+            return `<div class="admin-item"><span><small>[${c.cat}]</small> ${c.n}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleComplemento(${c.idc})"><span class="slider"></span></label></div>`;
+        }).join('');
+    }
 
-        document.getElementById('viewOpcoes').innerHTML = secoes.map(s => `
-            <div style="background:#eee; padding:10px; font-size:12px; font-weight:bold;">${s}</div>
-            ${extrasDisponiveis.filter(e => e.sec === s).map(e => `
-                <label class="admin-item">
-                    <span>${e.n} ${e.p>0?'+ R$'+e.p:''}</span>
-                    <input type="${filtro.includes('pastel')?'radio':'checkbox'}" name="opc" value="${e.n}" data-preco="${e.p}">
-                </label>
-            `).join('')}
-        `).join('');
-        document.getElementById('modalCompra').style.display = "flex";
+    function toggleProduto(id) { 
+        const item = estoqueProd.find(e => e.id === id); 
+        if(item) item.d = !item.d; 
+        localStorage.setItem('onmi_estoque_prod', JSON.stringify(estoqueProd)); 
+        renderizar(); 
+    }
+    
+    function toggleComplemento(idc) { 
+        const item = estoqueComp.find(e => e.idc === idc); 
+        if(item) item.d = !item.d; 
+        localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp)); 
+    }
+
+    function toggleForcarAberto() { configLoja.forcarAberto = document.getElementById('btnForcarAberto').checked; if(configLoja.forcarAberto) configLoja.forcarFechado = false; salvarConfig(); }
+    function toggleForcarFechado() { configLoja.forcarFechado = document.getElementById('btnForcarFechado').checked; if(configLoja.forcarFechado) configLoja.forcarAberto = false; salvarConfig(); }
+    function salvarConfig() { localStorage.setItem('onmi_config', JSON.stringify(configLoja)); checarStatusLoja(); }
+
+    function checarStatusLoja() {
+        const hora = new Date().getHours();
+        let aberto = (hora >= 13 && hora < 22);
+        if (configLoja.forcarAberto) aberto = true;
+        if (configLoja.forcarFechado) aberto = false;
+        document.getElementById('badgeStatus').innerText = aberto ? "Aberto" : "Fechado";
+        document.getElementById('badgeStatus').className = "status-badge " + (aberto ? "status-aberto" : "status-fechado");
+        document.getElementById('conteudoCardapio').style.display = aberto ? "block" : "none";
+        document.getElementById('avisoFechado').style.display = aberto ? "none" : "block";
+    }
+
+    function renderizar() {
+        ['copo', 'garrafa', 'pastel'].forEach(c => {
+            const lista = document.getElementById(`lista-${c === 'copo' ? 'copos' : c === 'garrafa' ? 'garrafas' : 'pasteis'}`);
+            lista.innerHTML = PRODUTOS_BASE.filter(p => p.cat === c).map(p => {
+                const itemEstoque = estoqueProd.find(e => e.id === p.id);
+                if(itemEstoque && !itemEstoque.d) return '';
+                return `
+                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
+                    <div class="produto-info"><h3>${p.nome}</h3><span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span></div>
+                    <div class="img-container"><img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img"></div>
+                </div>`;
+            }).join('');
+        });
+        checarStatusLoja();
+    }
+
+    function abrirModal(p) {
+        itemSelecionado = p;
+        document.getElementById('nomeProdModal').innerText = p.nome;
+        const container = document.getElementById('opcionais-container');
+        container.innerHTML = "";
+
+        let buscaCat = p.cat;
+        if (p.id === 8) buscaCat = 'pastel_t';
+        if (p.id === 9) buscaCat = 'pastel_e';
+
+        const secoes = [...new Set(COMPLEMENTOS_BASE.filter(c => c.cat === buscaCat).map(c => c.sec))];
+        
+        container.innerHTML = secoes.map(secNome => {
+            const itens = COMPLEMENTOS_BASE.filter(c => {
+                const itemEstoque = estoqueComp.find(e => e.idc === c.idc);
+                return c.sec === secNome && c.cat === buscaCat && (itemEstoque ? itemEstoque.d : true);
+            });
+            
+            if(itens.length === 0) return '';
+            
+            const htmlItens = itens.map(item => `
+                <label class="opcao-item">
+                    <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
+                    <input type="${item.unico ? 'radio' : 'checkbox'}" name="sec-${secNome.replace(/\s/g, '')}" class="extra-item" 
+                        data-sec="${secNome}" data-obrigar="${item.obrigar||false}" data-preco="${item.p||0}" value="${item.n}">
+                </label>`).join('');
+            return `<div class="secao-titulo-box"><span class="secao-nome">${secNome}</span><span class="secao-ajuda">${itens[0].obrigar ? 'Obrigatório' : 'Opcional'}</span></div>${htmlItens}`;
+        }).join('');
+        
+        document.getElementById('modalConfirmacao').style.display = 'flex';
     }
 
     function adicionarAoCarrinho() {
-        const checks = Array.from(document.querySelectorAll('input[name="opc"]:checked'));
-        const nomes = checks.map(c => c.value);
-        const extraPreco = checks.reduce((a, b) => a + parseFloat(b.dataset.preco), 0);
-        
-        carrinho.push({ nome: selecionado.nome, total: selecionado.preco + extraPreco });
-        
-        document.getElementById('barraCarrinho').style.display = "flex";
-        document.getElementById('cartQtd').innerText = carrinho.length;
-        const totalGeral = carrinho.reduce((a,b) => a+b.total, 0);
-        document.getElementById('cartTotal').innerText = `R$ ${totalGeral.toFixed(2)}`;
-        fecharModal('modalCompra');
+        let buscaCat = itemSelecionado.cat;
+        if (itemSelecionado.id === 8) buscaCat = 'pastel_t';
+        if (itemSelecionado.id === 9) buscaCat = 'pastel_e';
+
+        const obrigatorios = [...new Set(COMPLEMENTOS_BASE.filter(c => c.obrigar && c.cat === buscaCat).map(c => c.sec))];
+        for(let sec of obrigatorios) {
+            const selecionado = document.querySelector(`input[name="sec-${sec.replace(/\s/g, '')}"]:checked`);
+            if(!selecionado) {
+                alert(`Por favor, escolha o sabor!`);
+                return;
+            }
+        }
+
+        const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
+        const nomes = selecionados.map(el => el.value);
+        const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
+        carrinho.push({ nome: itemSelecionado.nome, precoFinal: itemSelecionado.preco + precoExtra, detalhes: nomes.join(', ') || 'Tradicional' });
+        atualizarBarra();
+        fecharModal('modalConfirmacao');
     }
 
-    function fecharModal(id) { document.getElementById(id).style.display = "none"; }
+    function atualizarBarra() {
+        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        const endereco = document.getElementById('enderecoCliente').value.toLowerCase();
+        const taxa = (endereco.includes("beira rio") || endereco.includes("beira-rio")) ? 2 : 3;
+        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
+        document.getElementById('qtdItens').innerText = carrinho.length;
+        document.getElementById('totalFlutuante').innerText = `R$ ${(sub + (carrinho.length > 0 ? taxa : 0)).toFixed(2).replace('.',',')}`;
+    }
 
-    renderMenu();
+    function abrirCarrinho() {
+        document.getElementById('itensNoCarrinho').innerHTML = carrinho.map((i, idx) => `
+            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span style="color:red; font-size:11px;" onclick="removerItem(${idx})">Remover</span></div>
+                <strong>R$ ${i.precoFinal.toFixed(2).replace('.',',')}</strong>
+            </div>`).join('');
+        document.getElementById('modalCarrinho').style.display = 'flex';
+    }
+
+    function removerItem(idx) { carrinho.splice(idx, 1); carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho'); atualizarBarra(); }
+    function togglePagamento() {
+        const p = document.getElementById('formaPagamento').value;
+        document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
+        document.getElementById('areaTroco').style.display = p === 'Dinheiro' ? 'block' : 'none';
+    }
+
+    function finalizarPedido() {
+        const n = document.getElementById('nomeCliente').value;
+        const e = document.getElementById('enderecoCliente').value;
+        const p = document.getElementById('formaPagamento').value;
+        if(!n || !e || !p) return alert("Preencha todos os campos!");
+        const taxa = (e.toLowerCase().includes("beira rio")) ? 2 : 3;
+        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
+        if(p === 'Pix') msg += `%0A%0A*CHAVE PIX:* 200.769.057-80 (Alex Cardoso)`;
+        msg += `%0A--------------------------%0A`;
+        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
+        msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
+        window.open(`https://wa.me/5521988626495?text=${msg}`);
+    }
+
+    function resetarTudo() { if(confirm("Isso vai resetar todos os produtos e fechar o admin. Continuar?")) { localStorage.clear(); location.reload(); } }
+    function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
+    function scrollToCategory(id, el) {
+        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    renderizar();
+    setInterval(checarStatusLoja, 60000);
 </script>
 </body>
 </html>
