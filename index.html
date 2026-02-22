@@ -24,24 +24,9 @@
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
         
-        body { 
-            margin: 0; 
-            font-family: 'Poppins', sans-serif; 
-            background: var(--bg); 
-            color: var(--text);
-            padding-bottom: 100px;
-        }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 100px; }
 
-        header { 
-            background: var(--primary); 
-            padding: 15px 20px; 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky; top: 0; z-index: 1100;
-        }
-
-        .header-info { display: flex; align-items: center; gap: 12px; }
+        header { background: var(--primary); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1100; }
         .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--white); background: var(--white); cursor: pointer; }
         .store-name { color: white; font-weight: 700; font-size: 1rem; }
 
@@ -51,7 +36,6 @@
 
         .nav-categories { background: var(--white); padding: 12px 0; position: sticky; top: 72px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; padding-left: 15px; scrollbar-width: none; }
         .nav-categories::-webkit-scrollbar { display: none; }
-
         .cat-item { padding: 6px 16px; background: var(--divider); border-radius: 18px; font-size: 13px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; }
         .cat-item.active { background: var(--primary); color: white; }
 
@@ -59,46 +43,36 @@
         .section-header { font-weight: 700; font-size: 0.9rem; color: #7f8c8d; margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 1px; padding-top: 100px; margin-top: -80px; }
 
         .produto-card { display: flex; background: var(--white); margin-bottom: 12px; padding: 15px; border-radius: 16px; box-shadow: var(--shadow); border: 1px solid transparent; align-items: center; transition: 0.2s; cursor: pointer; }
-        .produto-card:active { transform: scale(0.98); border-color: var(--primary-light); }
-
         .produto-info { flex: 1; }
-        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
+        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; }
         .preco { color: var(--primary); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
-        
         .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f9f9f9; }
         .produto-img { width: 100%; height: 100%; object-fit: cover; }
 
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: flex-end; backdrop-filter: blur(4px); }
         .modal-content { background: var(--white); width: 100%; border-radius: 25px 25px 0 0; padding-bottom: 30px; max-height: 90vh; overflow-y: auto; }
 
-        .secao-titulo-box { background: #f1f2f6; padding: 12px 18px; margin-top: 10px; display: flex; flex-direction: column; position: sticky; top: 0; z-index: 5; }
-        .secao-nome { font-size: 14px; font-weight: 700; color: #2d3436; }
-        .secao-ajuda { font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 2px; }
+        .form-add { background: #f1f2f6; padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px dashed var(--primary); }
+        .form-add h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 14px; }
 
-        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--divider); cursor: pointer; }
-        .opcao-nome { font-size: 13px; color: var(--text); }
-
-        .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; }
-
-        .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); }
-
-        input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; }
-
-        #adminPanel { padding: 20px; }
-        .admin-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; align-items: center; }
-        .admin-scroller { max-height: 300px; overflow-y: auto; border: 1px solid #eee; padding: 10px; border-radius: 10px; margin-bottom: 15px; }
+        .admin-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; align-items: center; font-size: 13px; }
+        .btn-delete { color: var(--danger); font-size: 12px; margin-right: 10px; cursor: pointer; }
+        
         .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
         .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--success); }
         input:checked + .slider:before { transform: translateX(16px); }
+
+        .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 10px auto; display: block; padding: 14px; border-radius: 12px; font-weight: 700; }
+        .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="header-info">
+    <div class="header-info" style="display:flex; align-items:center; gap:10px;">
         <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" id="masterLogo">
         <span class="store-name">Onmi Açaí</span>
     </div>
@@ -112,10 +86,9 @@
 </div>
 
 <div class="container" id="menu-content">
-    <div id="avisoFechado" style="display:none; text-align:center; padding:40px 20px; background:white; border-radius:20px; margin-top:20px;">
-        <i class="fas fa-moon" style="font-size:40px; color:var(--primary); margin-bottom:15px;"></i>
-        <h2 style="margin:0;">Estamos Fechados!</h2>
-        <p style="color:#666; font-size:14px;">Voltamos às 13:00.</p>
+    <div id="avisoFechado" style="display:none; text-align:center; padding:40px 20px;">
+        <h2>Estamos Fechados!</h2>
+        <p>Voltamos em breve.</p>
     </div>
 
     <div id="conteudoCardapio">
@@ -128,11 +101,36 @@
     </div>
 </div>
 
+<div id="modalAdmin" class="modal">
+    <div class="modal-content" style="padding: 20px;">
+        <h2 style="color:var(--primary); font-size: 18px;">Painel de Controle</h2>
+        
+        <div class="form-add">
+            <h4><i class="fas fa-plus-circle"></i> Cadastrar Novo Item</h4>
+            <input type="text" id="addNome" placeholder="Nome (Ex: Calda de Nutella)">
+            <input type="number" id="addPreco" placeholder="Preço Adicional (0 se for grátis)">
+            <select id="addCat">
+                <option value="">Onde este item vai aparecer?</option>
+                <option value="copo">Complemento de Açaí</option>
+                <option value="pastel_t">Sabor Pastel Tradicional</option>
+                <option value="pastel_e">Sabor Pastel Especial</option>
+                <option value="garrafa">Adicional na Garrafa</option>
+            </select>
+            <button class="btn-acao" onclick="salvarNovoItem()" style="background:var(--success); margin: 10px 0;">Salvar Item</button>
+        </div>
+
+        <div class="admin-item"><span>Loja Aberta?</span><label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleConfig('forcarAberto')"><span class="slider"></span></label></div>
+
+        <h3 style="font-size: 14px; margin-top: 20px;">Gerenciar Itens Existentes</h3>
+        <div id="listaItensAdmin" style="max-height: 200px; overflow-y: auto; border: 1px solid #eee; padding: 10px; border-radius: 10px;"></div>
+        
+        <button class="btn-acao" onclick="fecharModal('modalAdmin')">Fechar</button>
+    </div>
+</div>
+
 <div id="modalConfirmacao" class="modal">
     <div class="modal-content">
-        <div style="padding:20px;">
-            <h2 id="nomeProdModal" style="margin:0; font-size:17px;">Personalizar</h2>
-        </div>
+        <div style="padding:20px;"><h2 id="nomeProdModal" style="margin:0; font-size:17px;">Personalizar</h2></div>
         <div id="opcionais-container"></div>
         <button class="btn-acao" id="btnAdicionar" onclick="adicionarAoCarrinho()">Adicionar ao Pedido</button>
         <p onclick="fecharModal('modalConfirmacao')" style="text-align:center; color:#999; font-size:13px; cursor:pointer;">Cancelar</p>
@@ -141,40 +139,16 @@
 
 <div id="modalCarrinho" class="modal">
     <div class="modal-content" style="padding: 20px;">
-        <h2 style="font-size:18px; color:var(--primary); margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Resumo</h2>
+        <h2 style="font-size:18px; color:var(--primary);">Resumo do Pedido</h2>
         <div id="itensNoCarrinho"></div>
-        <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:15px;">
-            <input type="text" id="nomeCliente" placeholder="Seu nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)" oninput="atualizarBarra()">
-            <select id="formaPagamento" onchange="togglePagamento()">
-                <option value="">Forma de Pagamento</option>
-                <option value="Pix">Pix</option>
-                <option value="Cartão">Cartão</option>
-                <option value="Dinheiro">Dinheiro</option>
-            </select>
-            <div id="areaPix" style="display:none; font-size:12px; background:#fff; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:10px;">
-                <strong>Alex Cardoso Sousa</strong><br>Pix: 200.769.057-80
-            </div>
-            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
-        </div>
-        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Enviar via WhatsApp</button>
-    </div>
-</div>
-
-<div id="modalAdmin" class="modal">
-    <div class="modal-content" id="adminPanel">
-        <h2 style="font-size:18px; color:var(--primary);">Configurações</h2>
-        <div class="admin-item"><span>Aberto</span><label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
-        <div class="admin-item"><span>Fechado</span><label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
-        
-        <h3 style="font-size: 14px; margin-top: 15px;">Disponibilidade de Produtos</h3>
-        <div class="admin-scroller" id="listaControleProdutos"></div>
-        
-        <h3 style="font-size: 14px;">Disponibilidade de Sabores/Extras</h3>
-        <div class="admin-scroller" id="listaControleComplementos"></div>
-        
-        <button class="btn-acao" onclick="fecharModal('modalAdmin')">Fechar</button>
-        <p onclick="resetarTudo()" style="text-align:center; color:red; font-size:11px; cursor:pointer; margin-top:10px;">Resetar Memória do Site</p>
+        <input type="text" id="nomeCliente" placeholder="Seu nome">
+        <input type="text" id="enderecoCliente" placeholder="Endereço Completo">
+        <select id="formaPagamento" onchange="togglePagamento()">
+            <option value="Pix">Pix</option>
+            <option value="Dinheiro">Dinheiro</option>
+            <option value="Cartão">Cartão</option>
+        </select>
+        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Enviar WhatsApp</button>
     </div>
 </div>
 
@@ -184,6 +158,7 @@
 </div>
 
 <script>
+    // PRODUTOS PRINCIPAIS (Fixos)
     const PRODUTOS_BASE = [
         { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
         { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
@@ -196,115 +171,100 @@
         { id: 9, cat: "pastel", nome: "Pastel Especial", preco: 8.00, img: "Pastel Especial.jpg" }
     ];
 
-    const COMPLEMENTOS_BASE = [
-        { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', cat: 'copo', unico: true, obrigar: true },
-        { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', cat: 'copo', unico: true, obrigar: true },
-        { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', cat: 'copo', unico: true, obrigar: true },
-        { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', cat: 'copo', unico: true, obrigar: true },
-        { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', cat: 'copo', unico: true, obrigar: true },
-        { idc: 201, sec: 'Complementos', n: 'Granola', cat: 'copo' },
-        { idc: 202, sec: 'Complementos', n: 'Aveia', cat: 'copo' },
-        { idc: 203, sec: 'Complementos', n: 'Sucrilhos', cat: 'copo' },
-        { idc: 204, sec: 'Complementos', n: 'Granulado', cat: 'copo' },
-        { idc: 208, sec: 'Complementos', n: 'Leite em pó', cat: 'copo' },
-        { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo' },
-        { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo' },
-        { idc: 403, sec: 'Caldas', n: 'Leite Condensado', cat: 'copo' },
-        { idc: 501, sec: 'Especiais', n: 'Nutella', p: 3, cat: 'copo' },
-        { idc: 701, sec: 'Sabor do Pastel', n: 'Carne', cat: 'pastel_t', unico: true, obrigar: true },
-        { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', cat: 'pastel_t', unico: true, obrigar: true },
-        { idc: 703, sec: 'Sabor do Pastel', n: 'Queijo', cat: 'pastel_t', unico: true, obrigar: true },
-        { idc: 704, sec: 'Sabor do Pastel', n: 'Calabresa', cat: 'pastel_t', unico: true, obrigar: true },
-        { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', cat: 'pastel_t', unico: true, obrigar: true },
-        { idc: 706, sec: 'Sabor do Pastel', n: 'Misto', cat: 'pastel_t', unico: true, obrigar: true },
-        { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Carne c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
-        { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
-        { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Catupiry', cat: 'pastel_e', unico: true, obrigar: true },
-        { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
-        { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', p: 0, cat: 'garrafa' },
-        { idc: 602, sec: 'Adicionais', n: 'Nutella', p: 3.00, cat: 'garrafa' }
+    // BANCO DE DADOS DINÂMICO
+    let complementos = JSON.parse(localStorage.getItem('onmi_comp_v2')) || [
+        { idc: 101, n: 'Granola', p: 0, cat: 'copo', d: true, sec: 'Complementos' },
+        { idc: 102, n: 'Leite em pó', p: 0, cat: 'copo', d: true, sec: 'Complementos' },
+        { idc: 201, n: 'Morango', p: 0, cat: 'copo', d: true, sec: 'Frutas' },
+        { idc: 701, n: 'Carne', p: 0, cat: 'pastel_t', d: true, sec: 'Escolha o Sabor' }
     ];
 
-    // INICIALIZAÇÃO BLINDADA (Mescla o salvo com o novo)
-    let estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod')) || [];
-    PRODUTOS_BASE.forEach(p => { if(!estoqueProd.find(e => e.id === p.id)) estoqueProd.push({id: p.id, d: true}) });
-
-    let estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp')) || [];
-    COMPLEMENTOS_BASE.forEach(c => { if(!estoqueComp.find(e => e.idc === c.idc)) estoqueComp.push({idc: c.idc, d: true}) });
-
-    let configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { forcarAberto: false, forcarFechado: false };
+    let configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { forcarAberto: false };
     let carrinho = [];
     let itemSelecionado = null;
 
+    // LÓGICA DO ADMIN
     let timerLogo;
-    const logoBtn = document.getElementById('masterLogo');
-    logoBtn.addEventListener('mousedown', () => timerLogo = setTimeout(abrirAdmin, 3000));
-    logoBtn.addEventListener('mouseup', () => clearTimeout(timerLogo));
-    logoBtn.addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
-    logoBtn.addEventListener('touchend', () => clearTimeout(timerLogo));
+    document.getElementById('masterLogo').addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
+    document.getElementById('masterLogo').addEventListener('touchend', () => clearTimeout(timerLogo));
 
     function abrirAdmin() {
         const senha = prompt("Senha:");
-        if(senha === "onmi123") { document.getElementById('modalAdmin').style.display = "flex"; renderizarAdmin(); }
+        if(senha === "onmi123") {
+            document.getElementById('modalAdmin').style.display = "flex";
+            renderizarAdmin();
+        }
+    }
+
+    function salvarNovoItem() {
+        const nome = document.getElementById('addNome').value;
+        const preco = parseFloat(document.getElementById('addPreco').value) || 0;
+        const cat = document.getElementById('addCat').value;
+
+        if(!nome || !cat) return alert("Preencha Nome e Categoria!");
+
+        const novo = {
+            idc: Date.now(),
+            n: nome,
+            p: preco,
+            cat: cat,
+            d: true,
+            sec: cat.includes('pastel') ? 'Escolha o Sabor' : 'Adicionais'
+        };
+
+        complementos.push(novo);
+        localStorage.setItem('onmi_comp_v2', JSON.stringify(complementos));
+        alert("Adicionado com sucesso!");
+        
+        document.getElementById('addNome').value = "";
+        document.getElementById('addPreco').value = "";
+        renderizarAdmin();
+        renderizar();
     }
 
     function renderizarAdmin() {
+        const lista = document.getElementById('listaItensAdmin');
+        lista.innerHTML = complementos.map(c => `
+            <div class="admin-item">
+                <span><i class="fas fa-trash btn-delete" onclick="removerItemAdmin(${c.idc})"></i> ${c.n} <small>(${c.cat})</small></span>
+                <label class="switch"><input type="checkbox" ${c.d ? 'checked' : ''} onchange="toggleDisponibilidade(${c.idc})"><span class="slider"></span></label>
+            </div>
+        `).join('');
         document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto;
-        document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado;
-        
-        document.getElementById('listaControleProdutos').innerHTML = PRODUTOS_BASE.map(p => {
-            const item = estoqueProd.find(e => e.id === p.id);
-            const status = item ? item.d : true;
-            return `<div class="admin-item"><span>${p.nome}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleProduto(${p.id})"><span class="slider"></span></label></div>`;
-        }).join('');
-
-        document.getElementById('listaControleComplementos').innerHTML = COMPLEMENTOS_BASE.map(c => {
-            const item = estoqueComp.find(e => e.idc === c.idc);
-            const status = item ? item.d : true;
-            return `<div class="admin-item"><span><small>[${c.cat}]</small> ${c.n}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleComplemento(${c.idc})"><span class="slider"></span></label></div>`;
-        }).join('');
     }
 
-    function toggleProduto(id) { 
-        const item = estoqueProd.find(e => e.id === id); 
-        if(item) item.d = !item.d; 
-        localStorage.setItem('onmi_estoque_prod', JSON.stringify(estoqueProd)); 
-        renderizar(); 
-    }
-    
-    function toggleComplemento(idc) { 
-        const item = estoqueComp.find(e => e.idc === idc); 
-        if(item) item.d = !item.d; 
-        localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp)); 
+    function removerItemAdmin(id) {
+        if(confirm("Deseja excluir permanentemente?")) {
+            complementos = complementos.filter(c => c.idc !== id);
+            localStorage.setItem('onmi_comp_v2', JSON.stringify(complementos));
+            renderizarAdmin();
+            renderizar();
+        }
     }
 
-    function toggleForcarAberto() { configLoja.forcarAberto = document.getElementById('btnForcarAberto').checked; if(configLoja.forcarAberto) configLoja.forcarFechado = false; salvarConfig(); }
-    function toggleForcarFechado() { configLoja.forcarFechado = document.getElementById('btnForcarFechado').checked; if(configLoja.forcarFechado) configLoja.forcarAberto = false; salvarConfig(); }
-    function salvarConfig() { localStorage.setItem('onmi_config', JSON.stringify(configLoja)); checarStatusLoja(); }
-
-    function checarStatusLoja() {
-        const hora = new Date().getHours();
-        let aberto = (hora >= 13 && hora < 22);
-        if (configLoja.forcarAberto) aberto = true;
-        if (configLoja.forcarFechado) aberto = false;
-        document.getElementById('badgeStatus').innerText = aberto ? "Aberto" : "Fechado";
-        document.getElementById('badgeStatus').className = "status-badge " + (aberto ? "status-aberto" : "status-fechado");
-        document.getElementById('conteudoCardapio').style.display = aberto ? "block" : "none";
-        document.getElementById('avisoFechado').style.display = aberto ? "none" : "block";
+    function toggleDisponibilidade(id) {
+        const item = complementos.find(c => c.idc === id);
+        item.d = !item.d;
+        localStorage.setItem('onmi_comp_v2', JSON.stringify(complementos));
+        renderizar();
     }
 
+    function toggleConfig(key) {
+        configLoja[key] = !configLoja[key];
+        localStorage.setItem('onmi_config', JSON.stringify(configLoja));
+        checarStatusLoja();
+    }
+
+    // LÓGICA DO CARDÁPIO
     function renderizar() {
         ['copo', 'garrafa', 'pastel'].forEach(c => {
             const lista = document.getElementById(`lista-${c === 'copo' ? 'copos' : c === 'garrafa' ? 'garrafas' : 'pasteis'}`);
-            lista.innerHTML = PRODUTOS_BASE.filter(p => p.cat === c).map(p => {
-                const itemEstoque = estoqueProd.find(e => e.id === p.id);
-                if(itemEstoque && !itemEstoque.d) return '';
-                return `
+            lista.innerHTML = PRODUTOS_BASE.filter(p => p.cat === c).map(p => `
                 <div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
                     <div class="produto-info"><h3>${p.nome}</h3><span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span></div>
                     <div class="img-container"><img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img"></div>
-                </div>`;
-            }).join('');
+                </div>
+            `).join('');
         });
         checarStatusLoja();
     }
@@ -313,97 +273,69 @@
         itemSelecionado = p;
         document.getElementById('nomeProdModal').innerText = p.nome;
         const container = document.getElementById('opcionais-container');
-        container.innerHTML = "";
-
-        let buscaCat = p.cat;
-        if (p.id === 8) buscaCat = 'pastel_t';
-        if (p.id === 9) buscaCat = 'pastel_e';
-
-        const secoes = [...new Set(COMPLEMENTOS_BASE.filter(c => c.cat === buscaCat).map(c => c.sec))];
         
-        container.innerHTML = secoes.map(secNome => {
-            const itens = COMPLEMENTOS_BASE.filter(c => {
-                const itemEstoque = estoqueComp.find(e => e.idc === c.idc);
-                return c.sec === secNome && c.cat === buscaCat && (itemEstoque ? itemEstoque.d : true);
-            });
-            
-            if(itens.length === 0) return '';
-            
-            const htmlItens = itens.map(item => `
-                <label class="opcao-item">
-                    <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
-                    <input type="${item.unico ? 'radio' : 'checkbox'}" name="sec-${secNome.replace(/\s/g, '')}" class="extra-item" 
-                        data-sec="${secNome}" data-obrigar="${item.obrigar||false}" data-preco="${item.p||0}" value="${item.n}">
-                </label>`).join('');
-            return `<div class="secao-titulo-box"><span class="secao-nome">${secNome}</span><span class="secao-ajuda">${itens[0].obrigar ? 'Obrigatório' : 'Opcional'}</span></div>${htmlItens}`;
-        }).join('');
-        
+        let busca = p.cat;
+        if(p.id === 8) busca = 'pastel_t';
+        if(p.id === 9) busca = 'pastel_e';
+
+        const itensFiltrados = complementos.filter(c => c.cat === busca && c.d);
+        const secoes = [...new Set(itensFiltrados.map(i => i.sec))];
+
+        container.innerHTML = secoes.map(sec => `
+            <div style="background:#eee; padding:8px 15px; font-weight:700; font-size:12px;">${sec}</div>
+            ${itensFiltrados.filter(i => i.sec === sec).map(i => `
+                <label class="admin-item" style="padding:12px 20px;">
+                    <span>${i.n} ${i.p > 0 ? '<b>+R$'+i.p.toFixed(2)+'</b>' : ''}</span>
+                    <input type="${busca.includes('pastel') ? 'radio' : 'checkbox'}" name="opc" value="${i.n}" data-preco="${i.p}">
+                </label>
+            `).join('')}
+        `).join('');
+
         document.getElementById('modalConfirmacao').style.display = 'flex';
     }
 
     function adicionarAoCarrinho() {
-        let buscaCat = itemSelecionado.cat;
-        if (itemSelecionado.id === 8) buscaCat = 'pastel_t';
-        if (itemSelecionado.id === 9) buscaCat = 'pastel_e';
+        const selecionados = Array.from(document.querySelectorAll('input[name="opc"]:checked'));
+        if(itemSelecionado.cat === 'pastel' && selecionados.length === 0) return alert("Escolha o sabor!");
 
-        const obrigatorios = [...new Set(COMPLEMENTOS_BASE.filter(c => c.obrigar && c.cat === buscaCat).map(c => c.sec))];
-        for(let sec of obrigatorios) {
-            const selecionado = document.querySelector(`input[name="sec-${sec.replace(/\s/g, '')}"]:checked`);
-            if(!selecionado) {
-                alert(`Por favor, escolha o sabor!`);
-                return;
-            }
-        }
-
-        const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
-        const nomes = selecionados.map(el => el.value);
-        const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
-        carrinho.push({ nome: itemSelecionado.nome, precoFinal: itemSelecionado.preco + precoExtra, detalhes: nomes.join(', ') || 'Tradicional' });
+        const nomes = selecionados.map(s => s.value);
+        const extra = selecionados.reduce((acc, s) => acc + parseFloat(s.dataset.preco), 0);
+        
+        carrinho.push({
+            nome: itemSelecionado.nome,
+            detalhes: nomes.join(', ') || 'Simples',
+            total: itemSelecionado.preco + extra
+        });
+        
         atualizarBarra();
         fecharModal('modalConfirmacao');
     }
 
     function atualizarBarra() {
-        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        const endereco = document.getElementById('enderecoCliente').value.toLowerCase();
-        const taxa = (endereco.includes("beira rio") || endereco.includes("beira-rio")) ? 2 : 3;
+        const total = carrinho.reduce((acc, i) => acc + i.total, 0);
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = `R$ ${(sub + (carrinho.length > 0 ? taxa : 0)).toFixed(2).replace('.',',')}`;
-    }
-
-    function abrirCarrinho() {
-        document.getElementById('itensNoCarrinho').innerHTML = carrinho.map((i, idx) => `
-            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span style="color:red; font-size:11px;" onclick="removerItem(${idx})">Remover</span></div>
-                <strong>R$ ${i.precoFinal.toFixed(2).replace('.',',')}</strong>
-            </div>`).join('');
-        document.getElementById('modalCarrinho').style.display = 'flex';
-    }
-
-    function removerItem(idx) { carrinho.splice(idx, 1); carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho'); atualizarBarra(); }
-    function togglePagamento() {
-        const p = document.getElementById('formaPagamento').value;
-        document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
-        document.getElementById('areaTroco').style.display = p === 'Dinheiro' ? 'block' : 'none';
+        document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
     }
 
     function finalizarPedido() {
-        const n = document.getElementById('nomeCliente').value;
-        const e = document.getElementById('enderecoCliente').value;
-        const p = document.getElementById('formaPagamento').value;
-        if(!n || !e || !p) return alert("Preencha todos os campos!");
-        const taxa = (e.toLowerCase().includes("beira rio")) ? 2 : 3;
-        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
-        if(p === 'Pix') msg += `%0A%0A*CHAVE PIX:* 200.769.057-80 (Alex Cardoso)`;
-        msg += `%0A--------------------------%0A`;
-        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
-        msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
-        window.open(`https://wa.me/5521988626495?text=${msg}`);
+        const nome = document.getElementById('nomeCliente').value;
+        const end = document.getElementById('enderecoCliente').value;
+        if(!nome || !end) return alert("Preencha seus dados!");
+
+        let msg = `* NOVO PEDIDO - ONMI AÇAÍ *\nCliente: ${nome}\nEndereço: ${end}\n----------\n`;
+        carrinho.forEach(i => msg += `✅ ${i.nome}\n(${i.detalhes})\n\n`);
+        msg += `TOTAL: ${document.getElementById('totalFlutuante').innerText}`;
+        
+        window.open(`https://wa.me/5521988626495?text=${encodeURIComponent(msg)}`);
     }
 
-    function resetarTudo() { if(confirm("Isso vai resetar todos os produtos e fechar o admin. Continuar?")) { localStorage.clear(); location.reload(); } }
+    function checarStatusLoja() {
+        const aberto = configLoja.forcarAberto;
+        document.getElementById('badgeStatus').innerText = aberto ? "Aberto" : "Fechado";
+        document.getElementById('badgeStatus').className = "status-badge " + (aberto ? "status-aberto" : "status-fechado");
+    }
+
     function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
     function scrollToCategory(id, el) {
         document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
@@ -412,7 +344,6 @@
     }
 
     renderizar();
-    setInterval(checarStatusLoja, 60000);
 </script>
 </body>
 </html>
