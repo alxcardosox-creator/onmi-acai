@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
+        /* (mesmo estilo, não houve alteração) */
         * {
             margin: 0;
             padding: 0;
@@ -655,7 +656,7 @@
                 }).join('');
             });
 
-            // Adiciona eventos via dataset (melhor que inline)
+            // Adiciona eventos via dataset
             document.querySelectorAll('.produto-card').forEach(card => {
                 card.addEventListener('click', (e) => {
                     const id = Number(card.dataset.produtoId);
@@ -856,16 +857,29 @@
             localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp));
         };
 
+        // ---------- CORREÇÃO: toggles com desmarcação visual ----------
         window.toggleForcarAberto = function() {
-            configLoja.forcarAberto = document.getElementById('btnForcarAberto').checked;
-            if (configLoja.forcarAberto) configLoja.forcarFechado = false;
+            const abertoCheck = document.getElementById('btnForcarAberto');
+            const fechadoCheck = document.getElementById('btnForcarFechado');
+            configLoja.forcarAberto = abertoCheck.checked;
+            if (configLoja.forcarAberto) {
+                configLoja.forcarFechado = false;
+                fechadoCheck.checked = false; // desmarca o outro visualmente
+            }
             salvarConfig();
         };
+
         window.toggleForcarFechado = function() {
-            configLoja.forcarFechado = document.getElementById('btnForcarFechado').checked;
-            if (configLoja.forcarFechado) configLoja.forcarAberto = false;
+            const abertoCheck = document.getElementById('btnForcarAberto');
+            const fechadoCheck = document.getElementById('btnForcarFechado');
+            configLoja.forcarFechado = fechadoCheck.checked;
+            if (configLoja.forcarFechado) {
+                configLoja.forcarAberto = false;
+                abertoCheck.checked = false; // desmarca o outro visualmente
+            }
             salvarConfig();
         };
+
         function salvarConfig() {
             localStorage.setItem('onmi_config', JSON.stringify(configLoja));
             checarStatusLoja();
