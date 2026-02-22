@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* (Mantive seu CSS exatamente igual, não mexi em nada) */
+        /* (mesmo estilo, mantido) */
         * {
             margin: 0;
             padding: 0;
@@ -510,34 +510,13 @@
     <span id="totalFlutuante">R$ 0,00</span>
 </div>
 
-<!-- Firebase SDK (inserido antes do script principal) -->
-<script type="module">
-    // Importações do Firebase
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
-
-    // Sua configuração do Firebase (já está aqui!)
-    const firebaseConfig = {
-        apiKey: "AIzaSyBqQceIX98UUOV6XA1zOx0v9L6n1lcKD90",
-        authDomain: "onmi-80ddb.firebaseapp.com",
-        projectId: "onmi-80ddb",
-        storageBucket: "onmi-80ddb.firebasestorage.app",
-        messagingSenderId: "898270717185",
-        appId: "1:898270717185:web:a994eaad9caf7b00c6a700",
-        measurementId: "G-67MCMCJ79B"
-    };
-
-    // Inicializa o Firebase
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const configRef = ref(database, 'configLoja');
-
-    // Expõe os objetos globalmente para uso no script principal
-    window.firebaseTools = { database, configRef, set, onValue };
-</script>
-
 <script>
     (function() {
+        // ========== CONTROLE MANUAL DO STATUS DA LOJA ==========
+        // Altere esta variável para true (aberto) ou false (fechado)
+        const LOJA_ABERTA = true;  // <--- MUDE AQUI
+        // =======================================================
+
         // --------------------- BASE DE DADOS -------------------------
         const PRODUTOS_BASE = [
             { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
@@ -583,7 +562,6 @@
         // --------------------- ESTADO GLOBAL -------------------------
         let estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod')) || [];
         let estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp')) || [];
-        let configLoja = { forcarAberto: false, forcarFechado: false }; // será sobrescrito pelo Firebase
         let carrinho = [];
         let itemSelecionado = null;
 
@@ -623,10 +601,8 @@
         }
 
         function checarStatusLoja() {
-            const hora = new Date().getHours();
-            let aberto = (hora >= 13 && hora < 22);
-            if (configLoja.forcarAberto) aberto = true;
-            if (configLoja.forcarFechado) aberto = false;
+            // Usa a variável manual LOJA_ABERTA
+            const aberto = LOJA_ABERTA;
             const badge = document.getElementById('badgeStatus');
             badge.innerText = aberto ? "Aberto" : "Fechado";
             badge.className = "status-badge " + (aberto ? "status-aberto" : "status-fechado");
@@ -776,45 +752,7 @@
         }
         window.fecharModal = fecharModal;
 
-        // --------------------- FIREBASE -------------------------
-        function iniciarFirebaseListener() {
-            const { configRef, onValue } = window.firebaseTools;
-            // Ouve mudanças no nó configLoja
-            onValue(configRef, (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    configLoja = data;
-                } else {
-                    // Se não existir, cria com valores padrão
-                    configLoja = { forcarAberto: false, forcarFechado: false };
-                    set(configRef, configLoja);
-                }
-                checarStatusLoja(); // atualiza a interface
-            }, (error) => {
-                console.warn("Erro ao ler Firebase, usando localStorage como fallback.", error);
-                // Fallback para localStorage
-                const saved = localStorage.getItem('onmi_config');
-                if (saved) {
-                    configLoja = JSON.parse(saved);
-                } else {
-                    configLoja = { forcarAberto: false, forcarFechado: false };
-                }
-                checarStatusLoja();
-            });
-        }
-
-        // Função para atualizar o Firebase quando os toggles são alterados
-        function atualizarConfigFirebase(novaConfig) {
-            const { configRef, set } = window.firebaseTools;
-            set(configRef, novaConfig).catch(err => {
-                console.warn("Falha ao escrever no Firebase, salvando apenas localmente.", err);
-                localStorage.setItem('onmi_config', JSON.stringify(novaConfig));
-                configLoja = novaConfig;
-                checarStatusLoja();
-            });
-        }
-
-        // --------------------- ADMIN -------------------------
+        // --------------------- ADMIN (agora apenas visual, sem efeito no status) -------------------------
         window.abrirAdmin = function() {
             const senha = prompt("Senha do admin:");
             if (senha === "onmi123") {
@@ -824,8 +762,9 @@
         };
 
         function renderizarAdmin() {
-            document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto || false;
-            document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado || false;
+            // Os toggles agora não fazem nada, apenas mostram o estado atual (mas não alteram)
+            document.getElementById('btnForcarAberto').checked = LOJA_ABERTA;
+            document.getElementById('btnForcarFechado').checked = !LOJA_ABERTA;
 
             document.getElementById('listaControleProdutos').innerHTML = PRODUTOS_BASE.map(p => {
                 const ativo = estoqueProd.find(e => e.id === p.id)?.d ?? true;
@@ -851,27 +790,18 @@
             localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp));
         };
 
-        // Toggles alteram Firebase
+        // Os toggles de forçar aberto/fechado agora apenas exibem o status, mas não alteram
         window.toggleForcarAberto = function() {
-            const abertoCheck = document.getElementById('btnForcarAberto');
-            const fechadoCheck = document.getElementById('btnForcarFechado');
-            const novaConfig = { ...configLoja, forcarAberto: abertoCheck.checked };
-            if (novaConfig.forcarAberto) {
-                novaConfig.forcarFechado = false;
-                fechadoCheck.checked = false;
-            }
-            atualizarConfigFirebase(novaConfig);
+            alert("Para alterar o status da loja, edite a variável LOJA_ABERTA no código e publique novamente.");
+            // Reverte visualmente
+            document.getElementById('btnForcarAberto').checked = LOJA_ABERTA;
+            document.getElementById('btnForcarFechado').checked = !LOJA_ABERTA;
         };
 
         window.toggleForcarFechado = function() {
-            const abertoCheck = document.getElementById('btnForcarAberto');
-            const fechadoCheck = document.getElementById('btnForcarFechado');
-            const novaConfig = { ...configLoja, forcarFechado: fechadoCheck.checked };
-            if (novaConfig.forcarFechado) {
-                novaConfig.forcarAberto = false;
-                abertoCheck.checked = false;
-            }
-            atualizarConfigFirebase(novaConfig);
+            alert("Para alterar o status da loja, edite a variável LOJA_ABERTA no código e publique novamente.");
+            document.getElementById('btnForcarAberto').checked = LOJA_ABERTA;
+            document.getElementById('btnForcarFechado').checked = !LOJA_ABERTA;
         };
 
         window.resetarTudo = function() {
@@ -903,16 +833,8 @@
 
         // --------------------- INICIALIZAÇÃO -------------------------
         renderizarProdutos();
-
-        // Inicia o listener do Firebase (substitui o setInterval e localStorage)
-        if (window.firebaseTools) {
-            iniciarFirebaseListener();
-        } else {
-            // Fallback (caso o Firebase não carregue)
-            configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { forcarAberto: false, forcarFechado: false };
-            checarStatusLoja();
-            setInterval(checarStatusLoja, 60000);
-        }
+        checarStatusLoja(); // usa LOJA_ABERTA
+        // Não precisa de setInterval porque o status não muda sozinho
 
         document.getElementById('btnAdicionar').addEventListener('click', window.adicionarAoCarrinho);
         document.getElementById('enderecoCliente')?.addEventListener('input', atualizarBarra);
