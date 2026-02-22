@@ -178,7 +178,13 @@
     const OPCOES_ACAI = {
         copo: [
             { t: "Complementos (Grátis)", l: 3, o: [{n:"Granola", d:true}, {n:"Aveia", d:true}, {n:"Leite em pó", d:true}, {n:"Paçoca", d:true}] },
-            { t: "Caldas", l: 1, o: [{n:"Uva", d:false}, {n:"Morango", d:true}, {n:"tutti frutti", d:true}] }
+            { t: "Caldas (Escolha 1)", l: 1, o: [{n:"Leite Condensado", d:true}, {n:"Chocolate", d:true}, {n:"Morango", d:true}, {n:"Tutti Frutti", d:true}, {n:"Uva", d:false}] },
+            { t: "Especiais (Pago)", l: 4, o: [
+                {n:"Nutella", p:3.00, d:true}, 
+                {n:"Leite Condensado", p:2.00, d:true}, 
+                {n:"Ninho", p:2.00, d:true}, 
+                {n:"Mousse de Maracujá", p:2.00, d:true}
+            ]}
         ],
         garrafa: [
             { t: "Adicionais", l: 2, o: [{n:"Mousse de Maracujá", p:2, d:true}, {n:"Nutella", p:2, d:true}] }
@@ -190,6 +196,7 @@
 
     function calcularTaxaEntrega() {
         const e = document.getElementById('enderecoCliente').value.toLowerCase();
+        if(!e) return 0;
         return (e.includes("beira rio") || e.includes("beirario")) ? 2.00 : 3.00;
     }
 
@@ -227,7 +234,7 @@
                 </div>
                 ${sec.o.filter(o => o.d).map(o => `
                     <label class="opcao-item">
-                        <span class="opcao-nome">${o.n} ${o.p ? '+R$'+o.p : ''}</span>
+                        <span class="opcao-nome">${o.n} ${o.p ? '<b>+R$'+o.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
                         <input type="${sec.l===1?'radio':'checkbox'}" name="sec-${idx}" class="extra-item" data-preco="${o.p||0}" value="${o.n}">
                     </label>`).join('')}`).join('');
         }
