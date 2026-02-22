@@ -1,29 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onmi Açaí | Admin Total v9</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary: #5b0f73;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --bg: #f8f9fa;
+            --text: #2d3436;
+            --white: #ffffff;
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: var(--text); padding-bottom: 100px; }
+
+        header { background: var(--primary); padding: 15px 20px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 1100; color: white; }
+        .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid white; cursor: pointer; background: white; }
+        
+        .nav-categories { background: white; padding: 12px; position: sticky; top: 72px; z-index: 1000; display: flex; gap: 8px; overflow-x: auto; box-shadow: 0 2px 10px rgba(0,0,0,0.05); scrollbar-width: none; }
+        .nav-categories::-webkit-scrollbar { display: none; }
+        .cat-item { padding: 6px 16px; background: #eee; border-radius: 20px; font-size: 13px; font-weight: 600; white-space: nowrap; cursor: pointer; transition: 0.3s; }
+        .cat-item.active { background: var(--primary); color: white; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 15px; }
+        .section-header { font-weight: 800; color: #7f8c8d; margin: 25px 0 10px; text-transform: uppercase; font-size: 12px; letter-spacing: 1px; }
+
+        .produto-card { display: flex; background: white; margin-bottom: 12px; padding: 15px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.06); align-items: center; cursor: pointer; }
+        .produto-info { flex: 1; }
+        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; }
+        .preco { color: var(--primary); font-weight: 700; font-size: 16px; margin-top: 4px; display: block; }
+        .img-container { width: 75px; height: 75px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f0f0f0; display: flex; align-items: center; justify-content: center; color: #ccc; }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; align-items: flex-end; backdrop-filter: blur(3px); }
+        .modal-content { background: white; width: 100%; border-radius: 25px 25px 0 0; max-height: 85vh; overflow-y: auto; padding-bottom: 30px; }
+        
+        .admin-box { background: #f8f0fb; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #e1bee7; }
+        .admin-item-row { display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid #eee; align-items: center; font-size: 13px; }
+        
+        input, select { width: 100%; padding: 12px; margin: 6px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 14px; outline: none; }
+        .btn { width: 90%; margin: 10px auto; display: block; padding: 15px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; }
+        .btn-add { background: var(--success); color: white; }
+        .btn-primary { background: var(--primary); color: white; }
+
+        .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; inset: 0; background: #ccc; border-radius: 20px; transition: .4s; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background: white; border-radius: 50%; transition: .4s; }
+        input:checked + .slider { background: var(--success); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        .footer-cart { position: fixed; bottom: 15px; left: 5%; width: 90%; background: var(--primary); color: white; padding: 16px; border-radius: 15px; display: none; justify-content: space-between; align-items: center; z-index: 1500; font-weight: 700; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        
+        /* Overlay de loja fechada */
+        #avisoFechado { display: none; position: fixed; top: 120px; left: 0; width: 100%; background: var(--danger); color: white; text-align: center; padding: 10px; font-weight: bold; z-index: 900; }
+    </style>
+</head>
+<body>
+
+<div id="avisoFechado">LOJA FECHADA NO MOMENTO</div>
+
+<header>
+    <div style="display:flex; align-items:center; gap:10px;">
+        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" id="logoAdmin">
+        <span style="font-weight:800; font-size:18px;">ONMI AÇAÍ</span>
+    </div>
+    <div id="statusTag" style="font-size:10px; padding:4px 12px; border-radius:20px; font-weight:700;">CARREGANDO...</div>
+</header>
+
+<div class="nav-categories" id="navCategorias"></div>
+
+<div class="container" id="vitrine"></div>
+
+<div id="modalAdmin" class="modal">
+    <div class="modal-content" style="padding: 20px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="color:var(--primary); margin:0;">Painel Admin</h2>
+            <div style="display:flex; align-items:center; gap:10px; background:#eee; padding:5px 15px; border-radius:20px;">
+                <span id="txtStatusAdmin" style="font-size:12px; font-weight:bold;">FECHADA</span>
+                <label class="switch">
+                    <input type="checkbox" id="checkStatusLoja" onchange="toggleLoja()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+        
+        <div class="admin-box">
+            <h4 style="margin:0 0 10px 0;"><i class="fas fa-tags"></i> 1. Categorias</h4>
+            <input type="text" id="catNome" placeholder="Nova Categoria">
+            <button class="btn btn-primary" onclick="addCategoria()">Criar</button>
+            <div id="listaCategoriasAdmin"></div>
+        </div>
+
+        <div class="admin-box">
+            <h4 style="margin:0 0 10px 0;"><i class="fas fa-box"></i> 2. Produto</h4>
+            <input type="text" id="pNome" placeholder="Nome">
+            <input type="number" id="pPreco" placeholder="Preço">
+            <select id="pCatSelect"></select>
+            <button class="btn btn-add" onclick="addProduto()">Salvar</button>
+        </div>
+
+        <h3>Itens Ativos</h3>
+        <div id="listaGeralAdmin" style="max-height: 200px; overflow-y: auto;"></div>
+        
+        <button class="btn btn-primary" onclick="fecharModal('modalAdmin')">Fechar Painel</button>
+    </div>
+</div>
+
+<div id="modalCompra" class="modal">
+    <div class="modal-content">
+        <div style="padding:20px;"><h2 id="viewNome" style="margin:0;"></h2></div>
+        <div id="viewOpcoes"></div>
+        <button class="btn btn-add" onclick="confirmarPedido()">Adicionar ao Carrinho</button>
+        <p onclick="fecharModal('modalCompra')" style="text-align:center; color:#999; cursor:pointer;">Cancelar</p>
+    </div>
+</div>
+
+<div id="footerCart" class="footer-cart" onclick="finalizarNoZap()">
+    <span>🛒 <span id="cartQtd">0</span> itens</span>
+    <span id="cartTotal">R$ 0,00</span>
+</div>
+
 <script>
-    // ESTA É A CHAVE QUE CONECTA SEUS DISPOSITIVOS
-    // Se quiser que outro site use o mesmo banco, use o mesmo ID
-    const CLOUD_ID = "onmi_acai_global_v8"; 
+    // --- CONFIGURAÇÃO DA NUVEM (ID ÚNICO DA SUA LOJA) ---
+    const STORE_KEY = "onmi_acai_status_99"; 
+    
+    let db_cats = JSON.parse(localStorage.getItem('onmi_cats_v9')) || { "copo": "Açaí no Copo" };
+    let db_prods = JSON.parse(localStorage.getItem('onmi_prods_v9')) || [];
+    let db_exts = JSON.parse(localStorage.getItem('onmi_exts_v9')) || [];
+    let lojaAberta = true;
+    let carrinho = [];
+    let atual = null;
 
-    // Função que envia o status para a nuvem
-    async function sincronizarComNuvem(dados) {
+    // --- SINCRONIZAÇÃO GLOBAL ---
+    // Esta função avisa a internet que a loja abriu ou fechou
+    async function syncLojaCloud(status) {
         try {
-            await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_ID}`, {
+            await fetch(`https://api.jsonbin.io/v3/b/65d898431f56771c92404e54`, { // Bin público para exemplo ou npoint
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json', 'X-Master-Key': '$2b$10$EXEMPLO' }, // Exemplo de estrutura
-                body: JSON.stringify(dados)
+                headers: { 'Content-Type': 'application/json', 'X-Bin-Meta': 'false' },
+                body: JSON.stringify({ aberta: status })
             });
-        } catch (e) { console.log("Erro ao sincronizar"); }
+        } catch(e) { console.error("Erro sync"); }
     }
 
-    // Função que busca o status da nuvem
-    async function buscarStatusNuvem() {
+    // Esta função checa se você fechou a loja em outro aparelho
+    async function checkLojaStatus() {
         try {
-            const res = await fetch(`https://api.jsonbin.io/v3/b/${CLOUD_ID}/latest`);
+            const res = await fetch(`https://api.npoint.io/066f1255e2d140e6917c`); // Exemplo de ID
             const data = await res.json();
-            lojaAberta = data.record.lojaAberta;
-            updateStatusUI();
-        } catch (e) { console.log("Erro ao buscar"); }
+            if (data.aberta !== undefined) {
+                lojaAberta = data.aberta;
+                updateStatusUI();
+            }
+        } catch(e) {}
     }
 
-    // Verificando o status a cada 30 segundos para fechar no cliente automaticamente
-    setInterval(buscarStatusNuvem, 30000);
+    // --- INTERFACE ---
+    function updateStatusUI() {
+        const tag = document.getElementById('statusTag');
+        const aviso = document.getElementById('avisoFechado');
+        const check = document.getElementById('checkStatusLoja');
+        const txt = document.getElementById('txtStatusAdmin');
+        
+        if(lojaAberta) {
+            tag.innerText = "ABERTO"; tag.style.background = "#27ae60";
+            aviso.style.display = "none";
+            if(txt) txt.innerText = "ABERTA";
+            if(check) check.checked = true;
+        } else {
+            tag.innerText = "FECHADO"; tag.style.background = "#e74c3c";
+            aviso.style.display = "block";
+            if(txt) txt.innerText = "FECHADA";
+            if(check) check.checked = false;
+        }
+    }
+
+    async function toggleLoja() {
+        lojaAberta = !lojaAberta;
+        localStorage.setItem('onmi_status_v9', JSON.stringify(lojaAberta));
+        updateStatusUI();
+        
+        // Manda o comando para a nuvem para todos os clientes verem
+        try {
+            await fetch('https://api.npoint.io/066f1255e2d140e6917c', {
+                method: 'POST',
+                body: JSON.stringify({ aberta: lojaAberta })
+            });
+        } catch(e) {}
+    }
+
+    // --- ADMIN ---
+    let pressTimer;
+    document.getElementById('logoAdmin').onmousedown = () => pressTimer = setTimeout(abrirAdmin, 2000);
+    document.getElementById('logoAdmin').ontouchstart = () => pressTimer = setTimeout(abrirAdmin, 2000);
+
+    function abrirAdmin() { if(prompt("Senha:") === "onmi123") { document.getElementById('modalAdmin').style.display="flex"; renderAdmin(); } }
+
+    function addCategoria() {
+        const n = document.getElementById('catNome').value;
+        if(!n) return;
+        const id = n.toLowerCase().replace(/\s+/g, '-');
+        db_cats[id] = n;
+        salvarEAtualizar();
+    }
+
+    function addProduto() {
+        const n = document.getElementById('pNome').value;
+        const p = parseFloat(document.getElementById('pPreco').value);
+        const c = document.getElementById('pCatSelect').value;
+        if(n && p) {
+            db_prods.push({ id: Date.now(), nome: n, preco: p, cat: c, d: true });
+            salvarEAtualizar();
+        }
+    }
+
+    function renderAdmin() {
+        let drop = ""; for (let k in db_cats) drop += `<option value="${k}">${db_cats[k]}</option>`;
+        document.getElementById('pCatSelect').innerHTML = drop;
+
+        let h = '';
+        db_prods.forEach(p => {
+            h += `<div class="admin-item-row">${p.nome} <button onclick="delP(${p.id})" style="color:red; border:none; background:none;">X</button></div>`;
+        });
+        document.getElementById('listaGeralAdmin').innerHTML = h;
+    }
+
+    function delP(id) { db_prods = db_prods.filter(x=>x.id!==id); salvarEAtualizar(); }
+
+    function salvarEAtualizar() {
+        localStorage.setItem('onmi_cats_v9', JSON.stringify(db_cats));
+        localStorage.setItem('onmi_prods_v9', JSON.stringify(db_prods));
+        renderAdmin();
+        draw();
+    }
+
+    // --- VITRINE ---
+    function draw() {
+        let nHtml = ""; let vHtml = "";
+        for (let k in db_cats) {
+            const list = db_prods.filter(p => p.cat === k);
+            nHtml += `<div class="cat-item" onclick="document.getElementById('sec-${k}').scrollIntoView()">${db_cats[k]}</div>`;
+            vHtml += `<div id="sec-${k}" class="section-header">${db_cats[k]}</div>`;
+            list.forEach(p => {
+                vHtml += `
+                <div class="produto-card" onclick="abrirCompra(${p.id})">
+                    <div class="produto-info"><h3>${p.nome}</h3><span class="preco">R$ ${p.preco.toFixed(2)}</span></div>
+                </div>`;
+            });
+        }
+        document.getElementById('navCategorias').innerHTML = nHtml;
+        document.getElementById('vitrine').innerHTML = vHtml;
+    }
+
+    function abrirCompra(id) {
+        if(!lojaAberta) return alert("Loja Fechada!");
+        atual = db_prods.find(x=>x.id===id);
+        document.getElementById('viewNome').innerText = atual.nome;
+        document.getElementById('modalCompra').style.display = "flex";
+    }
+
+    function confirmarPedido() {
+        carrinho.push({ nome: atual.nome, total: atual.preco });
+        document.getElementById('footerCart').style.display = "flex";
+        document.getElementById('cartQtd').innerText = carrinho.length;
+        const total = carrinho.reduce((a,b)=>a+b.total, 0);
+        document.getElementById('cartTotal').innerText = `R$ ${total.toFixed(2)}`;
+        fecharModal('modalCompra');
+    }
+
+    function fecharModal(id) { document.getElementById(id).style.display = "none"; }
+
+    function finalizarNoZap() {
+        let msg = "*NOVO PEDIDO ONMI*%0A";
+        carrinho.forEach(i => msg += `- ${i.nome}%0A`);
+        window.open(`https://wa.me/5521988626495?text=${msg}`);
+    }
+
+    // Inicialização
+    draw();
+    updateStatusUI();
+    
+    // Checa o status na nuvem a cada 20 segundos
+    setInterval(checkLojaStatus, 20000);
 </script>
+</body>
+</html>
