@@ -74,6 +74,7 @@
 
         .secao-titulo-box { background: #f1f2f6; padding: 12px 18px; margin-top: 10px; display: flex; flex-direction: column; position: sticky; top: 0; z-index: 5; }
         .secao-nome { font-size: 14px; font-weight: 700; color: #2d3436; }
+        .secao-ajuda { font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 2px; }
 
         .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--divider); cursor: pointer; }
         .opcao-nome { font-size: 13px; color: var(--text); }
@@ -81,13 +82,11 @@
         .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; }
         .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); }
 
-        textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; margin-top: 10px; resize: none; }
         input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; }
 
         /* Admin */
         #adminPanel { padding: 20px; }
         .admin-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; align-items: center; }
-        .admin-subtitulo { font-size: 13px; font-weight: 800; color: var(--primary); margin-top: 20px; border-left: 3px solid var(--primary); padding-left: 8px; }
         .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
@@ -133,13 +132,9 @@
     <div class="modal-content">
         <div style="padding:20px;">
             <h2 id="nomeProdModal" style="margin:0; font-size:17px;">Personalizar</h2>
-            <p id="descProdModal" style="font-size:12px; color:#666; margin:5px 0;"></p>
+            <p id="descProdModal" style="font-size:12px; color:#666; margin-top:5px;"></p>
         </div>
         <div id="opcionais-container"></div>
-        <div style="padding: 20px;">
-            <span style="font-size: 13px; font-weight: 700;">Observações:</span>
-            <textarea id="obsItem" rows="2" placeholder="Algo mais?"></textarea>
-        </div>
         <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao Pedido</button>
         <p onclick="fecharModal('modalConfirmacao')" style="text-align:center; color:#999; font-size:13px; cursor:pointer;">Cancelar</p>
     </div>
@@ -147,11 +142,11 @@
 
 <div id="modalCarrinho" class="modal">
     <div class="modal-content" style="padding: 20px;">
-        <h2 style="font-size:18px; color:var(--primary); margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Meu Pedido</h2>
+        <h2 style="font-size:18px; color:var(--primary); margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Resumo</h2>
         <div id="itensNoCarrinho"></div>
         <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:15px;">
             <input type="text" id="nomeCliente" placeholder="Seu nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)" oninput="atualizarBarra()">
             <select id="formaPagamento" onchange="togglePagamento()">
                 <option value="">Forma de Pagamento</option>
                 <option value="Pix">Pix</option>
@@ -159,17 +154,17 @@
                 <option value="Dinheiro">Dinheiro</option>
             </select>
             <div id="areaPix" style="display:none; font-size:12px; background:#fff; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:10px;">
-                <strong>Pix: 200.769.057-80</strong>
+                <strong>Pix: 200.769.057-80</strong> (Alex Cardoso)
             </div>
-            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para?"></div>
+            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
         </div>
-        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Enviar Pedido</button>
+        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Enviar via WhatsApp</button>
     </div>
 </div>
 
 <div id="modalAdmin" class="modal">
     <div class="modal-content" id="adminPanel">
-        <h2 style="font-size:18px; color:var(--primary);">Admin</h2>
+        <h2 style="font-size:18px; color:var(--primary);">Configurações</h2>
         <div class="admin-item"><span>Aberto</span><label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
         <div class="admin-item"><span>Fechado</span><label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
         <div id="listaControleProdutos"></div>
@@ -191,34 +186,65 @@
         { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg" },
         { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg" },
         { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg" },
-        { id: 8, cat: "pastel", nome: "Pastel Tradicional", preco: 7.00, img: "Pastel Tradicional.jpg" },
-        { id: 9, cat: "pastel", nome: "Pastel Especial", preco: 8.00, img: "Pastel Especial.jpg" }
+        { id: 8, cat: "pastel", nome: "Pastel Tradicional", preco: 7.00, desc: "Escolha o sabor no WhatsApp", img: "Pastel Tradicional.jpg" },
+        { id: 9, cat: "pastel", nome: "Pastel Especial", preco: 8.00, desc: "Escolha o sabor no WhatsApp", img: "Pastel Especial.jpg" }
     ];
 
     const COMPLEMENTOS_BASE = [
-        { sec: 'Complementos Tradicionais', n: 'Granola', cat: 'copo' },
-        { sec: 'Complementos Tradicionais', n: 'Aveia', cat: 'copo' },
-        { sec: 'Complementos Tradicionais', n: 'Leite em pó', cat: 'copo' },
-        { sec: 'Complementos Tradicionais', n: 'Paçoca', cat: 'copo' },
-        { sec: 'Complementos Tradicionais', n: 'Jujuba', cat: 'copo' },
-        { sec: 'Frutas', n: 'Morango', cat: 'copo' },
-        { sec: 'Frutas', n: 'Uva', cat: 'copo' },
-        { sec: 'Frutas', n: 'Banana', cat: 'copo' },
-        { sec: 'Coberturas', n: 'Chocolate', cat: 'copo' },
-        { sec: 'Coberturas', n: 'Morango', cat: 'copo' },
-        { sec: 'Coberturas', n: 'Leite Condensado', cat: 'copo' },
-        { sec: 'Mousses (Escolha 1)', n: 'Puro, só açaí', cat: 'copo' },
-        { sec: 'Mousses (Escolha 1)', n: 'Mousse de morango', p: 1.00, cat: 'copo' },
-        { sec: 'Mousses (Escolha 1)', n: 'Mousse de maracujá', p: 1.00, cat: 'copo' },
-        { sec: 'Mousses (Escolha 1)', n: 'Nutella', p: 4.99, cat: 'copo' },
-        { sec: 'Posição', n: 'Em cima', cat: 'copo', unico: true },
-        { sec: 'Posição', n: 'No meio', cat: 'copo', unico: true }
+        // Montagem (Aparece Primeiro)
+        { sec: 'Onde deseja os Complementos?', n: 'Em cima', cat: 'copo', unico: true },
+        { sec: 'Onde deseja os Complementos?', n: 'No Meio', cat: 'copo', unico: true },
+        { sec: 'Onde deseja os Complementos?', n: 'Embaixo', cat: 'copo', unico: true },
+
+        // Complementos
+        { sec: 'Complementos', n: 'Granola', cat: 'copo' },
+        { sec: 'Complementos', n: 'Aveia', cat: 'copo' },
+        { sec: 'Complementos', n: 'Sucrilhos', cat: 'copo' },
+        { sec: 'Complementos', n: 'Granulado', cat: 'copo' },
+        { sec: 'Complementos', n: 'Bolinha de arroz', cat: 'copo' },
+        { sec: 'Complementos', n: 'Amendoim', cat: 'copo' },
+        { sec: 'Complementos', n: 'Marshmallow', cat: 'copo' },
+        { sec: 'Complementos', n: 'Leite em pó', cat: 'copo' },
+        { sec: 'Complementos', n: 'Paçoca', cat: 'copo' },
+
+        // Frutas
+        { sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo' },
+        { sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo' },
+        { sec: 'Deseja Frutas?', n: 'Uva', cat: 'copo' },
+        { sec: 'Deseja Frutas?', n: 'Manga', cat: 'copo' },
+        { sec: 'Deseja Frutas?', n: 'Kiwi', cat: 'copo' },
+
+        // Caldas
+        { sec: 'Caldas', n: 'Chocolate', cat: 'copo' },
+        { sec: 'Caldas', n: 'Morango', cat: 'copo' },
+        { sec: 'Caldas', n: 'Leite Condensado', cat: 'copo' },
+        { sec: 'Caldas', n: 'Tutti Frutti', cat: 'copo' },
+        { sec: 'Caldas', n: 'Amora', cat: 'copo' },
+        { sec: 'Caldas', n: 'Doce de Leite', cat: 'copo' },
+        { sec: 'Caldas', n: 'Menta', cat: 'copo' },
+        { sec: 'Caldas', n: 'Uva', cat: 'copo' },
+        { sec: 'Caldas', n: 'Maracujá', cat: 'copo' },
+        { sec: 'Caldas', n: 'Caramelo', cat: 'copo' },
+        { sec: 'Caldas', n: 'Graviola', cat: 'copo' },
+        { sec: 'Caldas', n: 'Maçã Verde', cat: 'copo' },
+
+        // Especiais
+        { sec: 'Especiais', n: 'Nutella', p: 3, cat: 'copo' },
+        { sec: 'Especiais', n: 'Mousse de Maracujá', p: 2, cat: 'copo' }
     ];
 
     let estoque = JSON.parse(localStorage.getItem('onmi_estoque')) || PRODUTOS_BASE.map(p => ({id: p.id, d: true}));
     let configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { forcarAberto: false, forcarFechado: false };
     let carrinho = [];
     let itemSelecionado = null;
+
+    // Abrir Admin (Toque longo na logo)
+    let timerLogo;
+    const logoBtn = document.getElementById('masterLogo');
+    logoBtn.addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
+    logoBtn.addEventListener('mousedown', () => timerLogo = setTimeout(abrirAdmin, 3000));
+    logoBtn.addEventListener('touchend', () => clearTimeout(timerLogo));
+    logoBtn.addEventListener('mouseup', () => clearTimeout(timerLogo));
 
     function abrirAdmin() {
         const senha = prompt("Senha:");
@@ -255,7 +281,8 @@
             const lista = document.getElementById(`lista-${c === 'copo' ? 'copos' : c === 'garrafa' ? 'garrafas' : 'pasteis'}`);
             lista.innerHTML = PRODUTOS_BASE.filter(p => p.cat === c).map(p => {
                 if(!estoque.find(e => e.id === p.id).d) return '';
-                return `<div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
+                return `
+                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
                     <div class="produto-info"><h3>${p.nome}</h3><span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span></div>
                     <div class="img-container"><img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img"></div>
                 </div>`;
@@ -270,15 +297,16 @@
         const container = document.getElementById('opcionais-container');
         container.innerHTML = "";
 
-        if(p.cat === 'copo') {
-            const secoes = [...new Set(COMPLEMENTOS_BASE.filter(c => c.cat === 'copo').map(c => c.sec))];
+        if(p.cat !== 'pastel') {
+            const secoes = [...new Set(COMPLEMENTOS_BASE.filter(c => c.cat === p.cat).map(c => c.sec))];
             container.innerHTML = secoes.map(secNome => {
-                const itens = COMPLEMENTOS_BASE.filter(c => c.sec === secNome);
-                return `<div class="secao-titulo-box"><span class="secao-nome">${secNome}</span></div>` + itens.map(item => `
+                const itens = COMPLEMENTOS_BASE.filter(c => c.sec === secNome && c.cat === p.cat);
+                const htmlItens = itens.map(item => `
                     <label class="opcao-item">
                         <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2)+'</b>' : ''}</span>
                         <input type="${item.unico ? 'radio' : 'checkbox'}" name="sec-${secNome}" class="extra-item" data-preco="${item.p||0}" value="${item.n}">
                     </label>`).join('');
+                return `<div class="secao-titulo-box"><span class="secao-nome">${secNome}</span><span class="secao-ajuda">${itens[0].unico ? 'Escolha 1' : 'Opcional'}</span></div>${htmlItens}`;
             }).join('');
         }
         document.getElementById('modalConfirmacao').style.display = 'flex';
@@ -288,34 +316,45 @@
         const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
         const nomes = selecionados.map(el => el.value);
         const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
-        carrinho.push({ nome: itemSelecionado.nome, precoFinal: itemSelecionado.preco + precoExtra, detalhes: nomes.join(', ') || 'Simples', obs: document.getElementById('obsItem').value });
-        atualizarBarra(); fecharModal('modalConfirmacao');
+        carrinho.push({ nome: itemSelecionado.nome, precoFinal: itemSelecionado.preco + precoExtra, detalhes: nomes.join(', ') || 'Tradicional' });
+        atualizarBarra();
+        fecharModal('modalConfirmacao');
     }
 
     function atualizarBarra() {
         const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        const taxa = (document.getElementById('enderecoCliente').value.toLowerCase().includes("beira rio")) ? 2 : 3;
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = `R$ ${sub.toFixed(2).replace('.',',')}`;
+        document.getElementById('totalFlutuante').innerText = `R$ ${(sub + (carrinho.length > 0 ? taxa : 0)).toFixed(2).replace('.',',')}`;
     }
 
     function abrirCarrinho() {
         document.getElementById('itensNoCarrinho').innerHTML = carrinho.map((i, idx) => `
-            <div style="padding:10px 0; border-bottom:1px solid #eee;">
-                <strong>${i.nome}</strong> - R$ ${i.precoFinal.toFixed(2)}<br>
-                <small>${i.detalhes}</small> | <span onclick="removerItem(${idx})" style="color:red">Remover</span>
+            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
+                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span style="color:red; font-size:11px;" onclick="removerItem(${idx})">Remover</span></div>
+                <strong>R$ ${i.precoFinal.toFixed(2).replace('.',',')}</strong>
             </div>`).join('');
         document.getElementById('modalCarrinho').style.display = 'flex';
     }
 
-    function removerItem(idx) { carrinho.splice(idx, 1); abrirCarrinho(); atualizarBarra(); if(carrinho.length === 0) fecharModal('modalCarrinho'); }
+    function removerItem(idx) { carrinho.splice(idx, 1); carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho'); atualizarBarra(); }
+    function togglePagamento() {
+        const p = document.getElementById('formaPagamento').value;
+        document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
+        document.getElementById('areaTroco').style.display = p === 'Dinheiro' ? 'block' : 'none';
+    }
 
     function finalizarPedido() {
         const n = document.getElementById('nomeCliente').value;
         const e = document.getElementById('enderecoCliente').value;
-        if(!n || !e) return alert("Preencha Nome e Endereço!");
-        let msg = `*NOVO PEDIDO - ONMI AÇAÍ*%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A%0A`;
-        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A_${i.detalhes}_%0A${i.obs ? 'Obs: '+i.obs : ''}%0A%0A`);
+        const p = document.getElementById('formaPagamento').value;
+        if(!n || !e || !p) return alert("Preencha tudo!");
+        const taxa = (e.toLowerCase().includes("beira rio")) ? 2 : 3;
+        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        let msg = `*NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A--------------------------%0A`;
+        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
+        msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
         window.open(`https://wa.me/5521988626495?text=${msg}`);
     }
 
@@ -323,10 +362,11 @@
     function scrollToCategory(id, el) {
         document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
         el.classList.add('active');
-        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     renderizar();
+    setInterval(checarStatusLoja, 60000);
 </script>
 </body>
 </html>
