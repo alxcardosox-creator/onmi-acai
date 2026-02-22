@@ -7,14 +7,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* (mesmo estilo, não houve alteração) */
+        /* (Mantive seu CSS exatamente igual, não mexi em nada) */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background: #f5f3f7;
@@ -22,7 +21,6 @@
             padding-bottom: 90px;
             scroll-behavior: smooth;
         }
-
         header {
             background: rgba(91, 15, 115, 0.98);
             backdrop-filter: blur(8px);
@@ -36,13 +34,11 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
-
         .header-info {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .logo-img {
             width: 44px;
             height: 44px;
@@ -53,11 +49,9 @@
             transition: transform 0.2s;
             cursor: pointer;
         }
-
         .logo-img:active {
             transform: scale(0.95);
         }
-
         .store-name {
             color: white;
             font-weight: 700;
@@ -65,7 +59,6 @@
             letter-spacing: -0.5px;
             text-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-
         .status-badge {
             font-size: 0.7rem;
             font-weight: 700;
@@ -76,17 +69,14 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             border: 1px solid rgba(255,255,255,0.3);
         }
-
         .status-aberto {
             background: #1f8532;
             color: white;
         }
-
         .status-fechado {
             background: #b13e3e;
             color: white;
         }
-
         .nav-categories {
             background: white;
             padding: 12px 20px;
@@ -101,11 +91,9 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.02);
             border-bottom: 1px solid #eeeef5;
         }
-
         .nav-categories::-webkit-scrollbar {
             display: none;
         }
-
         .cat-item {
             padding: 8px 18px;
             background: #f0eef2;
@@ -117,24 +105,20 @@
             transition: all 0.2s;
             border: 1px solid transparent;
         }
-
         .cat-item.active {
             background: #5b0f73;
             color: white;
             box-shadow: 0 4px 12px rgba(91,15,115,0.3);
             border-color: #7b2c9f;
         }
-
         .cat-item:active {
             transform: scale(0.96);
         }
-
         .container {
             max-width: 640px;
             margin: 0 auto;
             padding: 16px 20px;
         }
-
         .section-header {
             font-weight: 700;
             font-size: 1.1rem;
@@ -145,7 +129,6 @@
             letter-spacing: -0.3px;
             scroll-margin-top: 140px;
         }
-
         .produto-card {
             display: flex;
             background: white;
@@ -158,28 +141,23 @@
             border: 1px solid #ffffff50;
             cursor: pointer;
         }
-
         .produto-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 15px 30px rgba(91,15,115,0.08);
             border-color: #f0d9ff;
         }
-
         .produto-card:active {
             transform: scale(0.99);
         }
-
         .produto-info {
             flex: 1;
         }
-
         .produto-info h3 {
             font-size: 1.1rem;
             font-weight: 700;
             color: #1e1e2f;
             margin-bottom: 6px;
         }
-
         .preco {
             font-size: 1.2rem;
             font-weight: 800;
@@ -190,7 +168,6 @@
             border-radius: 40px;
             letter-spacing: -0.5px;
         }
-
         .img-container {
             width: 90px;
             height: 90px;
@@ -201,18 +178,15 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
             border: 1px solid #f0f0f0;
         }
-
         .produto-img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s;
         }
-
         .produto-card:hover .produto-img {
             transform: scale(1.05);
         }
-
         .modal {
             display: none;
             position: fixed;
@@ -223,7 +197,6 @@
             align-items: flex-end;
             justify-content: center;
         }
-
         .modal-content {
             background: white;
             width: 100%;
@@ -235,19 +208,16 @@
             box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
             animation: slideUp 0.3s ease;
         }
-
         @keyframes slideUp {
             from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
-
         .modal h2 {
             font-size: 1.3rem;
             margin-bottom: 20px;
             color: #5b0f73;
             font-weight: 700;
         }
-
         .secao-titulo-box {
             background: #f8f3ff;
             padding: 14px 18px;
@@ -258,12 +228,10 @@
             align-items: center;
             border-left: 4px solid #ffb347;
         }
-
         .secao-nome {
             font-weight: 700;
             color: #2d2d3a;
         }
-
         .secao-ajuda {
             font-size: 0.7rem;
             font-weight: 600;
@@ -272,7 +240,6 @@
             padding: 4px 12px;
             border-radius: 30px;
         }
-
         .opcao-item {
             display: flex;
             justify-content: space-between;
@@ -282,29 +249,24 @@
             cursor: pointer;
             transition: background 0.15s;
         }
-
         .opcao-item:active {
             background: #faf5ff;
         }
-
         .opcao-nome {
             font-size: 0.95rem;
             font-weight: 500;
             color: #1e1e2f;
         }
-
         .opcao-nome b {
             color: #d48806;
             font-weight: 700;
         }
-
         input[type="radio"], input[type="checkbox"] {
             width: 20px;
             height: 20px;
             accent-color: #5b0f73;
             transform: scale(1.1);
         }
-
         .btn-acao {
             background: #5b0f73;
             color: white;
@@ -319,12 +281,10 @@
             box-shadow: 0 10px 25px rgba(91,15,115,0.3);
             transition: all 0.2s;
         }
-
         .btn-acao:active {
             transform: scale(0.97);
             box-shadow: 0 5px 15px rgba(91,15,115,0.4);
         }
-
         .footer-carrinho {
             position: fixed;
             bottom: 20px;
@@ -347,21 +307,17 @@
             cursor: pointer;
             transition: transform 0.2s;
         }
-
         .footer-carrinho:active {
             transform: translateX(-50%) scale(0.97);
         }
-
         .footer-carrinho span:first-child i {
             margin-right: 10px;
             font-size: 1.2rem;
         }
-
         .footer-carrinho span:last-child {
             font-size: 1.3rem;
             font-weight: 800;
         }
-
         input, select {
             width: 100%;
             padding: 16px 20px;
@@ -373,13 +329,11 @@
             background: #fcfaff;
             transition: border 0.2s;
         }
-
         input:focus, select:focus {
             outline: none;
             border-color: #5b0f73;
             background: white;
         }
-
         #areaPix {
             background: #f2eaf7;
             border-radius: 20px;
@@ -388,11 +342,9 @@
             border: 1px dashed #9b6db7;
             color: #2d2d3a;
         }
-
         #adminPanel {
             background: #ffffff;
         }
-
         .admin-item {
             display: flex;
             justify-content: space-between;
@@ -400,20 +352,17 @@
             padding: 10px 0;
             border-bottom: 1px solid #efefef;
         }
-
         .switch {
             position: relative;
             display: inline-block;
             width: 46px;
             height: 24px;
         }
-
         .switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-
         .slider {
             position: absolute;
             cursor: pointer;
@@ -422,7 +371,6 @@
             transition: .3s;
             border-radius: 34px;
         }
-
         .slider:before {
             position: absolute;
             content: "";
@@ -434,15 +382,12 @@
             transition: .3s;
             border-radius: 50%;
         }
-
         input:checked + .slider {
             background-color: #5b0f73;
         }
-
         input:checked + .slider:before {
             transform: translateX(22px);
         }
-
         .admin-scroller {
             max-height: 250px;
             overflow-y: auto;
@@ -452,7 +397,6 @@
             margin-bottom: 20px;
             border: 1px solid #eceaf0;
         }
-
         #avisoFechado {
             background: linear-gradient(145deg, #fff0f0, #ffe7e7);
             border-radius: 40px;
@@ -460,7 +404,6 @@
             color: #a55555;
             border: 1px solid #ffcdcd;
         }
-
         @media (min-width: 640px) {
             .modal-content {
                 border-radius: 30px 30px 0 0;
@@ -547,8 +490,8 @@
 <div id="modalAdmin" class="modal">
     <div class="modal-content" id="adminPanel">
         <h2>🛠️ Configurações</h2>
-        <div class="admin-item"><span>Forçar loja <strong>Aberta</strong></span> <label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
-        <div class="admin-item"><span>Forçar loja <strong>Fechada</strong></span> <label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
+        <div class="admin-item"><span>Forçar loja <strong>Aberta</strong></span> <label class="switch"><input type="checkbox" id="btnForcarAberto"><span class="slider"></span></label></div>
+        <div class="admin-item"><span>Forçar loja <strong>Fechada</strong></span> <label class="switch"><input type="checkbox" id="btnForcarFechado"><span class="slider"></span></label></div>
 
         <h3 style="margin-top:20px;">📦 Produtos disponíveis</h3>
         <div class="admin-scroller" id="listaControleProdutos"></div>
@@ -556,7 +499,7 @@
         <h3>🥄 Sabores / Extras</h3>
         <div class="admin-scroller" id="listaControleComplementos"></div>
 
-        <button class="btn-acao" onclick="fecharModalEAtualizar()" style="background:#5f5f6f;">Fechar</button>
+        <button class="btn-acao" onclick="fecharModal('modalAdmin')" style="background:#5f5f6f;">Fechar</button>
         <p onclick="resetarTudo()" style="text-align:center; color:#c0392b; font-size:13px; margin:15px 0; cursor:pointer;">⚠️ Resetar dados do site</p>
     </div>
 </div>
@@ -566,6 +509,32 @@
     <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
     <span id="totalFlutuante">R$ 0,00</span>
 </div>
+
+<!-- Firebase SDK (inserido antes do script principal) -->
+<script type="module">
+    // Importações do Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-database.js";
+
+    // Sua configuração do Firebase (já está aqui!)
+    const firebaseConfig = {
+        apiKey: "AIzaSyBqQceIX98UUOV6XA1zOx0v9L6n1lcKD90",
+        authDomain: "onmi-80ddb.firebaseapp.com",
+        projectId: "onmi-80ddb",
+        storageBucket: "onmi-80ddb.firebasestorage.app",
+        messagingSenderId: "898270717185",
+        appId: "1:898270717185:web:a994eaad9caf7b00c6a700",
+        measurementId: "G-67MCMCJ79B"
+    };
+
+    // Inicializa o Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const configRef = ref(database, 'configLoja');
+
+    // Expõe os objetos globalmente para uso no script principal
+    window.firebaseTools = { database, configRef, set, onValue };
+</script>
 
 <script>
     (function() {
@@ -614,26 +583,13 @@
         // --------------------- ESTADO GLOBAL -------------------------
         let estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod')) || [];
         let estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp')) || [];
-        let configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { forcarAberto: false, forcarFechado: false };
+        let configLoja = { forcarAberto: false, forcarFechado: false }; // será sobrescrito pelo Firebase
         let carrinho = [];
         let itemSelecionado = null;
 
         // Inicializa estoques com base
         PRODUTOS_BASE.forEach(p => { if(!estoqueProd.find(e => e.id === p.id)) estoqueProd.push({id: p.id, d: true}); });
         COMPLEMENTOS_BASE.forEach(c => { if(!estoqueComp.find(e => e.idc === c.idc)) estoqueComp.push({idc: c.idc, d: true}); });
-
-        // --------------------- NOVO: LER PARÂMETRO DA URL -------------------------
-        const urlParams = new URLSearchParams(window.location.search);
-        const forcarUrl = urlParams.get('forcar');
-        if (forcarUrl === 'aberto') {
-            configLoja.forcarAberto = true;
-            configLoja.forcarFechado = false;
-            localStorage.setItem('onmi_config', JSON.stringify(configLoja));
-        } else if (forcarUrl === 'fechado') {
-            configLoja.forcarAberto = false;
-            configLoja.forcarFechado = true;
-            localStorage.setItem('onmi_config', JSON.stringify(configLoja));
-        }
 
         // --------------------- FUNÇÕES DE UI -------------------------
         function renderizarProdutos() {
@@ -657,7 +613,6 @@
                 }).join('');
             });
 
-            // Adiciona eventos via dataset
             document.querySelectorAll('.produto-card').forEach(card => {
                 card.addEventListener('click', (e) => {
                     const id = Number(card.dataset.produtoId);
@@ -821,6 +776,44 @@
         }
         window.fecharModal = fecharModal;
 
+        // --------------------- FIREBASE -------------------------
+        function iniciarFirebaseListener() {
+            const { configRef, onValue } = window.firebaseTools;
+            // Ouve mudanças no nó configLoja
+            onValue(configRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    configLoja = data;
+                } else {
+                    // Se não existir, cria com valores padrão
+                    configLoja = { forcarAberto: false, forcarFechado: false };
+                    set(configRef, configLoja);
+                }
+                checarStatusLoja(); // atualiza a interface
+            }, (error) => {
+                console.warn("Erro ao ler Firebase, usando localStorage como fallback.", error);
+                // Fallback para localStorage
+                const saved = localStorage.getItem('onmi_config');
+                if (saved) {
+                    configLoja = JSON.parse(saved);
+                } else {
+                    configLoja = { forcarAberto: false, forcarFechado: false };
+                }
+                checarStatusLoja();
+            });
+        }
+
+        // Função para atualizar o Firebase quando os toggles são alterados
+        function atualizarConfigFirebase(novaConfig) {
+            const { configRef, set } = window.firebaseTools;
+            set(configRef, novaConfig).catch(err => {
+                console.warn("Falha ao escrever no Firebase, salvando apenas localmente.", err);
+                localStorage.setItem('onmi_config', JSON.stringify(novaConfig));
+                configLoja = novaConfig;
+                checarStatusLoja();
+            });
+        }
+
         // --------------------- ADMIN -------------------------
         window.abrirAdmin = function() {
             const senha = prompt("Senha do admin:");
@@ -858,39 +851,27 @@
             localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp));
         };
 
-        // ---------- CORREÇÃO: toggles com desmarcação visual ----------
+        // Toggles alteram Firebase
         window.toggleForcarAberto = function() {
             const abertoCheck = document.getElementById('btnForcarAberto');
             const fechadoCheck = document.getElementById('btnForcarFechado');
-            configLoja.forcarAberto = abertoCheck.checked;
-            if (configLoja.forcarAberto) {
-                configLoja.forcarFechado = false;
+            const novaConfig = { ...configLoja, forcarAberto: abertoCheck.checked };
+            if (novaConfig.forcarAberto) {
+                novaConfig.forcarFechado = false;
                 fechadoCheck.checked = false;
             }
-            salvarConfig();
+            atualizarConfigFirebase(novaConfig);
         };
 
         window.toggleForcarFechado = function() {
             const abertoCheck = document.getElementById('btnForcarAberto');
             const fechadoCheck = document.getElementById('btnForcarFechado');
-            configLoja.forcarFechado = fechadoCheck.checked;
-            if (configLoja.forcarFechado) {
-                configLoja.forcarAberto = false;
+            const novaConfig = { ...configLoja, forcarFechado: fechadoCheck.checked };
+            if (novaConfig.forcarFechado) {
+                novaConfig.forcarAberto = false;
                 abertoCheck.checked = false;
             }
-            salvarConfig();
-        };
-
-        function salvarConfig() {
-            localStorage.setItem('onmi_config', JSON.stringify(configLoja));
-            checarStatusLoja();
-        }
-
-        window.fecharModalEAtualizar = function() {
-            fecharModal('modalAdmin');
-            setTimeout(() => {
-                checarStatusLoja();
-            }, 50);
+            atualizarConfigFirebase(novaConfig);
         };
 
         window.resetarTudo = function() {
@@ -922,11 +903,18 @@
 
         // --------------------- INICIALIZAÇÃO -------------------------
         renderizarProdutos();
-        checarStatusLoja();
-        setInterval(checarStatusLoja, 60000);
-        document.getElementById('btnAdicionar').addEventListener('click', window.adicionarAoCarrinho);
 
-        // Atualiza barra quando endereço muda
+        // Inicia o listener do Firebase (substitui o setInterval e localStorage)
+        if (window.firebaseTools) {
+            iniciarFirebaseListener();
+        } else {
+            // Fallback (caso o Firebase não carregue)
+            configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { forcarAberto: false, forcarFechado: false };
+            checarStatusLoja();
+            setInterval(checarStatusLoja, 60000);
+        }
+
+        document.getElementById('btnAdicionar').addEventListener('click', window.adicionarAoCarrinho);
         document.getElementById('enderecoCliente')?.addEventListener('input', atualizarBarra);
     })();
 </script>
