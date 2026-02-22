@@ -78,9 +78,9 @@
         .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--divider); cursor: pointer; }
         .opcao-nome { font-size: 13px; color: var(--text); }
 
-        .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; }
+        .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; }
 
-        .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); }
+        .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); cursor: pointer; }
 
         input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; }
 
@@ -158,6 +158,7 @@
             <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
         </div>
         <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Enviar via WhatsApp</button>
+        <p onclick="fecharModal('modalCarrinho')" style="text-align:center; color:#999; font-size:13px; cursor:pointer;">Fechar</p>
     </div>
 </div>
 
@@ -240,17 +241,21 @@
     const logoBtn = document.getElementById('masterLogo');
     logoBtn.addEventListener('mousedown', () => timerLogo = setTimeout(abrirAdmin, 3000));
     logoBtn.addEventListener('mouseup', () => clearTimeout(timerLogo));
+    logoBtn.addEventListener('mouseleave', () => clearTimeout(timerLogo));
     logoBtn.addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
     logoBtn.addEventListener('touchend', () => clearTimeout(timerLogo));
 
     function abrirAdmin() {
         const senha = prompt("Senha:");
-        if(senha === "onmi123") { document.getElementById('modalAdmin').style.display = "flex"; renderizarAdmin(); }
+        if(senha === "onmi123") { 
+            document.getElementById('modalAdmin').style.display = "flex"; 
+            renderizarAdmin(); 
+        }
     }
 
     function renderizarAdmin() {
-        document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto;
-        document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado;
+        document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto || false;
+        document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado || false;
         
         document.getElementById('listaControleProdutos').innerHTML = PRODUTOS_BASE.map(p => {
             const item = estoqueProd.find(e => e.id === p.id);
@@ -278,9 +283,28 @@
         localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp)); 
     }
 
-    function toggleForcarAberto() { configLoja.forcarAberto = document.getElementById('btnForcarAberto').checked; if(configLoja.forcarAberto) configLoja.forcarFechado = false; salvarConfig(); }
-    function toggleForcarFechado() { configLoja.forcarFechado = document.getElementById('btnForcarFechado').checked; if(configLoja.forcarFechado) configLoja.forcarAberto = false; salvarConfig(); }
-    function salvarConfig() { localStorage.setItem('onmi_config', JSON.stringify(configLoja)); checarStatusLoja(); }
+    function toggleForcarAberto() { 
+        configLoja.forcarAberto = document.getElementById('btnForcarAberto').checked; 
+        if(configLoja.forcarAberto) {
+            configLoja.forcarFechado = false;
+            document.getElementById('btnForcarFechado').checked = false;
+        }
+        salvarConfig(); 
+    }
+    
+    function toggleForcarFechado() { 
+        configLoja.forcarFechado = document.getElementById('btnForcarFechado').checked; 
+        if(configLoja.forcarFechado) {
+            configLoja.forcarAberto = false;
+            document.getElementById('btnForcarAberto').checked = false;
+        }
+        salvarConfig(); 
+    }
+    
+    function salvarConfig() { 
+        localStorage.setItem('onmi_config', JSON.stringify(configLoja)); 
+        checarStatusLoja(); 
+    }
 
     function checarStatusLoja() {
         const hora = new Date().getHours();
@@ -300,7 +324,7 @@
                 const itemEstoque = estoqueProd.find(e => e.id === p.id);
                 if(itemEstoque && !itemEstoque.d) return '';
                 return `
-                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
+                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p).replace(/'/g, "\\'")})'>
                     <div class="produto-info"><h3>${p.nome}</h3><span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span></div>
                     <div class="img-container"><img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img"></div>
                 </div>`;
@@ -331,7 +355,7 @@
             
             const htmlItens = itens.map(item => `
                 <label class="opcao-item">
-                    <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
+                    <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$ '+item.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
                     <input type="${item.unico ? 'radio' : 'checkbox'}" name="sec-${secNome.replace(/\s/g, '')}" class="extra-item" 
                         data-sec="${secNome}" data-obrigar="${item.obrigar||false}" data-preco="${item.p||0}" value="${item.n}">
                 </label>`).join('');
@@ -365,7 +389,7 @@
 
     function atualizarBarra() {
         const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        const endereco = document.getElementById('enderecoCliente').value.toLowerCase();
+        const endereco = document.getElementById('enderecoCliente')?.value.toLowerCase() || '';
         const taxa = (endereco.includes("beira rio") || endereco.includes("beira-rio")) ? 2 : 3;
         document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
         document.getElementById('qtdItens').innerText = carrinho.length;
@@ -373,15 +397,40 @@
     }
 
     function abrirCarrinho() {
+        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        const endereco = document.getElementById('enderecoCliente')?.value.toLowerCase() || '';
+        const taxa = (endereco.includes("beira rio") || endereco.includes("beira-rio")) ? 2 : 3;
+        
         document.getElementById('itensNoCarrinho').innerHTML = carrinho.map((i, idx) => `
             <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span style="color:red; font-size:11px;" onclick="removerItem(${idx})">Remover</span></div>
+                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span style="color:red; font-size:11px; cursor:pointer;" onclick="removerItem(${idx})">Remover</span></div>
                 <strong>R$ ${i.precoFinal.toFixed(2).replace('.',',')}</strong>
             </div>`).join('');
+        
+        // Adicionar taxa ao final
+        document.getElementById('itensNoCarrinho').innerHTML += `
+            <div style="padding:10px 0; display:flex; justify-content:space-between; font-weight:bold;">
+                <span>Taxa de entrega</span>
+                <span>R$ ${taxa.toFixed(2).replace('.',',')}</span>
+            </div>
+            <div style="padding:10px 0; display:flex; justify-content:space-between; font-weight:bold; color:var(--primary);">
+                <span>TOTAL</span>
+                <span>R$ ${(sub + taxa).toFixed(2).replace('.',',')}</span>
+            </div>`;
+        
         document.getElementById('modalCarrinho').style.display = 'flex';
     }
 
-    function removerItem(idx) { carrinho.splice(idx, 1); carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho'); atualizarBarra(); }
+    function removerItem(idx) { 
+        carrinho.splice(idx, 1); 
+        if(carrinho.length > 0) { 
+            abrirCarrinho(); 
+        } else { 
+            fecharModal('modalCarrinho'); 
+        } 
+        atualizarBarra(); 
+    }
+    
     function togglePagamento() {
         const p = document.getElementById('formaPagamento').value;
         document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
@@ -393,26 +442,21 @@
         const e = document.getElementById('enderecoCliente').value;
         const p = document.getElementById('formaPagamento').value;
         if(!n || !e || !p) return alert("Preencha todos os campos!");
-        const taxa = (e.toLowerCase().includes("beira rio")) ? 2 : 3;
+        
+        const taxa = (e.toLowerCase().includes("beira rio") || e.toLowerCase().includes("beira-rio")) ? 2 : 3;
         const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
+        const total = sub + taxa;
+        
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}`;
+        
         if(p === 'Pix') msg += `%0A%0A*CHAVE PIX:* 200.769.057-80 (Alex Cardoso)`;
-        msg += `%0A--------------------------%0A`;
-        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
-        msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
-        window.open(`https://wa.me/5521988626495?text=${msg}`);
-    }
-
-    function resetarTudo() { if(confirm("Isso vai resetar todos os produtos e fechar o admin. Continuar?")) { localStorage.clear(); location.reload(); } }
-    function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-    function scrollToCategory(id, el) {
-        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    renderizar();
-    setInterval(checarStatusLoja, 60000);
-</script>
-</body>
-</html>
+        if(p === 'Dinheiro') {
+            const troco = document.getElementById('trocoPara').value;
+            if(troco) msg += `%0A*Troco para:* R$ ${troco}`;
+        }
+        
+        msg += `%0A--------------------------%0A*ITENS:*%0A`;
+        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0AR$ ${i.precoFinal.toFixed(2).replace('.',',')}%0A%0A`);
+        msg += `--------------------------%0A*Taxa entrega:* R$ ${taxa.toFixed(2).replace('.',',')}%0A*TOTAL: R$ ${total.toFixed(2).replace('.',',')}*`;
+        
+        window.open(`https://wa.me
