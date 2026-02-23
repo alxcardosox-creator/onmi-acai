@@ -65,3 +65,143 @@
 <script src="script.js"></script>
 </body>
 </html>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f0f0f;
+  color:white;
+}
+
+header{
+  text-align:center;
+  padding:20px;
+  background:#1a1a1a;
+}
+
+h1{
+  color:#a020f0;
+}
+
+.produtos, .carrinho{
+  padding:20px;
+}
+
+.produto{
+  background:#1c1c1c;
+  padding:15px;
+  margin:10px 0;
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.produto:hover{
+  background:#a020f0;
+}
+
+button{
+  background:#a020f0;
+  border:none;
+  padding:10px;
+  color:white;
+  border-radius:8px;
+  margin-top:10px;
+  cursor:pointer;
+}
+
+.finalizar{
+  width:100%;
+  font-size:18px;
+}
+
+.hidden{
+  display:none;
+}
+let carrinho = [];
+let desconto = 0;
+
+function addItem(nome, preco){
+  carrinho.push({nome,preco});
+  atualizarCarrinho();
+}
+
+function atualizarCarrinho(){
+  let lista = document.getElementById("lista");
+  lista.innerHTML="";
+  carrinho.forEach(item=>{
+    lista.innerHTML += `<p>${item.nome} - R$${item.preco}</p>`;
+  });
+  calcularTotal();
+}
+
+function calcularTotal(){
+  let total = carrinho.reduce((soma,item)=>soma+item.preco,0);
+  let bairro = document.getElementById("bairro").value;
+
+  if(bairro == 0){
+    alert("Não entregamos em Engenheiro Pedreira.");
+    return;
+  }
+
+  if(bairro){
+    total += parseFloat(bairro);
+  }
+
+  total -= desconto;
+
+  document.getElementById("total").innerText = total.toFixed(2);
+}
+
+function aplicarCupom(){
+  let cupom = document.getElementById("cupom").value;
+
+  if(cupom == "ONMI10"){
+    desconto = 5;
+    alert("Cupom aplicado!");
+  }else{
+    alert("Cupom inválido");
+  }
+
+  calcularTotal();
+}
+
+function finalizarPedido(){
+  let hora = new Date().getHours();
+  let dia = new Date().getDay();
+
+  if((dia >=1 && dia <=6 && (hora<13 || hora>22)) ||
+     (dia==0 && (hora<13 || hora>17))){
+    alert("Estamos fechados no momento.");
+    return;
+  }
+
+  document.getElementById("pagamento").classList.remove("hidden");
+}
+
+function confirmarPagamento(){
+  alert("Pedido confirmado! 🍇");
+  carrinho=[];
+  atualizarCarrinho();
+  document.getElementById("pagamento").classList.add("hidden");
+}
+       {
+  "name": "Onmi Delivery",
+  "short_name": "Onmi",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#0f0f0f",
+  "theme_color": "#a020f0",
+  "icons": []
+}
+       self.addEventListener('install', e=>{
+  e.waitUntil(
+    caches.open('onmi').then(cache=>{
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/style.css',
+        '/script.js'
+      ]);
+    })
+  );
+});
