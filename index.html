@@ -193,12 +193,9 @@
         <div id="itensNoCarrinho"></div>
         <div style="margin-top:20px; background:var(--divider); padding:15px; border-radius:15px;">
             <input type="text" id="nomeCliente" placeholder="Seu nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)" oninput="atualizarBarra()">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)">
             <select id="bairroSelect" onchange="atualizarBarra()">
-                <option value="">Selecione o bairro</option>
-                <option value="centro">Centro</option>
-                <option value="beira rio">Beira Rio</option>
-                <option value="jardim">Jardim</option>
+                <!-- Opções preenchidas via JavaScript -->
             </select>
             <input type="text" id="cupomInput" placeholder="Cupom de desconto" oninput="aplicarCupom()">
             <span id="cupomMensagem" style="font-size:12px; color:var(--success);"></span>
@@ -212,13 +209,7 @@
                 <div id="qrCodeContainer"></div>
                 <button id="pixCopy" onclick="copiarPix()">Copiar código Pix</button>
                 <p style="font-size:12px;">Chave: 200.769.057-80 (Alex Cardoso)</p>
-                <select id="statusPagamento" onchange="atualizarStatusPedido()">
-                    <option value="aguardando">🟡 Aguardando pagamento</option>
-                    <option value="pago">🟢 Pago</option>
-                    <option value="preparo">🔵 Em preparo</option>
-                    <option value="entrega">🚚 Saiu para entrega</option>
-                    <option value="entregue">✅ Entregue</option>
-                </select>
+                <!-- Select de status removido -->
             </div>
             <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
         </div>
@@ -272,7 +263,7 @@
         <div id="resumoDia"></div>
         <button class="btn-acao" onclick="exportarRelatorio()">Exportar Relatório</button>
 
-        <button class="btn-acao" onclick="fecharModal('modalAdmin')">Fechar</button>
+        <button class="btn-acao" onclick="salvarConfigFechar()">Salvar e Fechar</button>
         <p onclick="resetarTudo()" style="text-align:center; color:red; font-size:11px; cursor:pointer; margin-top:10px;">Resetar Memória do Site</p>
     </div>
 </div>
@@ -356,9 +347,16 @@
     let itemSelecionado = null;
     let cupomAplicado = null;
 
-    // ==================== INICIALIZAÇÃO ====================
+    // ==================== FUNÇÕES AUXILIARES ====================
     function salvarCarrinho() {
         localStorage.setItem('onmi_carrinho', JSON.stringify(carrinho));
+    }
+
+    function salvarConfig() {
+        localStorage.setItem('onmi_config', JSON.stringify(configLoja));
+        // Atualiza select de bairros imediatamente
+        preencherBairros();
+        checarStatusLoja();
     }
 
     // ==================== ADMIN ====================
@@ -384,7 +382,7 @@
         document.getElementById('horarioSab').value = configLoja.horarios.sab;
         document.getElementById('horarioDom').value = configLoja.horarios.dom;
         
-        // Taxas
+        // Taxas - com opção de adicionar
         document.getElementById('listaTaxas').innerHTML = configLoja.taxasBairro.map((t, i) => `
             <div class="admin-item">
                 <input type="text" value="${t.bairro}" placeholder="Bairro" id="bairro_nome_${i}" style="width:40%;">
@@ -436,7 +434,7 @@
     }
 
     function adicionarTaxa() {
-        configLoja.taxasBairro.push({ bairro: "Novo", taxa: 0 });
+        configLoja.taxasBairro.push({ bairro: "Novo Bairro", taxa: 0 });
         renderizarAdmin();
     }
     function removerTaxa(i) {
@@ -475,20 +473,25 @@
         if(configLoja.forcarFechado) configLoja.forcarAberto = false; 
         salvarConfig(); 
     }
-    function salvarConfig() { 
+
+    // Função para salvar todas as alterações do admin e fechar
+    function salvarConfigFechar() {
+        // Capturar horários
         configLoja.horarios = {
             segSex: document.getElementById('horarioSegSex').value,
             sab: document.getElementById('horarioSab').value,
             dom: document.getElementById('horarioDom').value
         };
-        // Salvar taxas editadas
+        
+        // Capturar taxas
         configLoja.taxasBairro = [];
         for(let i=0; i<document.querySelectorAll('[id^="bairro_nome_"]').length; i++) {
             let nome = document.getElementById(`bairro_nome_${i}`)?.value;
             let taxa = parseFloat(document.getElementById(`bairro_taxa_${i}`)?.value);
             if(nome && !isNaN(taxa)) configLoja.taxasBairro.push({ bairro: nome.toLowerCase(), taxa });
         }
-        // Salvar cupons
+        
+        // Capturar cupons
         configLoja.cupons = [];
         for(let i=0; i<document.querySelectorAll('[id^="cupom_cod_"]').length; i++) {
             let cod = document.getElementById(`cupom_cod_${i}`)?.value;
@@ -496,8 +499,9 @@
             let tipo = document.getElementById(`cupom_tipo_${i}`)?.value;
             if(cod && !isNaN(val)) configLoja.cupons.push({ codigo: cod.toUpperCase(), desconto: val, tipo });
         }
-        localStorage.setItem('onmi_config', JSON.stringify(configLoja)); 
-        checarStatusLoja(); 
+
+        salvarConfig();
+        fecharModal('modalAdmin');
     }
 
     // ==================== HORÁRIO FUNCIONAMENTO ====================
@@ -543,6 +547,18 @@
             }).join('');
         });
         checarStatusLoja();
+    }
+
+    // ==================== PREENCHER BAIRROS NO SELECT ====================
+    function preencherBairros() {
+        const select = document.getElementById('bairroSelect');
+        select.innerHTML = '<option value="">Selecione o bairro</option>';
+        configLoja.taxasBairro.forEach(t => {
+            const option = document.createElement('option');
+            option.value = t.bairro;
+            option.textContent = t.bairro.charAt(0).toUpperCase() + t.bairro.slice(1) + ` (R$ ${t.taxa.toFixed(2).replace('.',',')})`;
+            select.appendChild(option);
+        });
     }
 
     // ==================== MODAL DE PERSONALIZAÇÃO ====================
@@ -596,7 +612,6 @@
         const nomes = selecionados.map(el => el.value);
         const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
         
-        // Adiciona com quantidade
         carrinho.push({ 
             nome: itemSelecionado.nome, 
             precoFinal: itemSelecionado.preco + precoExtra, 
@@ -632,7 +647,6 @@
         document.getElementById('qtdItens').innerText = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
         document.getElementById('totalFlutuante').innerText = `R$ ${totalFinal.toFixed(2).replace('.',',')}`;
         
-        // Gerar QR Code Pix se necessário
         if (document.getElementById('formaPagamento')?.value === 'Pix') {
             gerarQRCode(totalFinal);
         }
@@ -653,7 +667,6 @@
                 </div>
             </div>`).join('');
         document.getElementById('modalCarrinho').style.display = 'flex';
-        // Atualizar QR Code se Pix já selecionado
         if (document.getElementById('formaPagamento').value === 'Pix') {
             const total = calcularTotalFinal();
             gerarQRCode(total);
@@ -710,31 +723,25 @@
 
     // ==================== PIX QR CODE ====================
     function gerarQRCode(valor) {
-        // Formato Pix: 0002010102122681... (simplificado)
         const chave = "200.769.057-80";
         const nome = "Alex Cardoso Sousa";
         const cidade = "Rio de Janeiro";
         const txid = "ONMI" + Date.now();
-        // Usar lib QRCode.js
         const qrContainer = document.getElementById('qrCodeContainer');
         qrContainer.innerHTML = '';
-        // Criar string Pix copia e cola (EMV)
         const payload = generatePixPayload(chave, valor, nome, cidade, txid);
         new QRCode(qrContainer, {
             text: payload,
             width: 200,
             height: 200
         });
-        // Guardar payload para copiar
         window.pixPayload = payload;
     }
 
     function generatePixPayload(chave, valor, nome, cidade, txid) {
-        // Função simplificada para gerar payload Pix (apenas exemplo, não oficial)
         const valorFormatado = valor.toFixed(2);
         const nomeFormatado = nome.substring(0, 25);
         const cidadeFormatada = cidade.substring(0, 15);
-        // Em produção, use uma lib específica
         return `00020126360014BR.GOV.BCB.PIX0114${chave}520400005303986540${valorFormatado.replace('.','')}5802BR5913${nomeFormatado}6008${cidadeFormatada}62140510${txid}6304`;
     }
 
@@ -786,17 +793,14 @@
             cupom: cupomAplicado,
             total,
             pagamento: pag,
-            status: document.getElementById('statusPagamento')?.value || 'aguardando',
             timestamp: new Date().toISOString()
         };
         pedidos.push(pedido);
         localStorage.setItem('onmi_pedidos', JSON.stringify(pedidos));
 
-        // Tocar som de notificação
         document.getElementById('notificacaoSom').play();
 
         let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Bairro:* ${bairro}%0A*Pagamento:* ${pag}`;
-        if(pag === 'Pix') msg += `%0A*Status:* ${pedido.status}`;
         if(cupomAplicado) msg += `%0A*Cupom:* ${cupomAplicado.codigo} (-R$ ${desconto.toFixed(2)})`;
         msg += `%0A--------------------------%0A`;
         carrinho.forEach(i => msg += `✅ ${i.quantidade}x *${i.nome}*%0A _${i.detalhes}_%0A`);
@@ -804,13 +808,11 @@
         
         window.open(`https://wa.me/5521988626495?text=${msg}`);
 
-        // Limpar carrinho
         carrinho = [];
         salvarCarrinho();
         fecharModal('modalCarrinho');
         atualizarBarra();
 
-        // Abrir avaliação após pedido
         setTimeout(() => {
             document.getElementById('modalAvaliacao').style.display = 'flex';
         }, 1000);
@@ -878,7 +880,6 @@
 
     // ==================== GOOGLE MAPS ====================
     function abrirMapa() {
-        // Endereço da loja (exemplo)
         window.open('https://www.google.com/maps/search/?api=1&query=Onmi+Açaí+Rio+de+Janeiro');
     }
 
@@ -899,11 +900,7 @@
         const hoje = new Date().toLocaleDateString();
         const pedidosHoje = pedidos.filter(p => p.data === hoje);
         let texto = `Relatório ${hoje}\nTotal vendido: ${pedidosHoje.reduce((acc,p)=>acc+p.total,0).toFixed(2)}\nPedidos: ${pedidosHoje.length}\n`;
-        alert(texto); // Poderia gerar PDF também
-    }
-
-    function atualizarStatusPedido() {
-        // Simula atualização de status (em produção, seria por pedido)
+        alert(texto);
     }
 
     // ==================== RESET ====================
@@ -929,7 +926,8 @@
         navigator.serviceWorker.register('/sw.js').catch(err => console.log('ServiceWorker não suportado'));
     }
 
-    // Inicialização
+    // ==================== INICIALIZAÇÃO ====================
+    preencherBairros();
     renderizar();
     setInterval(checarStatusLoja, 60000);
     atualizarBarra();
