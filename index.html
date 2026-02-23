@@ -11,7 +11,7 @@
     <!-- PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        /* Mesmo CSS anterior, mantido */
+        /* (mesmo CSS anterior, mantido) */
         :root {
             --primary: #5b0f73;
             --primary-light: #f4e8f7;
@@ -116,9 +116,26 @@
 
         input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; background: var(--white); color: var(--text); }
 
+        /* Admin melhorado */
         #adminPanel { padding: 20px; }
-        .admin-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--divider); align-items: center; }
-        .admin-scroller { max-height: 300px; overflow-y: auto; border: 1px solid var(--divider); padding: 10px; border-radius: 10px; margin-bottom: 15px; }
+        .admin-tabs { display: flex; gap: 5px; margin-bottom: 20px; flex-wrap: wrap; }
+        .admin-tab { padding: 10px 20px; background: var(--divider); border-radius: 30px; font-weight: 600; cursor: pointer; }
+        .admin-tab.active { background: var(--primary); color: white; }
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
+        .admin-item { background: var(--divider); padding: 15px; border-radius: 12px; margin-bottom: 15px; }
+        .admin-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .admin-item-title { font-weight: 700; }
+        .admin-item-actions { display: flex; gap: 10px; }
+        .admin-item-actions button { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--text); }
+        .admin-item-actions .edit { color: var(--primary); }
+        .admin-item-actions .delete { color: var(--danger); }
+        .admin-form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+        .admin-form-row > * { flex: 1; min-width: 120px; }
+        .admin-checkbox { display: flex; align-items: center; gap: 5px; }
+        .admin-stats { background: var(--divider); padding: 15px; border-radius: 12px; font-size: 14px; }
+        .admin-stats p { margin: 5px 0; }
+        .admin-stats ul { max-height: 150px; overflow-y: auto; margin: 5px 0; padding-left: 20px; }
         .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
@@ -135,7 +152,6 @@
 
         #qrCodeContainer { display: flex; justify-content: center; margin: 15px 0; }
         #pixCopy { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; }
-        .mapa-btn { background: var(--success); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 10px; }
         .sync-indicator { font-size: 10px; color: var(--text-light); text-align: right; padding: 5px; }
     </style>
 </head>
@@ -228,37 +244,85 @@
     </div>
 </div>
 
+<!-- ADMIN MODAL REFORMULADO -->
 <div id="modalAdmin" class="modal">
     <div class="modal-content" id="adminPanel">
-        <h2 style="font-size:18px; color:var(--primary);">⚙️ Configurações</h2>
-        <div class="admin-item"><span>Aberto</span><label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
-        <div class="admin-item"><span>Fechado</span><label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
-        
-        <h3 style="font-size: 14px;">🕒 Horário personalizado</h3>
-        <div style="display:grid; gap:5px;">
-            <label>Segunda a Sexta: <input type="text" id="horarioSegSex" placeholder="13:00-22:00"></label>
-            <label>Sábado: <input type="text" id="horarioSab" placeholder="13:00-22:00"></label>
-            <label>Domingo: <input type="text" id="horarioDom" placeholder="Fechado"></label>
+        <h2 style="font-size:18px; color:var(--primary); margin-bottom:20px;">⚙️ Painel Administrativo</h2>
+
+        <!-- Abas -->
+        <div class="admin-tabs">
+            <div class="admin-tab active" onclick="mudarAba('geral')">Geral</div>
+            <div class="admin-tab" onclick="mudarAba('produtos')">Produtos</div>
+            <div class="admin-tab" onclick="mudarAba('complementos')">Complementos</div>
+            <div class="admin-tab" onclick="mudarAba('relatorios')">Relatórios</div>
         </div>
 
-        <h3 style="font-size: 14px;">💰 Taxas por bairro</h3>
-        <div class="admin-scroller" id="listaTaxas"></div>
+        <!-- Seção Geral -->
+        <div id="aba-geral" class="admin-section active">
+            <h3 style="font-size:14px;">🔧 Configurações da Loja</h3>
+            <div class="admin-item">
+                <div class="admin-item-header">
+                    <span class="admin-item-title">Forçar Status</span>
+                </div>
+                <div style="display:flex; gap:20px;">
+                    <div class="admin-checkbox"><label>Aberto</label> <label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
+                    <div class="admin-checkbox"><label>Fechado</label> <label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
+                </div>
+            </div>
 
-        <h3 style="font-size: 14px;">🎁 Cupons de desconto</h3>
-        <div class="admin-scroller" id="listaCupons"></div>
+            <div class="admin-item">
+                <div class="admin-item-header">
+                    <span class="admin-item-title">Horário de Funcionamento</span>
+                </div>
+                <div class="admin-form-row">
+                    <input type="text" id="horarioSegSex" placeholder="Seg-Sex (ex: 13:00-22:00)">
+                    <input type="text" id="horarioSab" placeholder="Sábado">
+                    <input type="text" id="horarioDom" placeholder="Domingo">
+                </div>
+            </div>
 
-        <h3 style="font-size: 14px;">📦 Produtos (copo, garrafa, pastel)</h3>
-        <div class="admin-scroller" id="listaProdutos"></div>
+            <div class="admin-item">
+                <div class="admin-item-header">
+                    <span class="admin-item-title">Taxas por Bairro</span>
+                    <button class="btn-acao" onclick="adicionarTaxa()" style="width:auto; padding:8px 15px; margin:0;">+ Adicionar</button>
+                </div>
+                <div id="listaTaxas"></div>
+            </div>
 
-        <h3 style="font-size: 14px;">🍨 Complementos (caldas, sabores, etc)</h3>
-        <div class="admin-scroller" id="listaComplementos"></div>
+            <div class="admin-item">
+                <div class="admin-item-header">
+                    <span class="admin-item-title">Cupons de Desconto</span>
+                    <button class="btn-acao" onclick="adicionarCupom()" style="width:auto; padding:8px 15px; margin:0;">+ Adicionar</button>
+                </div>
+                <div id="listaCupons"></div>
+            </div>
+        </div>
 
-        <h3 style="font-size: 14px;">📊 Resumo do dia</h3>
-        <div id="resumoDia" style="background: var(--divider); padding: 10px; border-radius: 8px; font-size: 13px;"></div>
-        <button class="btn-acao" onclick="exportarRelatorio()">📄 Exportar Relatório</button>
+        <!-- Seção Produtos -->
+        <div id="aba-produtos" class="admin-section">
+            <h3 style="font-size:14px;">📦 Gerenciar Produtos</h3>
+            <div id="listaProdutos"></div>
+            <button class="btn-acao" onclick="adicionarProduto()" style="width:100%;">+ Adicionar Novo Produto</button>
+        </div>
 
-        <button class="btn-acao" onclick="salvarConfigFechar()">💾 Salvar e Fechar</button>
+        <!-- Seção Complementos -->
+        <div id="aba-complementos" class="admin-section">
+            <h3 style="font-size:14px;">🍨 Gerenciar Complementos</h3>
+            <div id="listaComplementos"></div>
+            <button class="btn-acao" onclick="adicionarComplemento()" style="width:100%;">+ Adicionar Novo Complemento</button>
+        </div>
+
+        <!-- Seção Relatórios -->
+        <div id="aba-relatorios" class="admin-section">
+            <h3 style="font-size:14px;">📊 Resumo do Dia</h3>
+            <div id="resumoDia" class="admin-stats"></div>
+            <button class="btn-acao" onclick="exportarRelatorio()" style="margin-top:15px;">📄 Exportar Relatório</button>
+        </div>
+
+        <!-- Botões gerais -->
+        <button class="btn-acao" onclick="salvarConfigFechar()" style="background:var(--success); margin-top:20px;">💾 Salvar Todas as Alterações</button>
         <p onclick="resetarTudo()" style="text-align:center; color:red; font-size:11px; cursor:pointer; margin-top:10px;">⚠️ Resetar Memória do Site</p>
+        <p onclick="fecharModal('modalAdmin')" style="text-align:center; color:#999; font-size:13px; cursor:pointer;">Fechar</p>
     </div>
 </div>
 
@@ -283,13 +347,11 @@
     };
 
     // ==================== ESTRUTURAS DE DADOS ====================
-    // Agora produtos e complementos serão armazenados no JSONBin, não mais como constantes fixas.
-    let produtos = [];        // Array de objetos { id, cat, nome, preco, img, ativo? }
-    let complementos = [];    // Array de objetos { idc, sec, n, cat, unico, obrigar, p, ativo? }
-    let estoqueProd = [];     // Para controle de disponibilidade (pode ser integrado ao próprio produto)
+    let produtos = [];
+    let complementos = [];
+    let estoqueProd = [];
     let estoqueComp = [];
 
-    // Configurações da loja
     let configLoja = {
         forcarAberto: false,
         forcarFechado: false,
@@ -319,14 +381,12 @@
         } catch (error) {
             console.error('Erro ao carregar do JSONBin:', error);
             document.getElementById('syncStatus').innerText = '⚠️ Offline (usando cache)';
-            // Fallback para dados locais (se houver)
             produtos = JSON.parse(localStorage.getItem('onmi_produtos_fallback')) || [];
             complementos = JSON.parse(localStorage.getItem('onmi_complementos_fallback')) || [];
             estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod_fallback')) || [];
             estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp_fallback')) || [];
             configLoja = JSON.parse(localStorage.getItem('onmi_config_fallback')) || configLoja;
         }
-        // Se ainda estiver vazio, usar dados iniciais
         if (produtos.length === 0) {
             produtos = [
                 { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg", ativo: true },
@@ -370,7 +430,6 @@
                 { idc: 602, sec: 'Adicionais', n: 'Nutella', cat: 'garrafa', p: 3.00, ativo: true }
             ];
         }
-        // Garantir que cada produto tenha um campo 'ativo'
         produtos = produtos.map(p => ({ ...p, ativo: p.ativo !== false }));
         complementos = complementos.map(c => ({ ...c, ativo: c.ativo !== false }));
 
@@ -394,7 +453,6 @@
                 body: JSON.stringify(payload)
             });
             document.getElementById('syncStatus').innerText = '✅ Sincronizado';
-            // Salvar fallback no localStorage
             localStorage.setItem('onmi_produtos_fallback', JSON.stringify(produtos));
             localStorage.setItem('onmi_complementos_fallback', JSON.stringify(complementos));
             localStorage.setItem('onmi_estoque_prod_fallback', JSON.stringify(estoqueProd));
@@ -406,7 +464,6 @@
         }
     }
 
-    // Atualizar periodicamente (a cada 30 segundos)
     setInterval(carregarDados, 30000);
 
     // ==================== FUNÇÕES DE ADMIN ====================
@@ -425,7 +482,15 @@
         }
     }
 
+    function mudarAba(aba) {
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+        document.querySelector(`.admin-tab[onclick="mudarAba('${aba}')"]`).classList.add('active');
+        document.getElementById(`aba-${aba}`).classList.add('active');
+    }
+
     function renderizarAdmin() {
+        // Atualizar campos da aba Geral
         document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto || false;
         document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado || false;
         document.getElementById('horarioSegSex').value = configLoja.horarios.segSex;
@@ -434,81 +499,103 @@
         
         // Taxas
         document.getElementById('listaTaxas').innerHTML = (configLoja.taxasBairro || []).map((t, i) => `
-            <div class="admin-item">
-                <input type="text" value="${t.bairro}" placeholder="Bairro" id="bairro_nome_${i}" style="width:40%;">
-                <input type="number" value="${t.taxa}" step="0.01" id="bairro_taxa_${i}" style="width:40%;">
-                <button onclick="removerTaxa(${i})" style="background:red; color:white; border:none; border-radius:5px;">🗑️</button>
+            <div class="admin-item" style="margin-bottom:5px; padding:10px;">
+                <div class="admin-form-row">
+                    <input type="text" value="${t.bairro}" placeholder="Bairro" id="bairro_nome_${i}">
+                    <input type="number" value="${t.taxa}" step="0.01" placeholder="Taxa R$" id="bairro_taxa_${i}">
+                    <button onclick="removerTaxa(${i})" style="background:red; color:white; border:none; border-radius:5px; padding:10px;">🗑️</button>
+                </div>
             </div>
         `).join('');
-        document.getElementById('listaTaxas').innerHTML += `<button class="btn-acao" onclick="adicionarTaxa()" style="width:100%;">+ Adicionar bairro</button>`;
 
         // Cupons
         document.getElementById('listaCupons').innerHTML = (configLoja.cupons || []).map((c, i) => `
-            <div class="admin-item">
-                <input type="text" value="${c.codigo}" placeholder="Código" id="cupom_cod_${i}" style="width:30%;">
-                <input type="number" value="${c.desconto}" step="0.01" id="cupom_val_${i}" style="width:30%;">
-                <select id="cupom_tipo_${i}" style="width:30%;">
-                    <option value="porcentagem" ${c.tipo==='porcentagem'?'selected':''}>%</option>
-                    <option value="fixo" ${c.tipo==='fixo'?'selected':''}>R$</option>
-                </select>
-                <button onclick="removerCupom(${i})" style="background:red; color:white; border:none; border-radius:5px;">🗑️</button>
+            <div class="admin-item" style="margin-bottom:5px; padding:10px;">
+                <div class="admin-form-row">
+                    <input type="text" value="${c.codigo}" placeholder="Código" id="cupom_cod_${i}">
+                    <input type="number" value="${c.desconto}" step="0.01" placeholder="Desconto" id="cupom_val_${i}">
+                    <select id="cupom_tipo_${i}">
+                        <option value="porcentagem" ${c.tipo==='porcentagem'?'selected':''}>%</option>
+                        <option value="fixo" ${c.tipo==='fixo'?'selected':''}>R$</option>
+                    </select>
+                    <button onclick="removerCupom(${i})" style="background:red; color:white; border:none; border-radius:5px; padding:10px;">🗑️</button>
+                </div>
             </div>
         `).join('');
-        document.getElementById('listaCupons').innerHTML += `<button class="btn-acao" onclick="adicionarCupom()" style="width:100%;">+ Adicionar cupom</button>`;
 
         // Produtos
-        document.getElementById('listaProdutos').innerHTML = produtos.map((p, i) => `
-            <div class="admin-item" style="flex-wrap:wrap; gap:5px;">
-                <input type="text" value="${p.nome}" placeholder="Nome" id="prod_nome_${p.id}" style="width:100%;">
-                <input type="number" value="${p.preco}" step="0.01" placeholder="Preço" id="prod_preco_${p.id}" style="width:45%;">
-                <select id="prod_cat_${p.id}" style="width:45%;">
-                    <option value="copo" ${p.cat==='copo'?'selected':''}>Copo</option>
-                    <option value="garrafa" ${p.cat==='garrafa'?'selected':''}>Garrafa</option>
-                    <option value="pastel" ${p.cat==='pastel'?'selected':''}>Pastel</option>
-                </select>
-                <input type="text" value="${p.img}" placeholder="URL imagem" id="prod_img_${p.id}" style="width:100%;">
-                <label style="display:flex; align-items:center; gap:5px;">
-                    <input type="checkbox" id="prod_ativo_${p.id}" ${p.ativo?'checked':''}> Ativo
-                </label>
-                <button onclick="removerProduto(${p.id})" style="background:red; color:white; border:none; border-radius:5px;">🗑️</button>
+        document.getElementById('listaProdutos').innerHTML = produtos.map(p => `
+            <div class="admin-item" data-id="${p.id}">
+                <div class="admin-item-header">
+                    <span class="admin-item-title">${p.nome}</span>
+                    <div class="admin-item-actions">
+                        <button class="edit" onclick="editarProduto(${p.id})"><i class="fas fa-edit"></i></button>
+                        <button class="delete" onclick="removerProduto(${p.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="admin-form-row">
+                    <input type="text" value="${p.nome}" placeholder="Nome" id="prod_nome_${p.id}" style="display:none;">
+                    <input type="number" value="${p.preco}" step="0.01" placeholder="Preço" id="prod_preco_${p.id}" style="display:none;">
+                    <select id="prod_cat_${p.id}" style="display:none;">
+                        <option value="copo" ${p.cat==='copo'?'selected':''}>Copo</option>
+                        <option value="garrafa" ${p.cat==='garrafa'?'selected':''}>Garrafa</option>
+                        <option value="pastel" ${p.cat==='pastel'?'selected':''}>Pastel</option>
+                    </select>
+                    <input type="text" value="${p.img}" placeholder="URL imagem" id="prod_img_${p.id}" style="display:none;">
+                    <div class="admin-checkbox" style="display:none;">
+                        <label>Ativo</label> <input type="checkbox" id="prod_ativo_${p.id}" ${p.ativo?'checked':''}>
+                    </div>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                    <span><strong>Preço:</strong> R$ ${p.preco.toFixed(2).replace('.',',')}</span>
+                    <span><strong>Categoria:</strong> ${p.cat}</span>
+                    <span><strong>Status:</strong> ${p.ativo ? 'Ativo' : 'Inativo'}</span>
+                </div>
             </div>
         `).join('');
-        document.getElementById('listaProdutos').innerHTML += `<button class="btn-acao" onclick="adicionarProduto()" style="width:100%;">+ Adicionar produto</button>`;
 
         // Complementos
-        document.getElementById('listaComplementos').innerHTML = complementos.map((c, i) => `
-            <div class="admin-item" style="flex-wrap:wrap; gap:5px;">
-                <input type="text" value="${c.sec}" placeholder="Seção" id="comp_sec_${c.idc}" style="width:100%;">
-                <input type="text" value="${c.n}" placeholder="Nome" id="comp_nome_${c.idc}" style="width:100%;">
-                <input type="number" value="${c.p || 0}" step="0.01" placeholder="Preço extra" id="comp_preco_${c.idc}" style="width:45%;">
-                <select id="comp_cat_${c.idc}" style="width:45%;">
-                    <option value="copo" ${c.cat==='copo'?'selected':''}>Copo</option>
-                    <option value="garrafa" ${c.cat==='garrafa'?'selected':''}>Garrafa</option>
-                    <option value="pastel_t" ${c.cat==='pastel_t'?'selected':''}>Pastel Trad</option>
-                    <option value="pastel_e" ${c.cat==='pastel_e'?'selected':''}>Pastel Esp</option>
-                </select>
-                <label style="display:flex; align-items:center; gap:5px;">
-                    <input type="checkbox" id="comp_unico_${c.idc}" ${c.unico?'checked':''}> Único
-                </label>
-                <label style="display:flex; align-items:center; gap:5px;">
-                    <input type="checkbox" id="comp_obrigar_${c.idc}" ${c.obrigar?'checked':''}> Obrigatório
-                </label>
-                <label style="display:flex; align-items:center; gap:5px;">
-                    <input type="checkbox" id="comp_ativo_${c.idc}" ${c.ativo!==false?'checked':''}> Ativo
-                </label>
-                <button onclick="removerComplemento(${c.idc})" style="background:red; color:white; border:none; border-radius:5px;">🗑️</button>
+        document.getElementById('listaComplementos').innerHTML = complementos.map(c => `
+            <div class="admin-item" data-idc="${c.idc}">
+                <div class="admin-item-header">
+                    <span class="admin-item-title">${c.n} (${c.sec})</span>
+                    <div class="admin-item-actions">
+                        <button class="edit" onclick="editarComplemento(${c.idc})"><i class="fas fa-edit"></i></button>
+                        <button class="delete" onclick="removerComplemento(${c.idc})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+                <div class="admin-form-row" style="display:none;" id="edit-comp-${c.idc}">
+                    <input type="text" value="${c.sec}" placeholder="Seção" id="comp_sec_${c.idc}">
+                    <input type="text" value="${c.n}" placeholder="Nome" id="comp_nome_${c.idc}">
+                    <input type="number" value="${c.p || 0}" step="0.01" placeholder="Preço extra" id="comp_preco_${c.idc}">
+                    <select id="comp_cat_${c.idc}">
+                        <option value="copo" ${c.cat==='copo'?'selected':''}>Copo</option>
+                        <option value="garrafa" ${c.cat==='garrafa'?'selected':''}>Garrafa</option>
+                        <option value="pastel_t" ${c.cat==='pastel_t'?'selected':''}>Pastel Trad</option>
+                        <option value="pastel_e" ${c.cat==='pastel_e'?'selected':''}>Pastel Esp</option>
+                    </select>
+                    <div class="admin-checkbox"><label>Único</label> <input type="checkbox" id="comp_unico_${c.idc}" ${c.unico?'checked':''}></div>
+                    <div class="admin-checkbox"><label>Obrigatório</label> <input type="checkbox" id="comp_obrigar_${c.idc}" ${c.obrigar?'checked':''}></div>
+                    <div class="admin-checkbox"><label>Ativo</label> <input type="checkbox" id="comp_ativo_${c.idc}" ${c.ativo!==false?'checked':''}></div>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
+                    <span><strong>Seção:</strong> ${c.sec}</span>
+                    <span><strong>Preço extra:</strong> R$ ${(c.p||0).toFixed(2).replace('.',',')}</span>
+                    <span><strong>Categoria:</strong> ${c.cat}</span>
+                    <span><strong>Único:</strong> ${c.unico ? 'Sim' : 'Não'}</span>
+                    <span><strong>Obrigatório:</strong> ${c.obrigar ? 'Sim' : 'Não'}</span>
+                    <span><strong>Ativo:</strong> ${c.ativo ? 'Sim' : 'Não'}</span>
+                </div>
             </div>
         `).join('');
-        document.getElementById('listaComplementos').innerHTML += `<button class="btn-acao" onclick="adicionarComplemento()" style="width:100%;">+ Adicionar complemento</button>`;
 
-        // Resumo do dia detalhado
+        // Resumo do dia
         const hoje = new Date().toLocaleDateString();
         const pedidosHoje = pedidos.filter(p => p.data === hoje);
         const totalVendido = pedidosHoje.reduce((acc, p) => acc + p.total, 0);
         const totalTaxas = pedidosHoje.reduce((acc, p) => acc + p.taxa, 0);
         const qtdPedidos = pedidosHoje.length;
         
-        // Agrupar itens vendidos
         const itensVendidos = {};
         pedidosHoje.forEach(p => {
             p.itens.forEach(item => {
@@ -526,15 +613,29 @@
             <p>🚚 Total taxas entrega: R$ ${totalTaxas.toFixed(2)}</p>
             <p>📦 Pedidos: ${qtdPedidos}</p>
             <p>📊 Média por pedido: R$ ${(qtdPedidos > 0 ? (totalVendido/qtdPedidos).toFixed(2) : '0,00')}</p>
-            <p>⭐ Avaliações: ${avaliacoes.filter(a => a.data.startsWith(hoje)).length} (média: ${calcularMediaAvaliacoes(hoje)})</p>
+            <p>⭐ Avaliações hoje: ${avaliacoes.filter(a => a.data.startsWith(hoje)).length} (média: ${calcularMediaAvaliacoes(hoje)})</p>
             <p><strong>Itens vendidos:</strong></p>
-            <ul style="max-height:100px; overflow-y:auto; margin:0; padding-left:20px;">${listaItens || '<li>Nenhum item vendido hoje</li>'}</ul>
+            <ul>${listaItens || '<li>Nenhum item vendido hoje</li>'}</ul>
         `;
+    }
+
+    function editarProduto(id) {
+        const item = document.querySelector(`.admin-item[data-id="${id}"]`);
+        const campos = item.querySelectorAll('.admin-form-row input, .admin-form-row select, .admin-form-row .admin-checkbox');
+        campos.forEach(c => c.style.display = 'block');
+        // Oculta a visualização
+        item.querySelector('div:last-child').style.display = 'none';
+    }
+
+    function editarComplemento(idc) {
+        document.getElementById(`edit-comp-${idc}`).style.display = 'flex';
+        const item = document.querySelector(`.admin-item[data-idc="${idc}"]`);
+        item.querySelector('div:last-child').style.display = 'none';
     }
 
     function adicionarTaxa() {
         if (!configLoja.taxasBairro) configLoja.taxasBairro = [];
-        configLoja.taxasBairro.push({ bairro: "Novo Bairro", taxa: 0 });
+        configLoja.taxasBairro.push({ bairro: "", taxa: 0 });
         renderizarAdmin();
     }
     function removerTaxa(i) {
@@ -543,7 +644,7 @@
     }
     function adicionarCupom() {
         if (!configLoja.cupons) configLoja.cupons = [];
-        configLoja.cupons.push({ codigo: "CUPOM", desconto: 0, tipo: "fixo" });
+        configLoja.cupons.push({ codigo: "", desconto: 0, tipo: "fixo" });
         renderizarAdmin();
     }
     function removerCupom(i) {
@@ -562,10 +663,14 @@
             ativo: true
         });
         renderizarAdmin();
+        // Abrir edição automaticamente
+        setTimeout(() => editarProduto(novoId), 100);
     }
     function removerProduto(id) {
-        produtos = produtos.filter(p => p.id !== id);
-        renderizarAdmin();
+        if (confirm("Remover produto?")) {
+            produtos = produtos.filter(p => p.id !== id);
+            renderizarAdmin();
+        }
     }
 
     function adicionarComplemento() {
@@ -581,22 +686,33 @@
             ativo: true
         });
         renderizarAdmin();
+        setTimeout(() => editarComplemento(novoIdc), 100);
     }
     function removerComplemento(idc) {
-        complementos = complementos.filter(c => c.idc !== idc);
-        renderizarAdmin();
+        if (confirm("Remover complemento?")) {
+            complementos = complementos.filter(c => c.idc !== idc);
+            renderizarAdmin();
+        }
     }
 
-    // Função para salvar todas as alterações do admin
+    function toggleForcarAberto() { 
+        configLoja.forcarAberto = document.getElementById('btnForcarAberto').checked; 
+        if(configLoja.forcarAberto) configLoja.forcarFechado = false; 
+        // Não salva ainda, só no botão Salvar
+    }
+    function toggleForcarFechado() { 
+        configLoja.forcarFechado = document.getElementById('btnForcarFechado').checked; 
+        if(configLoja.forcarFechado) configLoja.forcarAberto = false; 
+    }
+
     function salvarConfigFechar() {
-        // Horários
+        // Capturar dados da aba Geral
         configLoja.horarios = {
             segSex: document.getElementById('horarioSegSex').value,
             sab: document.getElementById('horarioSab').value,
             dom: document.getElementById('horarioDom').value
         };
         
-        // Taxas
         const novasTaxas = [];
         for(let i=0; i<document.querySelectorAll('[id^="bairro_nome_"]').length; i++) {
             let nome = document.getElementById(`bairro_nome_${i}`)?.value;
@@ -605,7 +721,6 @@
         }
         configLoja.taxasBairro = novasTaxas;
         
-        // Cupons
         const novosCupons = [];
         for(let i=0; i<document.querySelectorAll('[id^="cupom_cod_"]').length; i++) {
             let cod = document.getElementById(`cupom_cod_${i}`)?.value;
@@ -615,21 +730,24 @@
         }
         configLoja.cupons = novosCupons;
 
-        // Produtos
+        // Produtos - capturar valores editados
         produtos = produtos.map(p => {
             const nomeEl = document.getElementById(`prod_nome_${p.id}`);
             const precoEl = document.getElementById(`prod_preco_${p.id}`);
             const catEl = document.getElementById(`prod_cat_${p.id}`);
             const imgEl = document.getElementById(`prod_img_${p.id}`);
             const ativoEl = document.getElementById(`prod_ativo_${p.id}`);
-            return {
-                ...p,
-                nome: nomeEl ? nomeEl.value : p.nome,
-                preco: precoEl ? parseFloat(precoEl.value) : p.preco,
-                cat: catEl ? catEl.value : p.cat,
-                img: imgEl ? imgEl.value : p.img,
-                ativo: ativoEl ? ativoEl.checked : p.ativo
-            };
+            if (nomeEl && nomeEl.style.display !== 'none') {
+                return {
+                    ...p,
+                    nome: nomeEl.value,
+                    preco: parseFloat(precoEl.value),
+                    cat: catEl.value,
+                    img: imgEl.value,
+                    ativo: ativoEl.checked
+                };
+            }
+            return p;
         });
 
         // Complementos
@@ -641,16 +759,19 @@
             const unicoEl = document.getElementById(`comp_unico_${c.idc}`);
             const obrigarEl = document.getElementById(`comp_obrigar_${c.idc}`);
             const ativoEl = document.getElementById(`comp_ativo_${c.idc}`);
-            return {
-                ...c,
-                sec: secEl ? secEl.value : c.sec,
-                n: nomeEl ? nomeEl.value : c.n,
-                p: precoEl ? parseFloat(precoEl.value) : c.p,
-                cat: catEl ? catEl.value : c.cat,
-                unico: unicoEl ? unicoEl.checked : c.unico,
-                obrigar: obrigarEl ? obrigarEl.checked : c.obrigar,
-                ativo: ativoEl ? ativoEl.checked : c.ativo
-            };
+            if (secEl && secEl.style.display !== 'none') {
+                return {
+                    ...c,
+                    sec: secEl.value,
+                    n: nomeEl.value,
+                    p: parseFloat(precoEl.value),
+                    cat: catEl.value,
+                    unico: unicoEl.checked,
+                    obrigar: obrigarEl.checked,
+                    ativo: ativoEl.checked
+                };
+            }
+            return c;
         });
 
         salvarDados();
@@ -725,12 +846,6 @@
         let buscaCat = p.cat;
         if (p.id === 8) buscaCat = 'pastel_t';
         if (p.id === 9) buscaCat = 'pastel_e';
-        // Para novos produtos, podemos usar a categoria diretamente, mas precisamos de um mapeamento
-        // Vamos considerar que se for da categoria "pastel", podemos ter subtipos? Vamos simplificar:
-        // Se cat for "pastel", usar "pastel_t" para tradicionais e "pastel_e" para especiais? 
-        // Mas como agora produtos são dinâmicos, precisamos de um campo extra. Para não complicar, vamos considerar que complementos podem ser associados à categoria geral "pastel" ou a subcategorias. 
-        // Manteremos a lógica antiga para os IDs 8 e 9, e para novos produtos, usaremos a própria cat como filtro.
-        // Na prática, você pode criar complementos com cat = "pastel" que aparecerão para todos os pastéis.
 
         const secoes = [...new Set(complementos.filter(c => c.cat === buscaCat || c.cat === p.cat).map(c => c.sec))];
         
@@ -946,7 +1061,7 @@
             cliente: n,
             endereco: e,
             bairro,
-            itens: carrinho.slice(), // cópia
+            itens: carrinho.slice(),
             subtotal: sub,
             taxa,
             cupom: cupomAplicado ? { ...cupomAplicado } : null,
