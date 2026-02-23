@@ -11,7 +11,7 @@
     <!-- PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        /* (CSS mantido da versão anterior, com alguns acréscimos) */
+        /* (CSS mantido) */
         :root {
             --primary: #5b0f73;
             --primary-light: #f4e8f7;
@@ -352,9 +352,8 @@
 
 <script>
     // ==================== CONFIGURAÇÃO DO JSONBIN.IO ====================
-    // Substitua pelos seus dados
-    const BIN_ID = "699bc19eae596e708f410537";        // Ex: "65a1b2c3d4e5f6g7h8i9"
-    const MASTER_KEY = "$2a$10$LToPE4MpTL/L64UVd9Sinuyx9/7.GtWSe3xRU8AxiLrgeCkPSvIFG"; // Ex: "$2b$10$abcdefghijklmnopqrstuv"
+    const BIN_ID = "699bc19eae596e708f410537";
+    const MASTER_KEY = "$2a$10$LToPE4MpTL/L64UVd9Sinuyx9/7.GtWSe3xRU8AxiLrgeCkPSvIFG";
 
     const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
     const HEADERS = {
@@ -423,38 +422,38 @@
         }
         if (complementos.length === 0) {
             complementos = [
-                { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 201, sec: 'Complementos', n: 'Granola', cat: 'copo', p: 0, ativo: true },
-                { idc: 202, sec: 'Complementos', n: 'Aveia', cat: 'copo', p: 0, ativo: true },
-                { idc: 203, sec: 'Complementos', n: 'Sucrilhos', cat: 'copo', p: 0, ativo: true },
-                { idc: 204, sec: 'Complementos', n: 'Granulado', cat: 'copo', p: 0, ativo: true },
-                { idc: 208, sec: 'Complementos', n: 'Leite em pó', cat: 'copo', p: 0, ativo: true },
-                { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo', p: 0, ativo: true },
-                { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo', p: 0, ativo: true },
-                { idc: 403, sec: 'Caldas', n: 'Leite Condensado', cat: 'copo', p: 0, ativo: true },
-                { idc: 501, sec: 'Especiais', n: 'Nutella', cat: 'copo', p: 3, ativo: true },
-                { idc: 701, sec: 'Sabor do Pastel', n: 'Carne', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 703, sec: 'Sabor do Pastel', n: 'Queijo', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 704, sec: 'Sabor do Pastel', n: 'Calabresa', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 706, sec: 'Sabor do Pastel', n: 'Misto', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Carne c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Catupiry', cat: 'pastel_e', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', cat: 'garrafa', p: 0, ativo: true },
-                { idc: 602, sec: 'Adicionais', n: 'Nutella', cat: 'garrafa', p: 3.00, ativo: true }
+                { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 201, sec: 'Complementos', n: 'Granola', idCategoria: 1, p: 0, ativo: true },
+                { idc: 202, sec: 'Complementos', n: 'Aveia', idCategoria: 1, p: 0, ativo: true },
+                { idc: 203, sec: 'Complementos', n: 'Sucrilhos', idCategoria: 1, p: 0, ativo: true },
+                { idc: 204, sec: 'Complementos', n: 'Granulado', idCategoria: 1, p: 0, ativo: true },
+                { idc: 208, sec: 'Complementos', n: 'Leite em pó', idCategoria: 1, p: 0, ativo: true },
+                { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', idCategoria: 1, p: 0, ativo: true },
+                { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', idCategoria: 1, p: 0, ativo: true },
+                { idc: 403, sec: 'Caldas', n: 'Leite Condensado', idCategoria: 1, p: 0, ativo: true },
+                { idc: 501, sec: 'Especiais', n: 'Nutella', idCategoria: 1, p: 3, ativo: true },
+                { idc: 701, sec: 'Sabor do Pastel', n: 'Carne', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 703, sec: 'Sabor do Pastel', n: 'Queijo', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 704, sec: 'Sabor do Pastel', n: 'Calabresa', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 706, sec: 'Sabor do Pastel', n: 'Misto', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Carne c/ Queijo', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Queijo', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Catupiry', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa c/ Queijo', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
+                { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', idCategoria: 2, p: 0, ativo: true },
+                { idc: 602, sec: 'Adicionais', n: 'Nutella', idCategoria: 2, p: 3.00, ativo: true }
             ];
         }
         // Garantir campos
         categorias = categorias.map(c => ({ ...c, ativo: c.ativo !== false }));
         produtos = produtos.map(p => ({ ...p, ativo: p.ativo !== false, destaque: p.destaque || false, estoque: p.estoque !== undefined ? p.estoque : 999, ordem: p.ordem || 0 }));
-        complementos = complementos.map(c => ({ ...c, ativo: c.ativo !== false }));
+        complementos = complementos.map(c => ({ ...c, ativo: c.ativo !== false, idCategoria: c.idCategoria || (c.cat ? (c.cat === 'copo' ? 1 : c.cat === 'garrafa' ? 2 : c.cat === 'pastel_t' ? 3 : c.cat === 'pastel_e' ? 3 : 1) : 1) }));
 
         renderizarCardapio();
         preencherBairros();
@@ -601,11 +600,13 @@
             </div>`;
         }).join('');
 
-        // Aba Complementos (similar, mas com campos existentes)
-        document.getElementById('listaComplementos').innerHTML = complementos.map(c => `
+        // Aba Complementos
+        document.getElementById('listaComplementos').innerHTML = complementos.map(c => {
+            const cat = categorias.find(cat => cat.id === c.idCategoria) || { nome: 'Desconhecida' };
+            return `
             <div class="admin-item" data-idc="${c.idc}">
                 <div class="admin-item-header">
-                    <span class="admin-item-title">${c.n} (${c.sec})</span>
+                    <span class="admin-item-title">${c.n} (${c.sec}) - ${cat.nome}</span>
                     <div class="admin-item-actions">
                         <button class="edit" onclick="editarComplemento(${c.idc})"><i class="fas fa-edit"></i></button>
                         <button class="delete" onclick="removerComplemento(${c.idc})"><i class="fas fa-trash"></i></button>
@@ -615,11 +616,8 @@
                     <input type="text" value="${c.sec}" placeholder="Seção" id="comp_sec_${c.idc}">
                     <input type="text" value="${c.n}" placeholder="Nome" id="comp_nome_${c.idc}">
                     <input type="number" value="${c.p || 0}" step="0.01" placeholder="Preço extra" id="comp_preco_${c.idc}">
-                    <select id="comp_cat_${c.idc}">
-                        <option value="copo" ${c.cat==='copo'?'selected':''}>Copo</option>
-                        <option value="garrafa" ${c.cat==='garrafa'?'selected':''}>Garrafa</option>
-                        <option value="pastel_t" ${c.cat==='pastel_t'?'selected':''}>Pastel Trad</option>
-                        <option value="pastel_e" ${c.cat==='pastel_e'?'selected':''}>Pastel Esp</option>
+                    <select id="comp_categoria_${c.idc}">
+                        ${categorias.map(cat => `<option value="${cat.id}" ${cat.id === c.idCategoria ? 'selected' : ''}>${cat.nome}</option>`).join('')}
                     </select>
                     <div class="admin-checkbox"><label>Único</label> <input type="checkbox" id="comp_unico_${c.idc}" ${c.unico?'checked':''}></div>
                     <div class="admin-checkbox"><label>Obrigatório</label> <input type="checkbox" id="comp_obrigar_${c.idc}" ${c.obrigar?'checked':''}></div>
@@ -628,13 +626,13 @@
                 <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">
                     <span><strong>Seção:</strong> ${c.sec}</span>
                     <span><strong>Preço extra:</strong> R$ ${(c.p||0).toFixed(2).replace('.',',')}</span>
-                    <span><strong>Categoria:</strong> ${c.cat}</span>
+                    <span><strong>Categoria:</strong> ${cat.nome}</span>
                     <span><strong>Único:</strong> ${c.unico ? 'Sim' : 'Não'}</span>
                     <span><strong>Obrigatório:</strong> ${c.obrigar ? 'Sim' : 'Não'}</span>
                     <span><strong>Ativo:</strong> ${c.ativo ? 'Sim' : 'Não'}</span>
                 </div>
-            </div>
-        `).join('');
+            </div>`;
+        }).join('');
     }
 
     // Funções para Categorias
@@ -695,7 +693,7 @@
             idc: novoIdc,
             sec: "Nova Seção",
             n: "Novo Complemento",
-            cat: "copo",
+            idCategoria: categorias.length ? categorias[0].id : 0,
             unico: false,
             obrigar: false,
             p: 0,
@@ -817,7 +815,7 @@
             const secEl = document.getElementById(`comp_sec_${c.idc}`);
             const nomeEl = document.getElementById(`comp_nome_${c.idc}`);
             const precoEl = document.getElementById(`comp_preco_${c.idc}`);
-            const catEl = document.getElementById(`comp_cat_${c.idc}`);
+            const catEl = document.getElementById(`comp_categoria_${c.idc}`);
             const unicoEl = document.getElementById(`comp_unico_${c.idc}`);
             const obrigarEl = document.getElementById(`comp_obrigar_${c.idc}`);
             const ativoEl = document.getElementById(`comp_ativo_${c.idc}`);
@@ -827,7 +825,7 @@
                     sec: secEl.value,
                     n: nomeEl.value,
                     p: parseFloat(precoEl.value),
-                    cat: catEl.value,
+                    idCategoria: parseInt(catEl.value),
                     unico: unicoEl.checked,
                     obrigar: obrigarEl.checked,
                     ativo: ativoEl.checked
@@ -892,7 +890,6 @@
         const periodo = document.getElementById('periodoRelatorio').value;
         const hoje = new Date();
         let inicio, fim;
-        const hojeStr = hoje.toLocaleDateString();
 
         if (periodo === 'hoje') {
             inicio = new Date(hoje.setHours(0,0,0,0));
@@ -903,9 +900,6 @@
             inicio = new Date(ontem.setHours(0,0,0,0));
             fim = new Date(ontem.setHours(23,59,59,999));
         } else if (periodo === 'semana') {
-            const primeiroDia = new Date(hoje);
-            primeiroDia.setDate(hoje.getDate() - hoje.getDay()); // começa no domingo? Vamos usar segunda como início
-            // Ajustar para segunda-feira
             const diaSemana = hoje.getDay();
             const diff = diaSemana === 0 ? 6 : diaSemana - 1;
             const segunda = new Date(hoje);
@@ -997,24 +991,14 @@
         const container = document.getElementById('opcionais-container');
         container.innerHTML = "";
 
-        // Mapear categoria do produto para os complementos (manter compatibilidade)
-        let buscaCat = '';
-        if (p.idCategoria === 1) buscaCat = 'copo';
-        else if (p.idCategoria === 2) buscaCat = 'garrafa';
-        else if (p.idCategoria === 3) {
-            // Pastéis: distinção entre tradicional e especial baseada no nome? Para simplificar, usaremos 'pastel_t' e 'pastel_e' conforme IDs fixos antigos.
-            // Se o produto for pastel, podemos usar o campo cat antigo, mas como agora é dinâmico, podemos criar um mapeamento.
-            // Vamos manter a lógica anterior: se nome incluir "Especial", usa pastel_e, senão pastel_t.
-            if (p.nome.includes('Especial')) buscaCat = 'pastel_e';
-            else buscaCat = 'pastel_t';
-        } else {
-            buscaCat = 'copo'; // fallback
-        }
-
-        const secoes = [...new Set(complementos.filter(c => c.cat === buscaCat).map(c => c.sec))];
+        // Filtra complementos pela categoria do produto
+        const complementosDaCategoria = complementos.filter(c => c.idCategoria === p.idCategoria && c.ativo !== false);
+        
+        // Agrupa por seção
+        const secoes = [...new Set(complementosDaCategoria.map(c => c.sec))];
         
         container.innerHTML = secoes.map(secNome => {
-            const itens = complementos.filter(c => c.cat === buscaCat && c.sec === secNome && c.ativo !== false);
+            const itens = complementosDaCategoria.filter(c => c.sec === secNome);
             if(itens.length === 0) return '';
             
             const htmlItens = itens.map(item => `
@@ -1030,15 +1014,9 @@
     }
 
     function adicionarAoCarrinho() {
-        let buscaCat = '';
-        if (itemSelecionado.idCategoria === 1) buscaCat = 'copo';
-        else if (itemSelecionado.idCategoria === 2) buscaCat = 'garrafa';
-        else if (itemSelecionado.idCategoria === 3) {
-            if (itemSelecionado.nome.includes('Especial')) buscaCat = 'pastel_e';
-            else buscaCat = 'pastel_t';
-        } else buscaCat = 'copo';
-
-        const obrigatorios = [...new Set(complementos.filter(c => c.obrigar && c.cat === buscaCat).map(c => c.sec))];
+        const complementosDaCategoria = complementos.filter(c => c.idCategoria === itemSelecionado.idCategoria && c.ativo !== false);
+        const obrigatorios = [...new Set(complementosDaCategoria.filter(c => c.obrigar).map(c => c.sec))];
+        
         for(let sec of obrigatorios) {
             const selecionado = document.querySelector(`input[name="sec-${sec.replace(/\s/g, '')}"]:checked`);
             if(!selecionado) {
@@ -1324,8 +1302,6 @@
 
     // ==================== IMPRIMIR PEDIDO ====================
     function imprimirPedido() {
-        const conteudo = document.getElementById('itensNoCarrinho').innerText;
-        const total = calcularTotalFinal().toFixed(2).replace('.',',');
         const janela = window.open('', '_blank');
         janela.document.write(`
             <html>
@@ -1338,7 +1314,7 @@
                     <hr>
                     ${carrinho.map(i => `<p>${i.quantidade}x ${i.nome} - ${i.detalhes} - R$ ${(i.precoFinal*i.quantidade).toFixed(2).replace('.',',')}</p>`).join('')}
                     <hr>
-                    <p><strong>Total: R$ ${total}</strong></p>
+                    <p><strong>Total: R$ ${calcularTotalFinal().toFixed(2).replace('.',',')}</strong></p>
                 </body>
             </html>
         `);
