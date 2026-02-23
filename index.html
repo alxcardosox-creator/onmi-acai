@@ -11,7 +11,7 @@
     <!-- PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        /* (mesmo CSS anterior, com algumas adições) */
+        /* (CSS mantido da versão anterior, com alguns acréscimos) */
         :root {
             --primary: #5b0f73;
             --primary-light: #f4e8f7;
@@ -81,7 +81,7 @@
         .status-aberto { background: #afffcf22; color: #afffcf; }
         .status-fechado { background: #ffafaf22; color: #ffafaf; }
 
-        .nav-categories { background: var(--white); padding: 12px 0; position: sticky; top: 72px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; padding-left: 15px; scrollbar-width: none; }
+        .nav-categories { background: var(--white); padding: 12px 0; position: sticky; top: 72px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; padding-left: 15px; scrollbar-width: none; align-items: center; }
         .nav-categories::-webkit-scrollbar { display: none; }
         .nav-categories .cat-item { display: inline-flex; align-items: center; gap: 5px; }
 
@@ -242,7 +242,7 @@
     </div>
 </div>
 
-<!-- ADMIN MODAL REFORMULADO -->
+<!-- ADMIN MODAL REFORMULADO COM CATEGORIAS -->
 <div id="modalAdmin" class="modal">
     <div class="modal-content" id="adminPanel">
         <h2 style="font-size:18px; color:var(--primary); margin-bottom:20px;">⚙️ Painel Administrativo</h2>
@@ -363,9 +363,9 @@
     };
 
     // ==================== ESTRUTURAS DE DADOS ====================
-    let categorias = [];       // { id, nome, icone, ordem, ativo }
-    let produtos = [];         // { id, idCategoria, nome, preco, img, ordem, destaque, estoque, ativo }
-    let complementos = [];     // { idc, sec, n, cat, unico, obrigar, p, ativo }
+    let categorias = [];
+    let produtos = [];
+    let complementos = [];
 
     let configLoja = {
         forcarAberto: false,
@@ -453,7 +453,7 @@
         }
         // Garantir campos
         categorias = categorias.map(c => ({ ...c, ativo: c.ativo !== false }));
-        produtos = produtos.map(p => ({ ...p, ativo: p.ativo !== false, destaque: p.destaque || false, estoque: p.estoque !== undefined ? p.estoque : 999 }));
+        produtos = produtos.map(p => ({ ...p, ativo: p.ativo !== false, destaque: p.destaque || false, estoque: p.estoque !== undefined ? p.estoque : 999, ordem: p.ordem || 0 }));
         complementos = complementos.map(c => ({ ...c, ativo: c.ativo !== false }));
 
         renderizarCardapio();
@@ -601,7 +601,7 @@
             </div>`;
         }).join('');
 
-        // Aba Complementos (similar, mas vou manter igual à versão anterior)
+        // Aba Complementos (similar, mas com campos existentes)
         document.getElementById('listaComplementos').innerHTML = complementos.map(c => `
             <div class="admin-item" data-idc="${c.idc}">
                 <div class="admin-item-header">
@@ -768,7 +768,7 @@
         }
         configLoja.cupons = novosCupons;
 
-        // Capturar categorias
+        // Categorias
         categorias = categorias.map(c => {
             const nomeEl = document.getElementById(`cat_nome_${c.id}`);
             const iconeEl = document.getElementById(`cat_icone_${c.id}`);
@@ -786,7 +786,7 @@
             return c;
         });
 
-        // Capturar produtos
+        // Produtos
         produtos = produtos.map(p => {
             const nomeEl = document.getElementById(`prod_nome_${p.id}`);
             const precoEl = document.getElementById(`prod_preco_${p.id}`);
@@ -812,7 +812,7 @@
             return p;
         });
 
-        // Capturar complementos
+        // Complementos
         complementos = complementos.map(c => {
             const secEl = document.getElementById(`comp_sec_${c.idc}`);
             const nomeEl = document.getElementById(`comp_nome_${c.idc}`);
@@ -858,7 +858,8 @@
         
         // Preencher seções
         container.innerHTML = catsAtivas.map(c => {
-            const produtosCat = produtos.filter(p => p.idCategoria === c.id && p.ativo && p.estoque > 0).sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
+            const produtosCat = produtos.filter(p => p.idCategoria === c.id && p.ativo && p.estoque > 0)
+                                        .sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
             if (produtosCat.length === 0) return '';
             return `
                 <div id="cat-${c.id}" class="section-header">
@@ -880,28 +881,532 @@
             `;
         }).join('');
         
-        checarStatusLoja();
+        // Se não houver nenhum produto, mostrar mensagem
+        if (container.innerHTML === '') {
+            container.innerHTML = '<p style="text-align:center; padding:40px;">Nenhum produto disponível no momento.</p>';
+        }
     }
 
-    // ==================== OUTRAS FUNÇÕES ====================
-    // (mantive as funções de carrinho, pagamento, etc., mas por brevidade não as repetirei aqui.
-    //  Elas são as mesmas da versão anterior, apenas com adaptações para o novo sistema de categorias.
-    //  Incluirei apenas as que mudaram, mas no código final elas devem estar presentes.
-    //  Para economizar espaço, vou continuar a partir daqui com as funções essenciais.)
+    // ==================== RELATÓRIOS POR PERÍODO ====================
+    function atualizarRelatorio() {
+        const periodo = document.getElementById('periodoRelatorio').value;
+        const hoje = new Date();
+        let inicio, fim;
+        const hojeStr = hoje.toLocaleDateString();
 
-    // ATENÇÃO: Devido ao limite de caracteres, não posso repetir todo o código anterior.
-    // Você deve integrar este novo código com as funções de carrinho, pagamento, etc., que já estavam funcionando.
-    // Basta substituir a parte de renderização e adicionar as novas seções de admin.
+        if (periodo === 'hoje') {
+            inicio = new Date(hoje.setHours(0,0,0,0));
+            fim = new Date(hoje.setHours(23,59,59,999));
+        } else if (periodo === 'ontem') {
+            const ontem = new Date(hoje);
+            ontem.setDate(ontem.getDate() - 1);
+            inicio = new Date(ontem.setHours(0,0,0,0));
+            fim = new Date(ontem.setHours(23,59,59,999));
+        } else if (periodo === 'semana') {
+            const primeiroDia = new Date(hoje);
+            primeiroDia.setDate(hoje.getDate() - hoje.getDay()); // começa no domingo? Vamos usar segunda como início
+            // Ajustar para segunda-feira
+            const diaSemana = hoje.getDay();
+            const diff = diaSemana === 0 ? 6 : diaSemana - 1;
+            const segunda = new Date(hoje);
+            segunda.setDate(hoje.getDate() - diff);
+            inicio = new Date(segunda.setHours(0,0,0,0));
+            fim = new Date(hoje.setHours(23,59,59,999));
+        } else if (periodo === 'mes') {
+            inicio = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+            fim = new Date(hoje.getFullYear(), hoje.getMonth() + 1, 0, 23, 59, 59, 999);
+        }
 
-    // As funções de abrirModal, adicionarAoCarrinho, finalizarPedido, etc., permanecem praticamente iguais,
-    // apenas precisam ser ajustadas para usar o novo array de complementos (já está sendo usado).
+        const pedidosPeriodo = pedidos.filter(p => {
+            const dataPedido = new Date(p.timestamp);
+            return dataPedido >= inicio && dataPedido <= fim;
+        });
 
-    // Para evitar duplicação enorme, vou considerar que o usuário já tem as funções de carrinho e simplesmente adicionamos as melhorias.
-    // O código final deve conter todas as funções anteriores. Como não posso enviar um código de 20k linhas, vou fornecer um resumo do que adicionar.
-}
+        const totalVendido = pedidosPeriodo.reduce((acc, p) => acc + p.total, 0);
+        const totalTaxas = pedidosPeriodo.reduce((acc, p) => acc + p.taxa, 0);
+        const qtdPedidos = pedidosPeriodo.length;
+        
+        const itensVendidos = {};
+        pedidosPeriodo.forEach(p => {
+            p.itens.forEach(item => {
+                const chave = `${item.nome} - ${item.detalhes}`;
+                if (!itensVendidos[chave]) itensVendidos[chave] = 0;
+                itensVendidos[chave] += item.quantidade;
+            });
+        });
 
-// Aqui continuam as funções de carrinho, pagamento, avaliação, etc. (mesmas da versão anterior)
-// ...
+        const listaItens = Object.entries(itensVendidos).map(([nome, qtd]) => `<li>${qtd}x ${nome}</li>`).join('');
+
+        document.getElementById('resumoDia').innerHTML = `
+            <p><strong>📅 Período: ${periodo}</strong></p>
+            <p>💰 Total vendido: R$ ${totalVendido.toFixed(2)} (inclui taxas)</p>
+            <p>🚚 Total taxas entrega: R$ ${totalTaxas.toFixed(2)}</p>
+            <p>📦 Pedidos: ${qtdPedidos}</p>
+            <p>📊 Média por pedido: R$ ${(qtdPedidos > 0 ? (totalVendido/qtdPedidos).toFixed(2) : '0,00')}</p>
+            <p><strong>Itens vendidos:</strong></p>
+            <ul>${listaItens || '<li>Nenhum item vendido neste período</li>'}</ul>
+        `;
+    }
+
+    // ==================== HORÁRIO FUNCIONAMENTO ====================
+    function checarStatusLoja() {
+        const agora = new Date();
+        const diaSemana = agora.getDay();
+        let horarioHoje = "";
+        if (diaSemana === 0) horarioHoje = configLoja.horarios.dom;
+        else if (diaSemana === 6) horarioHoje = configLoja.horarios.sab;
+        else horarioHoje = configLoja.horarios.segSex;
+
+        let aberto = false;
+        if (horarioHoje && horarioHoje.toLowerCase() !== "fechado") {
+            let [inicio, fim] = horarioHoje.split('-');
+            if (inicio && fim) {
+                let horaInicio = parseInt(inicio.split(':')[0]);
+                let horaFim = parseInt(fim.split(':')[0]);
+                let horaAtual = agora.getHours();
+                aberto = (horaAtual >= horaInicio && horaAtual < horaFim);
+            }
+        }
+
+        if (configLoja.forcarAberto) aberto = true;
+        if (configLoja.forcarFechado) aberto = false;
+
+        document.getElementById('badgeStatus').innerText = aberto ? "Aberto" : "Fechado";
+        document.getElementById('badgeStatus').className = "status-badge " + (aberto ? "status-aberto" : "status-fechado");
+        document.getElementById('conteudoCardapio').style.display = aberto ? "block" : "none";
+        document.getElementById('avisoFechado').style.display = aberto ? "none" : "block";
+        document.getElementById('horarioFuncionamento').innerText = horarioHoje || "Fechado";
+    }
+
+    function preencherBairros() {
+        const select = document.getElementById('bairroSelect');
+        if (!select) return;
+        select.innerHTML = '<option value="">Selecione o bairro</option>';
+        (configLoja.taxasBairro || []).forEach(t => {
+            const option = document.createElement('option');
+            option.value = t.bairro;
+            option.textContent = t.bairro.charAt(0).toUpperCase() + t.bairro.slice(1) + ` (R$ ${t.taxa.toFixed(2).replace('.',',')})`;
+            select.appendChild(option);
+        });
+    }
+
+    // ==================== MODAL DE PERSONALIZAÇÃO ====================
+    function abrirModal(p) {
+        itemSelecionado = p;
+        document.getElementById('nomeProdModal').innerText = p.nome;
+        const container = document.getElementById('opcionais-container');
+        container.innerHTML = "";
+
+        // Mapear categoria do produto para os complementos (manter compatibilidade)
+        let buscaCat = '';
+        if (p.idCategoria === 1) buscaCat = 'copo';
+        else if (p.idCategoria === 2) buscaCat = 'garrafa';
+        else if (p.idCategoria === 3) {
+            // Pastéis: distinção entre tradicional e especial baseada no nome? Para simplificar, usaremos 'pastel_t' e 'pastel_e' conforme IDs fixos antigos.
+            // Se o produto for pastel, podemos usar o campo cat antigo, mas como agora é dinâmico, podemos criar um mapeamento.
+            // Vamos manter a lógica anterior: se nome incluir "Especial", usa pastel_e, senão pastel_t.
+            if (p.nome.includes('Especial')) buscaCat = 'pastel_e';
+            else buscaCat = 'pastel_t';
+        } else {
+            buscaCat = 'copo'; // fallback
+        }
+
+        const secoes = [...new Set(complementos.filter(c => c.cat === buscaCat).map(c => c.sec))];
+        
+        container.innerHTML = secoes.map(secNome => {
+            const itens = complementos.filter(c => c.cat === buscaCat && c.sec === secNome && c.ativo !== false);
+            if(itens.length === 0) return '';
+            
+            const htmlItens = itens.map(item => `
+                <label class="opcao-item">
+                    <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
+                    <input type="${item.unico ? 'radio' : 'checkbox'}" name="sec-${secNome.replace(/\s/g, '')}" class="extra-item" 
+                        data-sec="${secNome}" data-obrigar="${item.obrigar||false}" data-preco="${item.p||0}" value="${item.n}">
+                </label>`).join('');
+            return `<div class="secao-titulo-box"><span class="secao-nome">${secNome}</span><span class="secao-ajuda">${itens[0].obrigar ? 'Obrigatório' : 'Opcional'}</span></div>${htmlItens}`;
+        }).join('');
+        
+        document.getElementById('modalConfirmacao').style.display = 'flex';
+    }
+
+    function adicionarAoCarrinho() {
+        let buscaCat = '';
+        if (itemSelecionado.idCategoria === 1) buscaCat = 'copo';
+        else if (itemSelecionado.idCategoria === 2) buscaCat = 'garrafa';
+        else if (itemSelecionado.idCategoria === 3) {
+            if (itemSelecionado.nome.includes('Especial')) buscaCat = 'pastel_e';
+            else buscaCat = 'pastel_t';
+        } else buscaCat = 'copo';
+
+        const obrigatorios = [...new Set(complementos.filter(c => c.obrigar && c.cat === buscaCat).map(c => c.sec))];
+        for(let sec of obrigatorios) {
+            const selecionado = document.querySelector(`input[name="sec-${sec.replace(/\s/g, '')}"]:checked`);
+            if(!selecionado) {
+                alert(`Por favor, escolha uma opção em "${sec}"!`);
+                return;
+            }
+        }
+
+        const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
+        const nomes = selecionados.map(el => el.value);
+        const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
+        
+        carrinho.push({ 
+            nome: itemSelecionado.nome, 
+            precoFinal: itemSelecionado.preco + precoExtra, 
+            detalhes: nomes.join(', ') || 'Sem adicionais',
+            quantidade: 1,
+            id: Date.now() + Math.random()
+        });
+        salvarCarrinho();
+        atualizarBarra();
+        fecharModal('modalConfirmacao');
+    }
+
+    // ==================== CARRINHO ====================
+    function salvarCarrinho() {
+        localStorage.setItem('onmi_carrinho', JSON.stringify(carrinho));
+    }
+
+    function atualizarBarra() {
+        const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
+        const bairro = document.getElementById('bairroSelect')?.value || '';
+        const taxaObj = (configLoja.taxasBairro || []).find(t => t.bairro === bairro);
+        const taxa = taxaObj ? taxaObj.taxa : 0;
+        const totalComTaxa = sub + (carrinho.length > 0 ? taxa : 0);
+        
+        let desconto = 0;
+        if (cupomAplicado) {
+            if (cupomAplicado.tipo === 'porcentagem') {
+                desconto = totalComTaxa * (cupomAplicado.desconto / 100);
+            } else {
+                desconto = cupomAplicado.desconto;
+            }
+        }
+        const totalFinal = Math.max(0, totalComTaxa - desconto);
+
+        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
+        document.getElementById('qtdItens').innerText = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
+        document.getElementById('totalFlutuante').innerText = `R$ ${totalFinal.toFixed(2).replace('.',',')}`;
+        
+        if (document.getElementById('formaPagamento')?.value === 'Pix') {
+            gerarQRCode(totalFinal);
+        }
+    }
+
+    function abrirCarrinho() {
+        document.getElementById('itensNoCarrinho').innerHTML = carrinho.map((i, idx) => `
+            <div style="padding:10px 0; border-bottom:1px solid var(--divider);">
+                <div style="display:flex; justify-content:space-between;">
+                    <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small></div>
+                    <strong>R$ ${(i.precoFinal * i.quantidade).toFixed(2).replace('.',',')}</strong>
+                </div>
+                <div class="qtd-controle">
+                    <button onclick="alterarQuantidade(${idx}, -1)">-</button>
+                    <span>${i.quantidade}</span>
+                    <button onclick="alterarQuantidade(${idx}, 1)">+</button>
+                    <span style="color:red; font-size:12px; margin-left:auto; cursor:pointer;" onclick="removerItem(${idx})">Remover</span>
+                </div>
+            </div>`).join('');
+        document.getElementById('modalCarrinho').style.display = 'flex';
+        if (document.getElementById('formaPagamento').value === 'Pix') {
+            const total = calcularTotalFinal();
+            gerarQRCode(total);
+        }
+    }
+
+    function alterarQuantidade(idx, delta) {
+        const novoValor = carrinho[idx].quantidade + delta;
+        if (novoValor < 1) return removerItem(idx);
+        carrinho[idx].quantidade = novoValor;
+        salvarCarrinho();
+        abrirCarrinho();
+        atualizarBarra();
+    }
+
+    function removerItem(idx) { 
+        carrinho.splice(idx, 1); 
+        salvarCarrinho();
+        if (carrinho.length > 0) abrirCarrinho(); 
+        else fecharModal('modalCarrinho'); 
+        atualizarBarra(); 
+    }
+
+    function calcularTotalFinal() {
+        const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
+        const bairro = document.getElementById('bairroSelect')?.value || '';
+        const taxaObj = (configLoja.taxasBairro || []).find(t => t.bairro === bairro);
+        const taxa = taxaObj ? taxaObj.taxa : 0;
+        const totalComTaxa = sub + (carrinho.length > 0 ? taxa : 0);
+        let desconto = 0;
+        if (cupomAplicado) {
+            if (cupomAplicado.tipo === 'porcentagem') {
+                desconto = totalComTaxa * (cupomAplicado.desconto / 100);
+            } else {
+                desconto = cupomAplicado.desconto;
+            }
+        }
+        return Math.max(0, totalComTaxa - desconto);
+    }
+
+    // ==================== CUPOM ====================
+    function aplicarCupom() {
+        const codigo = document.getElementById('cupomInput').value.trim().toUpperCase();
+        const cupom = (configLoja.cupons || []).find(c => c.codigo === codigo);
+        if (cupom) {
+            cupomAplicado = cupom;
+            document.getElementById('cupomMensagem').innerText = `Cupom aplicado: ${cupom.desconto}${cupom.tipo==='porcentagem'?'%':'R$'}`;
+        } else {
+            cupomAplicado = null;
+            document.getElementById('cupomMensagem').innerText = 'Cupom inválido';
+        }
+        atualizarBarra();
+    }
+
+    // ==================== PIX QR CODE ====================
+    function gerarQRCode(valor) {
+        const chave = "200.769.057-80";
+        const nome = "Alex Cardoso Sousa";
+        const cidade = "Rio de Janeiro";
+        const txid = "ONMI" + Date.now();
+        const qrContainer = document.getElementById('qrCodeContainer');
+        qrContainer.innerHTML = '';
+        const payload = generatePixPayload(chave, valor, nome, cidade, txid);
+        new QRCode(qrContainer, {
+            text: payload,
+            width: 200,
+            height: 200
+        });
+        window.pixPayload = payload;
+    }
+
+    function generatePixPayload(chave, valor, nome, cidade, txid) {
+        const valorFormatado = valor.toFixed(2);
+        const nomeFormatado = nome.substring(0, 25);
+        const cidadeFormatada = cidade.substring(0, 15);
+        return `00020126360014BR.GOV.BCB.PIX0114${chave}520400005303986540${valorFormatado.replace('.','')}5802BR5913${nomeFormatado}6008${cidadeFormatada}62140510${txid}6304`;
+    }
+
+    function copiarPix() {
+        if (window.pixPayload) {
+            navigator.clipboard.writeText(window.pixPayload);
+            alert('Código Pix copiado!');
+        }
+    }
+
+    function togglePagamento() {
+        const p = document.getElementById('formaPagamento').value;
+        document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
+        document.getElementById('areaTroco').style.display = p === 'Dinheiro' ? 'block' : 'none';
+        if (p === 'Pix') {
+            const total = calcularTotalFinal();
+            gerarQRCode(total);
+        }
+    }
+
+    // ==================== FINALIZAR PEDIDO ====================
+    function finalizarPedido() {
+        const n = document.getElementById('nomeCliente').value;
+        const e = document.getElementById('enderecoCliente').value;
+        const bairro = document.getElementById('bairroSelect').value;
+        const pag = document.getElementById('formaPagamento').value;
+        if(!n || !e || !bairro || !pag) return alert("Preencha todos os campos!");
+        
+        const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
+        const taxaObj = (configLoja.taxasBairro || []).find(t => t.bairro === bairro);
+        const taxa = taxaObj ? taxaObj.taxa : 0;
+        let total = sub + taxa;
+        let desconto = 0;
+        if (cupomAplicado) {
+            if (cupomAplicado.tipo === 'porcentagem') desconto = total * (cupomAplicado.desconto / 100);
+            else desconto = cupomAplicado.desconto;
+            total = Math.max(0, total - desconto);
+        }
+
+        const pedido = {
+            id: Date.now(),
+            data: new Date().toLocaleDateString(),
+            cliente: n,
+            endereco: e,
+            bairro,
+            itens: carrinho.slice(),
+            subtotal: sub,
+            taxa,
+            cupom: cupomAplicado ? { ...cupomAplicado } : null,
+            total,
+            pagamento: pag,
+            timestamp: new Date().toISOString()
+        };
+        pedidos.push(pedido);
+        localStorage.setItem('onmi_pedidos', JSON.stringify(pedidos));
+
+        document.getElementById('notificacaoSom').play();
+
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Bairro:* ${bairro}%0A*Pagamento:* ${pag}`;
+        if(cupomAplicado) msg += `%0A*Cupom:* ${cupomAplicado.codigo} (-R$ ${desconto.toFixed(2)})`;
+        msg += `%0A--------------------------%0A`;
+        carrinho.forEach(i => msg += `✅ ${i.quantidade}x *${i.nome}*%0A _${i.detalhes}_%0A`);
+        msg += `--------------------------%0A*Subtotal: R$ ${sub.toFixed(2)}*%0A*Taxa entrega: R$ ${taxa.toFixed(2)}*%0A*TOTAL: R$ ${total.toFixed(2).replace('.',',')}*`;
+        
+        window.open(`https://wa.me/5521988626495?text=${msg}`);
+
+        carrinho = [];
+        salvarCarrinho();
+        fecharModal('modalCarrinho');
+        atualizarBarra();
+
+        setTimeout(() => {
+            document.getElementById('modalAvaliacao').style.display = 'flex';
+        }, 1000);
+    }
+
+    // ==================== AVALIAÇÃO ====================
+    let avaliacaoAtual = 0;
+    document.querySelectorAll('#estrelasContainer i').forEach(star => {
+        star.addEventListener('mouseover', function() {
+            const valor = this.dataset.value;
+            document.querySelectorAll('#estrelasContainer i').forEach((s, index) => {
+                if (index < valor) s.classList.replace('fa-regular', 'fa-solid');
+                else s.classList.replace('fa-solid', 'fa-regular');
+            });
+        });
+        star.addEventListener('mouseout', function() {
+            document.querySelectorAll('#estrelasContainer i').forEach((s, index) => {
+                if (index < avaliacaoAtual) s.classList.replace('fa-regular', 'fa-solid');
+                else s.classList.replace('fa-solid', 'fa-regular');
+            });
+        });
+        star.addEventListener('click', function() {
+            avaliacaoAtual = parseInt(this.dataset.value);
+            document.querySelectorAll('#estrelasContainer i').forEach((s, index) => {
+                if (index < avaliacaoAtual) s.classList.replace('fa-regular', 'fa-solid');
+                else s.classList.replace('fa-solid', 'fa-regular');
+            });
+        });
+    });
+
+    function salvarAvaliacao() {
+        const comentario = document.getElementById('comentarioAvaliacao').value;
+        const hoje = new Date().toLocaleDateString();
+        avaliacoes.push({ nota: avaliacaoAtual, comentario, data: hoje + ' ' + new Date().toLocaleTimeString() });
+        localStorage.setItem('onmi_avaliacoes', JSON.stringify(avaliacoes));
+        fecharModal('modalAvaliacao');
+        alert('Obrigado pela avaliação!');
+    }
+
+    function calcularMediaAvaliacoes(dataFiltro = null) {
+        const lista = dataFiltro ? avaliacoes.filter(a => a.data.startsWith(dataFiltro)) : avaliacoes;
+        if (lista.length === 0) return "0.0";
+        const soma = lista.reduce((acc, a) => acc + a.nota, 0);
+        return (soma / lista.length).toFixed(1);
+    }
+
+    // ==================== PDF ====================
+    function gerarPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text("Comprovante Onmi Açaí", 20, 20);
+        doc.setFontSize(12);
+        let y = 30;
+        doc.text(`Cliente: ${document.getElementById('nomeCliente').value}`, 20, y);
+        y += 10;
+        doc.text(`Endereço: ${document.getElementById('enderecoCliente').value}`, 20, y);
+        y += 10;
+        carrinho.forEach((i, idx) => {
+            doc.text(`${i.quantidade}x ${i.nome} - R$ ${(i.precoFinal*i.quantidade).toFixed(2)}`, 20, y);
+            y += 7;
+        });
+        y += 5;
+        doc.text(`Total: R$ ${calcularTotalFinal().toFixed(2)}`, 20, y);
+        doc.save("comprovante.pdf");
+    }
+
+    // ==================== IMPRIMIR PEDIDO ====================
+    function imprimirPedido() {
+        const conteudo = document.getElementById('itensNoCarrinho').innerText;
+        const total = calcularTotalFinal().toFixed(2).replace('.',',');
+        const janela = window.open('', '_blank');
+        janela.document.write(`
+            <html>
+                <head><title>Pedido Onmi Açaí</title></head>
+                <body>
+                    <h2>Onmi Açaí</h2>
+                    <p>Cliente: ${document.getElementById('nomeCliente').value}</p>
+                    <p>Endereço: ${document.getElementById('enderecoCliente').value}</p>
+                    <p>Bairro: ${document.getElementById('bairroSelect').value}</p>
+                    <hr>
+                    ${carrinho.map(i => `<p>${i.quantidade}x ${i.nome} - ${i.detalhes} - R$ ${(i.precoFinal*i.quantidade).toFixed(2).replace('.',',')}</p>`).join('')}
+                    <hr>
+                    <p><strong>Total: R$ ${total}</strong></p>
+                </body>
+            </html>
+        `);
+        janela.print();
+    }
+
+    // ==================== GOOGLE MAPS ====================
+    function abrirMapa() {
+        window.open('https://www.google.com/maps/search/?api=1&query=Onmi+Açaí+Rio+de+Janeiro');
+    }
+
+    window.addEventListener('load', function() {
+        const headerDiv = document.querySelector('.header-info');
+        if (headerDiv && !document.getElementById('mapaBtn')) {
+            const mapaBtn = document.createElement('button');
+            mapaBtn.id = 'mapaBtn';
+            mapaBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+            mapaBtn.style.background = 'transparent';
+            mapaBtn.style.border = 'none';
+            mapaBtn.style.color = 'white';
+            mapaBtn.style.fontSize = '20px';
+            mapaBtn.style.cursor = 'pointer';
+            mapaBtn.onclick = abrirMapa;
+            headerDiv.appendChild(mapaBtn);
+        }
+    });
+
+    // ==================== EXPORTAR RELATÓRIO ====================
+    function exportarRelatorio() {
+        const periodo = document.getElementById('periodoRelatorio').value;
+        const texto = document.getElementById('resumoDia').innerText;
+        alert('Relatório exportado (simulação). Conteúdo:\n\n' + texto);
+    }
+
+    // ==================== RESET ====================
+    function resetarTudo() { 
+        if(confirm("Isso vai resetar todos os dados do JSONBin e localStorage. Continuar?")) { 
+            localStorage.clear(); 
+            location.reload(); 
+        } 
+    }
+
+    function fecharModal(id) { 
+        document.getElementById(id).style.display = 'none'; 
+    }
+
+    function scrollToCategory(id, el) {
+        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ==================== PWA ====================
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('ServiceWorker não suportado'));
+    }
+
+    // ==================== INICIALIZAÇÃO ====================
+    carregarDados();
+    preencherBairros();
+    atualizarBarra();
+    setInterval(checarStatusLoja, 60000);
 </script>
+
+<!-- Manifest PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#5b0f73">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </body>
 </html>
