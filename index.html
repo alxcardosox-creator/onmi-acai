@@ -1,207 +1,944 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Onmi Delivery</title>
-<link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
-</head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Onmi Açaí | Premium Delivery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Biblioteca para gerar QR Code -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <!-- Biblioteca para PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #5b0f73;
+            --primary-light: #f4e8f7;
+            --accent: #ffc107;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --bg: #f8f9fa;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --divider: #f1f2f6;
+        }
 
+        /* Modo escuro automático */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #1a1a1a;
+                --text: #f0f0f0;
+                --text-light: #b0b0b0;
+                --white: #2d2d2d;
+                --divider: #3a3a3a;
+                --shadow: 0 4px 12px rgba(0,0,0,0.3);
+            }
+            .produto-card, .modal-content, .nav-categories, #avisoFechado {
+                background: #2d2d2d;
+                color: #f0f0f0;
+            }
+            .cat-item {
+                background: #3a3a3a;
+                color: #b0b0b0;
+            }
+            .secao-titulo-box {
+                background: #3a3a3a;
+            }
+            input, select {
+                background: #3a3a3a;
+                color: #f0f0f0;
+                border-color: #555;
+            }
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+        
+        body { 
+            margin: 0; 
+            font-family: 'Poppins', sans-serif; 
+            background: var(--bg); 
+            color: var(--text);
+            padding-bottom: 100px;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        header { 
+            background: var(--primary); 
+            padding: 15px 20px; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky; top: 0; z-index: 1100;
+        }
+
+        .header-info { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--white); background: var(--white); cursor: pointer; }
+        .store-name { color: white; font-weight: 700; font-size: 1rem; }
+
+        .status-badge { font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; border: 1px solid currentColor; }
+        .status-aberto { background: #afffcf22; color: #afffcf; }
+        .status-fechado { background: #ffafaf22; color: #ffafaf; }
+
+        .nav-categories { background: var(--white); padding: 12px 0; position: sticky; top: 72px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; padding-left: 15px; scrollbar-width: none; }
+        .nav-categories::-webkit-scrollbar { display: none; }
+
+        .cat-item { padding: 6px 16px; background: var(--divider); border-radius: 18px; font-size: 13px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; }
+        .cat-item.active { background: var(--primary); color: white; }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 10px 15px; }
+        .section-header { font-weight: 700; font-size: 0.9rem; color: #7f8c8d; margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 1px; padding-top: 100px; margin-top: -80px; }
+
+        .produto-card { display: flex; background: var(--white); margin-bottom: 12px; padding: 15px; border-radius: 16px; box-shadow: var(--shadow); border: 1px solid transparent; align-items: center; transition: 0.2s; cursor: pointer; }
+        .produto-card:active { transform: scale(0.98); border-color: var(--primary-light); }
+
+        .produto-info { flex: 1; }
+        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
+        .preco { color: var(--primary); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
+        
+        .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f9f9f9; }
+        .produto-img { width: 100%; height: 100%; object-fit: cover; }
+
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: flex-end; backdrop-filter: blur(4px); }
+        .modal-content { background: var(--white); width: 100%; border-radius: 25px 25px 0 0; padding-bottom: 30px; max-height: 90vh; overflow-y: auto; }
+
+        .secao-titulo-box { background: var(--divider); padding: 12px 18px; margin-top: 10px; display: flex; flex-direction: column; position: sticky; top: 0; z-index: 5; }
+        .secao-nome { font-size: 14px; font-weight: 700; color: var(--text); }
+        .secao-ajuda { font-size: 11px; color: var(--primary); font-weight: 600; margin-top: 2px; }
+
+        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--divider); cursor: pointer; }
+        .opcao-nome { font-size: 13px; color: var(--text); }
+
+        .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; cursor: pointer; }
+
+        .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); cursor: pointer; }
+
+        input[type="text"], input[type="number"], select, textarea { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; background: var(--white); color: var(--text); }
+
+        #adminPanel { padding: 20px; }
+        .admin-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--divider); align-items: center; }
+        .admin-scroller { max-height: 300px; overflow-y: auto; border: 1px solid var(--divider); padding: 10px; border-radius: 10px; margin-bottom: 15px; }
+        .switch { position: relative; display: inline-block; width: 34px; height: 18px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(16px); }
+
+        /* Estilos para quantidade no carrinho */
+        .qtd-controle { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .qtd-controle button { background: var(--primary); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; }
+        .qtd-controle span { font-weight: 600; min-width: 20px; text-align: center; }
+
+        /* Estrelas avaliação */
+        .estrelas { display: flex; gap: 5px; font-size: 25px; cursor: pointer; color: #ccc; }
+        .estrelas .fa-star.checked { color: var(--accent); }
+
+        /* QR Code */
+        #qrCodeContainer { display: flex; justify-content: center; margin: 15px 0; }
+        #pixCopy { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; }
+
+        /* Botão localização */
+        .mapa-btn { background: var(--success); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 10px; }
+    </style>
+</head>
 <body>
 
 <header>
-  <h1>ONMI DELIVERY</h1>
-  <p>Peça seu Açaí 🍇</p>
+    <div class="header-info">
+        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img" id="masterLogo">
+        <span class="store-name">Onmi Açaí</span>
+    </div>
+    <span id="badgeStatus" class="status-badge">Verificando...</span>
 </header>
 
-<section class="produtos">
-  <h2>Escolha seu tamanho</h2>
+<div class="nav-categories" id="category-menu">
+    <div class="cat-item active" onclick="scrollToCategory('cat-copo', this)">Açaí no Copo</div>
+    <div class="cat-item" onclick="scrollToCategory('cat-garrafa', this)">Açaí na Garrafa</div>
+    <div class="cat-item" onclick="scrollToCategory('cat-pastel', this)">Pastel da Nana</div>
+</div>
 
-  <div class="produto" onclick="addItem('300ml',7)">
-    300ml - R$7
-  </div>
+<div class="container" id="menu-content">
+    <div id="avisoFechado" style="display:none; text-align:center; padding:40px 20px; background:var(--white); border-radius:20px; margin-top:20px;">
+        <i class="fas fa-moon" style="font-size:40px; color:var(--primary); margin-bottom:15px;"></i>
+        <h2 style="margin:0;">Estamos Fechados!</h2>
+        <p style="color:#666; font-size:14px;">Horário de funcionamento: <span id="horarioFuncionamento"></span></p>
+    </div>
 
-  <div class="produto" onclick="addItem('400ml',10)">
-    400ml - R$10
-  </div>
+    <div id="conteudoCardapio">
+        <div id="cat-copo" class="section-header">Açaí no Copo</div>
+        <div id="lista-copos"></div>
+        <div id="cat-garrafa" class="section-header">Açaí na Garrafa</div>
+        <div id="lista-garrafas"></div>
+        <div id="cat-pastel" class="section-header">Pastel da Nana</div>
+        <div id="lista-pasteis"></div>
+    </div>
+</div>
 
-  <div class="produto" onclick="addItem('500ml',12)">
-    500ml - R$12
-  </div>
+<div id="modalConfirmacao" class="modal">
+    <div class="modal-content">
+        <div style="padding:20px;">
+            <h2 id="nomeProdModal" style="margin:0; font-size:17px;">Personalizar</h2>
+        </div>
+        <div id="opcionais-container"></div>
+        <button class="btn-acao" id="btnAdicionar" onclick="adicionarAoCarrinho()">Adicionar ao Pedido</button>
+        <p onclick="fecharModal('modalConfirmacao')" style="text-align:center; color:#999; font-size:13px; cursor:pointer;">Cancelar</p>
+    </div>
+</div>
 
-  <div class="produto" onclick="addItem('700ml',16)">
-    700ml - R$16
-  </div>
-</section>
+<div id="modalCarrinho" class="modal">
+    <div class="modal-content" style="padding: 20px;">
+        <h2 style="font-size:18px; color:var(--primary); margin-bottom:15px;"><i class="fas fa-shopping-basket"></i> Resumo</h2>
+        <div id="itensNoCarrinho"></div>
+        <div style="margin-top:20px; background:var(--divider); padding:15px; border-radius:15px;">
+            <input type="text" id="nomeCliente" placeholder="Seu nome">
+            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)" oninput="atualizarBarra()">
+            <select id="bairroSelect" onchange="atualizarBarra()">
+                <option value="">Selecione o bairro</option>
+                <option value="centro">Centro</option>
+                <option value="beira rio">Beira Rio</option>
+                <option value="jardim">Jardim</option>
+            </select>
+            <input type="text" id="cupomInput" placeholder="Cupom de desconto" oninput="aplicarCupom()">
+            <span id="cupomMensagem" style="font-size:12px; color:var(--success);"></span>
+            <select id="formaPagamento" onchange="togglePagamento()">
+                <option value="">Forma de Pagamento</option>
+                <option value="Pix">Pix</option>
+                <option value="Cartão">Cartão</option>
+                <option value="Dinheiro">Dinheiro</option>
+            </select>
+            <div id="areaPix" style="display:none;">
+                <div id="qrCodeContainer"></div>
+                <button id="pixCopy" onclick="copiarPix()">Copiar código Pix</button>
+                <p style="font-size:12px;">Chave: 200.769.057-80 (Alex Cardoso)</p>
+                <select id="statusPagamento" onchange="atualizarStatusPedido()">
+                    <option value="aguardando">🟡 Aguardando pagamento</option>
+                    <option value="pago">🟢 Pago</option>
+                    <option value="preparo">🔵 Em preparo</option>
+                    <option value="entrega">🚚 Saiu para entrega</option>
+                    <option value="entregue">✅ Entregue</option>
+                </select>
+            </div>
+            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
+        </div>
+        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Enviar via WhatsApp</button>
+        <button class="btn-acao" onclick="gerarPDF()" style="background:var(--primary);">📄 Gerar Comprovante PDF</button>
+    </div>
+</div>
 
-<section class="carrinho">
-  <h2>Carrinho</h2>
-  <div id="lista"></div>
+<div id="modalAvaliacao" class="modal">
+    <div class="modal-content" style="padding:20px;">
+        <h2 style="font-size:18px; color:var(--primary);">Avalie seu pedido</h2>
+        <div class="estrelas" id="estrelasContainer">
+            <i class="fa-regular fa-star" data-value="1"></i>
+            <i class="fa-regular fa-star" data-value="2"></i>
+            <i class="fa-regular fa-star" data-value="3"></i>
+            <i class="fa-regular fa-star" data-value="4"></i>
+            <i class="fa-regular fa-star" data-value="5"></i>
+        </div>
+        <textarea id="comentarioAvaliacao" placeholder="Deixe seu comentário (opcional)" rows="3"></textarea>
+        <button class="btn-acao" onclick="salvarAvaliacao()">Enviar avaliação</button>
+        <p onclick="fecharModal('modalAvaliacao')" style="text-align:center; color:#999; cursor:pointer;">Agora não</p>
+    </div>
+</div>
 
-  <label>Bairro:</label>
-  <select id="bairro" onchange="calcularTotal()">
-    <option value="">Selecione</option>
-    <option value="2">Beira Rio - R$2</option>
-    <option value="3">Outros Bairros - R$3</option>
-    <option value="0">Engenheiro Pedreira (Não entrega)</option>
-  </select>
+<div id="modalAdmin" class="modal">
+    <div class="modal-content" id="adminPanel">
+        <h2 style="font-size:18px; color:var(--primary);">Configurações</h2>
+        <div class="admin-item"><span>Aberto</span><label class="switch"><input type="checkbox" id="btnForcarAberto" onchange="toggleForcarAberto()"><span class="slider"></span></label></div>
+        <div class="admin-item"><span>Fechado</span><label class="switch"><input type="checkbox" id="btnForcarFechado" onchange="toggleForcarFechado()"><span class="slider"></span></label></div>
+        
+        <h3 style="font-size: 14px;">Horário personalizado</h3>
+        <div style="display:grid; gap:5px;">
+            <label>Segunda a Sexta: <input type="text" id="horarioSegSex" placeholder="13:00-22:00" value="13:00-22:00"></label>
+            <label>Sábado: <input type="text" id="horarioSab" placeholder="13:00-22:00" value="13:00-22:00"></label>
+            <label>Domingo: <input type="text" id="horarioDom" placeholder="Fechado" value="Fechado"></label>
+        </div>
 
-  <input type="text" id="cupom" placeholder="Cupom de desconto">
-  <button onclick="aplicarCupom()">Aplicar Cupom</button>
+        <h3 style="font-size: 14px;">Taxas por bairro</h3>
+        <div class="admin-scroller" id="listaTaxas"></div>
 
-  <h3>Total: R$ <span id="total">0</span></h3>
+        <h3 style="font-size: 14px;">Cupons de desconto</h3>
+        <div class="admin-scroller" id="listaCupons"></div>
 
-  <button class="finalizar" onclick="finalizarPedido()">Finalizar Pedido</button>
-</section>
+        <h3 style="font-size: 14px;">Disponibilidade de Produtos</h3>
+        <div class="admin-scroller" id="listaControleProdutos"></div>
+        
+        <h3 style="font-size: 14px;">Disponibilidade de Sabores/Extras</h3>
+        <div class="admin-scroller" id="listaControleComplementos"></div>
 
-<section id="pagamento" class="hidden">
-  <h2>Pagamento via Pix</h2>
-  <img src="pix.png" width="250">
-  <p>Chave Pix: 200.769.057-80</p>
-  <button onclick="confirmarPagamento()">Já Paguei</button>
-</section>
+        <h3 style="font-size: 14px;">📊 Resumo do dia</h3>
+        <div id="resumoDia"></div>
+        <button class="btn-acao" onclick="exportarRelatorio()">Exportar Relatório</button>
 
-<script src="script.js"></script>
+        <button class="btn-acao" onclick="fecharModal('modalAdmin')">Fechar</button>
+        <p onclick="resetarTudo()" style="text-align:center; color:red; font-size:11px; cursor:pointer; margin-top:10px;">Resetar Memória do Site</p>
+    </div>
+</div>
+
+<div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
+    <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
+    <span id="totalFlutuante" style="font-weight:800;">R$ 0,00</span>
+</div>
+
+<!-- Som de notificação -->
+<audio id="notificacaoSom" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
+
+<script>
+    // ==================== DADOS BASE ====================
+    const PRODUTOS_BASE = [
+        { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
+        { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg" },
+        { id: 3, cat: "copo", nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg" },
+        { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg" },
+        { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg" },
+        { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg" },
+        { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg" },
+        { id: 8, cat: "pastel", nome: "Pastel Tradicional", preco: 7.00, img: "Pastel Tradicional.jpg" },
+        { id: 9, cat: "pastel", nome: "Pastel Especial", preco: 8.00, img: "Pastel Especial.jpg" }
+    ];
+
+    const COMPLEMENTOS_BASE = [
+        { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', cat: 'copo', unico: true, obrigar: true },
+        { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', cat: 'copo', unico: true, obrigar: true },
+        { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', cat: 'copo', unico: true, obrigar: true },
+        { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', cat: 'copo', unico: true, obrigar: true },
+        { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', cat: 'copo', unico: true, obrigar: true },
+        { idc: 201, sec: 'Complementos', n: 'Granola', cat: 'copo' },
+        { idc: 202, sec: 'Complementos', n: 'Aveia', cat: 'copo' },
+        { idc: 203, sec: 'Complementos', n: 'Sucrilhos', cat: 'copo' },
+        { idc: 204, sec: 'Complementos', n: 'Granulado', cat: 'copo' },
+        { idc: 208, sec: 'Complementos', n: 'Leite em pó', cat: 'copo' },
+        { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo' },
+        { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo' },
+        { idc: 403, sec: 'Caldas', n: 'Leite Condensado', cat: 'copo' },
+        { idc: 501, sec: 'Especiais', n: 'Nutella', p: 3, cat: 'copo' },
+        { idc: 701, sec: 'Sabor do Pastel', n: 'Carne', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 703, sec: 'Sabor do Pastel', n: 'Queijo', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 704, sec: 'Sabor do Pastel', n: 'Calabresa', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 706, sec: 'Sabor do Pastel', n: 'Misto', cat: 'pastel_t', unico: true, obrigar: true },
+        { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Carne c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
+        { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
+        { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Catupiry', cat: 'pastel_e', unico: true, obrigar: true },
+        { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true },
+        { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', p: 0, cat: 'garrafa' },
+        { idc: 602, sec: 'Adicionais', n: 'Nutella', p: 3.00, cat: 'garrafa' }
+    ];
+
+    // ==================== ESTADO GLOBAL ====================
+    let estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod')) || [];
+    PRODUTOS_BASE.forEach(p => { if(!estoqueProd.find(e => e.id === p.id)) estoqueProd.push({id: p.id, d: true}) });
+
+    let estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp')) || [];
+    COMPLEMENTOS_BASE.forEach(c => { if(!estoqueComp.find(e => e.idc === c.idc)) estoqueComp.push({idc: c.idc, d: true}) });
+
+    let configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { 
+        forcarAberto: false, 
+        forcarFechado: false,
+        horarios: { segSex: "13:00-22:00", sab: "13:00-22:00", dom: "Fechado" },
+        taxasBairro: [
+            { bairro: "centro", taxa: 3.00 },
+            { bairro: "beira rio", taxa: 2.00 },
+            { bairro: "jardim", taxa: 4.00 }
+        ],
+        cupons: [
+            { codigo: "ONMI10", desconto: 10, tipo: "porcentagem" },
+            { codigo: "ONMI5", desconto: 5, tipo: "fixo" }
+        ]
+    };
+
+    let carrinho = JSON.parse(localStorage.getItem('onmi_carrinho')) || [];
+    let pedidos = JSON.parse(localStorage.getItem('onmi_pedidos')) || [];
+    let avaliacoes = JSON.parse(localStorage.getItem('onmi_avaliacoes')) || [];
+    let itemSelecionado = null;
+    let cupomAplicado = null;
+
+    // ==================== INICIALIZAÇÃO ====================
+    function salvarCarrinho() {
+        localStorage.setItem('onmi_carrinho', JSON.stringify(carrinho));
+    }
+
+    // ==================== ADMIN ====================
+    let timerLogo;
+    const logoBtn = document.getElementById('masterLogo');
+    logoBtn.addEventListener('mousedown', () => timerLogo = setTimeout(abrirAdmin, 3000));
+    logoBtn.addEventListener('mouseup', () => clearTimeout(timerLogo));
+    logoBtn.addEventListener('touchstart', () => timerLogo = setTimeout(abrirAdmin, 3000));
+    logoBtn.addEventListener('touchend', () => clearTimeout(timerLogo));
+
+    function abrirAdmin() {
+        const senha = prompt("Senha:");
+        if(senha === "onmi123") { 
+            document.getElementById('modalAdmin').style.display = "flex"; 
+            renderizarAdmin(); 
+        }
+    }
+
+    function renderizarAdmin() {
+        document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto;
+        document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado;
+        document.getElementById('horarioSegSex').value = configLoja.horarios.segSex;
+        document.getElementById('horarioSab').value = configLoja.horarios.sab;
+        document.getElementById('horarioDom').value = configLoja.horarios.dom;
+        
+        // Taxas
+        document.getElementById('listaTaxas').innerHTML = configLoja.taxasBairro.map((t, i) => `
+            <div class="admin-item">
+                <input type="text" value="${t.bairro}" placeholder="Bairro" id="bairro_nome_${i}" style="width:40%;">
+                <input type="number" value="${t.taxa}" step="0.01" id="bairro_taxa_${i}" style="width:40%;">
+                <button onclick="removerTaxa(${i})" style="background:red; color:white; border:none; border-radius:5px;">🗑️</button>
+            </div>
+        `).join('');
+        document.getElementById('listaTaxas').innerHTML += `<button class="btn-acao" onclick="adicionarTaxa()" style="width:100%;">+ Adicionar bairro</button>`;
+
+        // Cupons
+        document.getElementById('listaCupons').innerHTML = configLoja.cupons.map((c, i) => `
+            <div class="admin-item">
+                <input type="text" value="${c.codigo}" placeholder="Código" id="cupom_cod_${i}" style="width:30%;">
+                <input type="number" value="${c.desconto}" step="0.01" id="cupom_val_${i}" style="width:30%;">
+                <select id="cupom_tipo_${i}" style="width:30%;">
+                    <option value="porcentagem" ${c.tipo==='porcentagem'?'selected':''}>%</option>
+                    <option value="fixo" ${c.tipo==='fixo'?'selected':''}>R$</option>
+                </select>
+                <button onclick="removerCupom(${i})" style="background:red; color:white; border:none; border-radius:5px;">🗑️</button>
+            </div>
+        `).join('');
+        document.getElementById('listaCupons').innerHTML += `<button class="btn-acao" onclick="adicionarCupom()" style="width:100%;">+ Adicionar cupom</button>`;
+
+        // Produtos
+        document.getElementById('listaControleProdutos').innerHTML = PRODUTOS_BASE.map(p => {
+            const item = estoqueProd.find(e => e.id === p.id);
+            const status = item ? item.d : true;
+            return `<div class="admin-item"><span>${p.nome}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleProduto(${p.id})"><span class="slider"></span></label></div>`;
+        }).join('');
+
+        // Complementos
+        document.getElementById('listaControleComplementos').innerHTML = COMPLEMENTOS_BASE.map(c => {
+            const item = estoqueComp.find(e => e.idc === c.idc);
+            const status = item ? item.d : true;
+            return `<div class="admin-item"><span><small>[${c.cat}]</small> ${c.n}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleComplemento(${c.idc})"><span class="slider"></span></label></div>`;
+        }).join('');
+
+        // Resumo do dia
+        const hoje = new Date().toLocaleDateString();
+        const pedidosHoje = pedidos.filter(p => p.data === hoje);
+        const totalVendido = pedidosHoje.reduce((acc, p) => acc + p.total, 0);
+        const qtdPedidos = pedidosHoje.length;
+        document.getElementById('resumoDia').innerHTML = `
+            <p>📅 ${hoje}</p>
+            <p>💰 Total vendido: R$ ${totalVendido.toFixed(2)}</p>
+            <p>📦 Pedidos: ${qtdPedidos}</p>
+            <p>⭐ Avaliações: ${avaliacoes.length} (média: ${calcularMediaAvaliacoes()})</p>
+        `;
+    }
+
+    function adicionarTaxa() {
+        configLoja.taxasBairro.push({ bairro: "Novo", taxa: 0 });
+        renderizarAdmin();
+    }
+    function removerTaxa(i) {
+        configLoja.taxasBairro.splice(i, 1);
+        renderizarAdmin();
+    }
+    function adicionarCupom() {
+        configLoja.cupons.push({ codigo: "CUPOM", desconto: 0, tipo: "fixo" });
+        renderizarAdmin();
+    }
+    function removerCupom(i) {
+        configLoja.cupons.splice(i, 1);
+        renderizarAdmin();
+    }
+
+    function toggleProduto(id) { 
+        const item = estoqueProd.find(e => e.id === id); 
+        if(item) item.d = !item.d; 
+        localStorage.setItem('onmi_estoque_prod', JSON.stringify(estoqueProd)); 
+        renderizar(); 
+    }
+    
+    function toggleComplemento(idc) { 
+        const item = estoqueComp.find(e => e.idc === idc); 
+        if(item) item.d = !item.d; 
+        localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp)); 
+    }
+
+    function toggleForcarAberto() { 
+        configLoja.forcarAberto = document.getElementById('btnForcarAberto').checked; 
+        if(configLoja.forcarAberto) configLoja.forcarFechado = false; 
+        salvarConfig(); 
+    }
+    function toggleForcarFechado() { 
+        configLoja.forcarFechado = document.getElementById('btnForcarFechado').checked; 
+        if(configLoja.forcarFechado) configLoja.forcarAberto = false; 
+        salvarConfig(); 
+    }
+    function salvarConfig() { 
+        configLoja.horarios = {
+            segSex: document.getElementById('horarioSegSex').value,
+            sab: document.getElementById('horarioSab').value,
+            dom: document.getElementById('horarioDom').value
+        };
+        // Salvar taxas editadas
+        configLoja.taxasBairro = [];
+        for(let i=0; i<document.querySelectorAll('[id^="bairro_nome_"]').length; i++) {
+            let nome = document.getElementById(`bairro_nome_${i}`)?.value;
+            let taxa = parseFloat(document.getElementById(`bairro_taxa_${i}`)?.value);
+            if(nome && !isNaN(taxa)) configLoja.taxasBairro.push({ bairro: nome.toLowerCase(), taxa });
+        }
+        // Salvar cupons
+        configLoja.cupons = [];
+        for(let i=0; i<document.querySelectorAll('[id^="cupom_cod_"]').length; i++) {
+            let cod = document.getElementById(`cupom_cod_${i}`)?.value;
+            let val = parseFloat(document.getElementById(`cupom_val_${i}`)?.value);
+            let tipo = document.getElementById(`cupom_tipo_${i}`)?.value;
+            if(cod && !isNaN(val)) configLoja.cupons.push({ codigo: cod.toUpperCase(), desconto: val, tipo });
+        }
+        localStorage.setItem('onmi_config', JSON.stringify(configLoja)); 
+        checarStatusLoja(); 
+    }
+
+    // ==================== HORÁRIO FUNCIONAMENTO ====================
+    function checarStatusLoja() {
+        const agora = new Date();
+        const diaSemana = agora.getDay(); // 0=domingo, 1=segunda, ..., 6=sábado
+        let horarioHoje = "";
+        if (diaSemana === 0) horarioHoje = configLoja.horarios.dom;
+        else if (diaSemana === 6) horarioHoje = configLoja.horarios.sab;
+        else horarioHoje = configLoja.horarios.segSex;
+
+        let aberto = false;
+        if (horarioHoje.toLowerCase() !== "fechado") {
+            let [inicio, fim] = horarioHoje.split('-');
+            let horaInicio = parseInt(inicio.split(':')[0]);
+            let horaFim = parseInt(fim.split(':')[0]);
+            let horaAtual = agora.getHours();
+            aberto = (horaAtual >= horaInicio && horaAtual < horaFim);
+        }
+
+        if (configLoja.forcarAberto) aberto = true;
+        if (configLoja.forcarFechado) aberto = false;
+
+        document.getElementById('badgeStatus').innerText = aberto ? "Aberto" : "Fechado";
+        document.getElementById('badgeStatus').className = "status-badge " + (aberto ? "status-aberto" : "status-fechado");
+        document.getElementById('conteudoCardapio').style.display = aberto ? "block" : "none";
+        document.getElementById('avisoFechado').style.display = aberto ? "none" : "block";
+        document.getElementById('horarioFuncionamento').innerText = horarioHoje;
+    }
+
+    // ==================== RENDERIZAR CARDÁPIO ====================
+    function renderizar() {
+        ['copo', 'garrafa', 'pastel'].forEach(c => {
+            const lista = document.getElementById(`lista-${c === 'copo' ? 'copos' : c === 'garrafa' ? 'garrafas' : 'pasteis'}`);
+            lista.innerHTML = PRODUTOS_BASE.filter(p => p.cat === c).map(p => {
+                const itemEstoque = estoqueProd.find(e => e.id === p.id);
+                if(itemEstoque && !itemEstoque.d) return '';
+                return `
+                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
+                    <div class="produto-info"><h3>${p.nome}</h3><span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span></div>
+                    <div class="img-container"><img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img"></div>
+                </div>`;
+            }).join('');
+        });
+        checarStatusLoja();
+    }
+
+    // ==================== MODAL DE PERSONALIZAÇÃO ====================
+    function abrirModal(p) {
+        itemSelecionado = p;
+        document.getElementById('nomeProdModal').innerText = p.nome;
+        const container = document.getElementById('opcionais-container');
+        container.innerHTML = "";
+
+        let buscaCat = p.cat;
+        if (p.id === 8) buscaCat = 'pastel_t';
+        if (p.id === 9) buscaCat = 'pastel_e';
+
+        const secoes = [...new Set(COMPLEMENTOS_BASE.filter(c => c.cat === buscaCat).map(c => c.sec))];
+        
+        container.innerHTML = secoes.map(secNome => {
+            const itens = COMPLEMENTOS_BASE.filter(c => {
+                const itemEstoque = estoqueComp.find(e => e.idc === c.idc);
+                return c.sec === secNome && c.cat === buscaCat && (itemEstoque ? itemEstoque.d : true);
+            });
+            
+            if(itens.length === 0) return '';
+            
+            const htmlItens = itens.map(item => `
+                <label class="opcao-item">
+                    <span class="opcao-nome">${item.n} ${item.p ? '<b>+R$'+item.p.toFixed(2).replace('.',',')+'</b>' : ''}</span>
+                    <input type="${item.unico ? 'radio' : 'checkbox'}" name="sec-${secNome.replace(/\s/g, '')}" class="extra-item" 
+                        data-sec="${secNome}" data-obrigar="${item.obrigar||false}" data-preco="${item.p||0}" value="${item.n}">
+                </label>`).join('');
+            return `<div class="secao-titulo-box"><span class="secao-nome">${secNome}</span><span class="secao-ajuda">${itens[0].obrigar ? 'Obrigatório' : 'Opcional'}</span></div>${htmlItens}`;
+        }).join('');
+        
+        document.getElementById('modalConfirmacao').style.display = 'flex';
+    }
+
+    function adicionarAoCarrinho() {
+        let buscaCat = itemSelecionado.cat;
+        if (itemSelecionado.id === 8) buscaCat = 'pastel_t';
+        if (itemSelecionado.id === 9) buscaCat = 'pastel_e';
+
+        const obrigatorios = [...new Set(COMPLEMENTOS_BASE.filter(c => c.obrigar && c.cat === buscaCat).map(c => c.sec))];
+        for(let sec of obrigatorios) {
+            const selecionado = document.querySelector(`input[name="sec-${sec.replace(/\s/g, '')}"]:checked`);
+            if(!selecionado) {
+                alert(`Por favor, escolha o sabor!`);
+                return;
+            }
+        }
+
+        const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
+        const nomes = selecionados.map(el => el.value);
+        const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
+        
+        // Adiciona com quantidade
+        carrinho.push({ 
+            nome: itemSelecionado.nome, 
+            precoFinal: itemSelecionado.preco + precoExtra, 
+            detalhes: nomes.join(', ') || 'Tradicional',
+            quantidade: 1,
+            id: Date.now() + Math.random()
+        });
+        salvarCarrinho();
+        atualizarBarra();
+        fecharModal('modalConfirmacao');
+    }
+
+    // ==================== CARRINHO COM QUANTIDADE ====================
+    function atualizarBarra() {
+        const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
+        const bairro = document.getElementById('bairroSelect')?.value || '';
+        const taxaObj = configLoja.taxasBairro.find(t => t.bairro === bairro);
+        const taxa = taxaObj ? taxaObj.taxa : 0;
+        const totalComTaxa = sub + (carrinho.length > 0 ? taxa : 0);
+        
+        // Aplicar cupom
+        let desconto = 0;
+        if (cupomAplicado) {
+            if (cupomAplicado.tipo === 'porcentagem') {
+                desconto = totalComTaxa * (cupomAplicado.desconto / 100);
+            } else {
+                desconto = cupomAplicado.desconto;
+            }
+        }
+        const totalFinal = Math.max(0, totalComTaxa - desconto);
+
+        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
+        document.getElementById('qtdItens').innerText = carrinho.reduce((acc, i) => acc + i.quantidade, 0);
+        document.getElementById('totalFlutuante').innerText = `R$ ${totalFinal.toFixed(2).replace('.',',')}`;
+        
+        // Gerar QR Code Pix se necessário
+        if (document.getElementById('formaPagamento')?.value === 'Pix') {
+            gerarQRCode(totalFinal);
+        }
+    }
+
+    function abrirCarrinho() {
+        document.getElementById('itensNoCarrinho').innerHTML = carrinho.map((i, idx) => `
+            <div style="padding:10px 0; border-bottom:1px solid var(--divider);">
+                <div style="display:flex; justify-content:space-between;">
+                    <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small></div>
+                    <strong>R$ ${(i.precoFinal * i.quantidade).toFixed(2).replace('.',',')}</strong>
+                </div>
+                <div class="qtd-controle">
+                    <button onclick="alterarQuantidade(${idx}, -1)">-</button>
+                    <span>${i.quantidade}</span>
+                    <button onclick="alterarQuantidade(${idx}, 1)">+</button>
+                    <span style="color:red; font-size:12px; margin-left:auto; cursor:pointer;" onclick="removerItem(${idx})">Remover</span>
+                </div>
+            </div>`).join('');
+        document.getElementById('modalCarrinho').style.display = 'flex';
+        // Atualizar QR Code se Pix já selecionado
+        if (document.getElementById('formaPagamento').value === 'Pix') {
+            const total = calcularTotalFinal();
+            gerarQRCode(total);
+        }
+    }
+
+    function alterarQuantidade(idx, delta) {
+        const novoValor = carrinho[idx].quantidade + delta;
+        if (novoValor < 1) return removerItem(idx);
+        carrinho[idx].quantidade = novoValor;
+        salvarCarrinho();
+        abrirCarrinho(); // re-render
+        atualizarBarra();
+    }
+
+    function removerItem(idx) { 
+        carrinho.splice(idx, 1); 
+        salvarCarrinho();
+        if (carrinho.length > 0) abrirCarrinho(); 
+        else fecharModal('modalCarrinho'); 
+        atualizarBarra(); 
+    }
+
+    function calcularTotalFinal() {
+        const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
+        const bairro = document.getElementById('bairroSelect')?.value || '';
+        const taxaObj = configLoja.taxasBairro.find(t => t.bairro === bairro);
+        const taxa = taxaObj ? taxaObj.taxa : 0;
+        const totalComTaxa = sub + (carrinho.length > 0 ? taxa : 0);
+        let desconto = 0;
+        if (cupomAplicado) {
+            if (cupomAplicado.tipo === 'porcentagem') {
+                desconto = totalComTaxa * (cupomAplicado.desconto / 100);
+            } else {
+                desconto = cupomAplicado.desconto;
+            }
+        }
+        return Math.max(0, totalComTaxa - desconto);
+    }
+
+    // ==================== CUPOM ====================
+    function aplicarCupom() {
+        const codigo = document.getElementById('cupomInput').value.trim().toUpperCase();
+        const cupom = configLoja.cupons.find(c => c.codigo === codigo);
+        if (cupom) {
+            cupomAplicado = cupom;
+            document.getElementById('cupomMensagem').innerText = `Cupom aplicado: ${cupom.desconto}${cupom.tipo==='porcentagem'?'%':'R$'}`;
+        } else {
+            cupomAplicado = null;
+            document.getElementById('cupomMensagem').innerText = 'Cupom inválido';
+        }
+        atualizarBarra();
+    }
+
+    // ==================== PIX QR CODE ====================
+    function gerarQRCode(valor) {
+        // Formato Pix: 0002010102122681... (simplificado)
+        const chave = "200.769.057-80";
+        const nome = "Alex Cardoso Sousa";
+        const cidade = "Rio de Janeiro";
+        const txid = "ONMI" + Date.now();
+        // Usar lib QRCode.js
+        const qrContainer = document.getElementById('qrCodeContainer');
+        qrContainer.innerHTML = '';
+        // Criar string Pix copia e cola (EMV)
+        const payload = generatePixPayload(chave, valor, nome, cidade, txid);
+        new QRCode(qrContainer, {
+            text: payload,
+            width: 200,
+            height: 200
+        });
+        // Guardar payload para copiar
+        window.pixPayload = payload;
+    }
+
+    function generatePixPayload(chave, valor, nome, cidade, txid) {
+        // Função simplificada para gerar payload Pix (apenas exemplo, não oficial)
+        const valorFormatado = valor.toFixed(2);
+        const nomeFormatado = nome.substring(0, 25);
+        const cidadeFormatada = cidade.substring(0, 15);
+        // Em produção, use uma lib específica
+        return `00020126360014BR.GOV.BCB.PIX0114${chave}520400005303986540${valorFormatado.replace('.','')}5802BR5913${nomeFormatado}6008${cidadeFormatada}62140510${txid}6304`;
+    }
+
+    function copiarPix() {
+        if (window.pixPayload) {
+            navigator.clipboard.writeText(window.pixPayload);
+            alert('Código Pix copiado!');
+        }
+    }
+
+    function togglePagamento() {
+        const p = document.getElementById('formaPagamento').value;
+        document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
+        document.getElementById('areaTroco').style.display = p === 'Dinheiro' ? 'block' : 'none';
+        if (p === 'Pix') {
+            const total = calcularTotalFinal();
+            gerarQRCode(total);
+        }
+    }
+
+    // ==================== FINALIZAR PEDIDO ====================
+    function finalizarPedido() {
+        const n = document.getElementById('nomeCliente').value;
+        const e = document.getElementById('enderecoCliente').value;
+        const bairro = document.getElementById('bairroSelect').value;
+        const pag = document.getElementById('formaPagamento').value;
+        if(!n || !e || !bairro || !pag) return alert("Preencha todos os campos!");
+        
+        const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
+        const taxaObj = configLoja.taxasBairro.find(t => t.bairro === bairro);
+        const taxa = taxaObj ? taxaObj.taxa : 0;
+        let total = sub + taxa;
+        let desconto = 0;
+        if (cupomAplicado) {
+            if (cupomAplicado.tipo === 'porcentagem') desconto = total * (cupomAplicado.desconto / 100);
+            else desconto = cupomAplicado.desconto;
+            total = Math.max(0, total - desconto);
+        }
+
+        const pedido = {
+            id: Date.now(),
+            data: new Date().toLocaleDateString(),
+            cliente: n,
+            endereco: e,
+            bairro,
+            itens: carrinho,
+            subtotal: sub,
+            taxa,
+            cupom: cupomAplicado,
+            total,
+            pagamento: pag,
+            status: document.getElementById('statusPagamento')?.value || 'aguardando',
+            timestamp: new Date().toISOString()
+        };
+        pedidos.push(pedido);
+        localStorage.setItem('onmi_pedidos', JSON.stringify(pedidos));
+
+        // Tocar som de notificação
+        document.getElementById('notificacaoSom').play();
+
+        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Bairro:* ${bairro}%0A*Pagamento:* ${pag}`;
+        if(pag === 'Pix') msg += `%0A*Status:* ${pedido.status}`;
+        if(cupomAplicado) msg += `%0A*Cupom:* ${cupomAplicado.codigo} (-R$ ${desconto.toFixed(2)})`;
+        msg += `%0A--------------------------%0A`;
+        carrinho.forEach(i => msg += `✅ ${i.quantidade}x *${i.nome}*%0A _${i.detalhes}_%0A`);
+        msg += `--------------------------%0A*Subtotal: R$ ${sub.toFixed(2)}*%0A*Taxa entrega: R$ ${taxa.toFixed(2)}*%0A*TOTAL: R$ ${total.toFixed(2).replace('.',',')}*`;
+        
+        window.open(`https://wa.me/5521988626495?text=${msg}`);
+
+        // Limpar carrinho
+        carrinho = [];
+        salvarCarrinho();
+        fecharModal('modalCarrinho');
+        atualizarBarra();
+
+        // Abrir avaliação após pedido
+        setTimeout(() => {
+            document.getElementById('modalAvaliacao').style.display = 'flex';
+        }, 1000);
+    }
+
+    // ==================== AVALIAÇÃO ====================
+    let avaliacaoAtual = 0;
+    document.querySelectorAll('#estrelasContainer i').forEach(star => {
+        star.addEventListener('mouseover', function() {
+            const valor = this.dataset.value;
+            document.querySelectorAll('#estrelasContainer i').forEach((s, index) => {
+                if (index < valor) s.classList.replace('fa-regular', 'fa-solid');
+                else s.classList.replace('fa-solid', 'fa-regular');
+            });
+        });
+        star.addEventListener('mouseout', function() {
+            document.querySelectorAll('#estrelasContainer i').forEach((s, index) => {
+                if (index < avaliacaoAtual) s.classList.replace('fa-regular', 'fa-solid');
+                else s.classList.replace('fa-solid', 'fa-regular');
+            });
+        });
+        star.addEventListener('click', function() {
+            avaliacaoAtual = parseInt(this.dataset.value);
+            document.querySelectorAll('#estrelasContainer i').forEach((s, index) => {
+                if (index < avaliacaoAtual) s.classList.replace('fa-regular', 'fa-solid');
+                else s.classList.replace('fa-solid', 'fa-regular');
+            });
+        });
+    });
+
+    function salvarAvaliacao() {
+        const comentario = document.getElementById('comentarioAvaliacao').value;
+        avaliacoes.push({ nota: avaliacaoAtual, comentario, data: new Date().toLocaleString() });
+        localStorage.setItem('onmi_avaliacoes', JSON.stringify(avaliacoes));
+        fecharModal('modalAvaliacao');
+        alert('Obrigado pela avaliação!');
+    }
+
+    function calcularMediaAvaliacoes() {
+        if (avaliacoes.length === 0) return "0.0";
+        const soma = avaliacoes.reduce((acc, a) => acc + a.nota, 0);
+        return (soma / avaliacoes.length).toFixed(1);
+    }
+
+    // ==================== PDF ====================
+    function gerarPDF() {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        doc.setFontSize(18);
+        doc.text("Comprovante Onmi Açaí", 20, 20);
+        doc.setFontSize(12);
+        let y = 30;
+        doc.text(`Cliente: ${document.getElementById('nomeCliente').value}`, 20, y);
+        y += 10;
+        doc.text(`Endereço: ${document.getElementById('enderecoCliente').value}`, 20, y);
+        y += 10;
+        carrinho.forEach((i, idx) => {
+            doc.text(`${i.quantidade}x ${i.nome} - R$ ${(i.precoFinal*i.quantidade).toFixed(2)}`, 20, y);
+            y += 7;
+        });
+        y += 5;
+        doc.text(`Total: R$ ${calcularTotalFinal().toFixed(2)}`, 20, y);
+        doc.save("comprovante.pdf");
+    }
+
+    // ==================== GOOGLE MAPS ====================
+    function abrirMapa() {
+        // Endereço da loja (exemplo)
+        window.open('https://www.google.com/maps/search/?api=1&query=Onmi+Açaí+Rio+de+Janeiro');
+    }
+
+    // Adicionar botão de mapa no header
+    const headerDiv = document.querySelector('.header-info');
+    const mapaBtn = document.createElement('button');
+    mapaBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+    mapaBtn.style.background = 'transparent';
+    mapaBtn.style.border = 'none';
+    mapaBtn.style.color = 'white';
+    mapaBtn.style.fontSize = '20px';
+    mapaBtn.style.cursor = 'pointer';
+    mapaBtn.onclick = abrirMapa;
+    headerDiv.appendChild(mapaBtn);
+
+    // ==================== EXPORTAR RELATÓRIO ====================
+    function exportarRelatorio() {
+        const hoje = new Date().toLocaleDateString();
+        const pedidosHoje = pedidos.filter(p => p.data === hoje);
+        let texto = `Relatório ${hoje}\nTotal vendido: ${pedidosHoje.reduce((acc,p)=>acc+p.total,0).toFixed(2)}\nPedidos: ${pedidosHoje.length}\n`;
+        alert(texto); // Poderia gerar PDF também
+    }
+
+    function atualizarStatusPedido() {
+        // Simula atualização de status (em produção, seria por pedido)
+    }
+
+    // ==================== RESET ====================
+    function resetarTudo() { 
+        if(confirm("Isso vai resetar todos os produtos e fechar o admin. Continuar?")) { 
+            localStorage.clear(); 
+            location.reload(); 
+        } 
+    }
+
+    function fecharModal(id) { 
+        document.getElementById(id).style.display = 'none'; 
+    }
+
+    function scrollToCategory(id, el) {
+        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ==================== PWA ====================
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('ServiceWorker não suportado'));
+    }
+
+    // Inicialização
+    renderizar();
+    setInterval(checarStatusLoja, 60000);
+    atualizarBarra();
+</script>
+
+<!-- Manifest PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#5b0f73">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 </body>
 </html>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#0f0f0f;
-  color:white;
-}
-
-header{
-  text-align:center;
-  padding:20px;
-  background:#1a1a1a;
-}
-
-h1{
-  color:#a020f0;
-}
-
-.produtos, .carrinho{
-  padding:20px;
-}
-
-.produto{
-  background:#1c1c1c;
-  padding:15px;
-  margin:10px 0;
-  border-radius:10px;
-  cursor:pointer;
-  transition:0.3s;
-}
-
-.produto:hover{
-  background:#a020f0;
-}
-
-button{
-  background:#a020f0;
-  border:none;
-  padding:10px;
-  color:white;
-  border-radius:8px;
-  margin-top:10px;
-  cursor:pointer;
-}
-
-.finalizar{
-  width:100%;
-  font-size:18px;
-}
-
-.hidden{
-  display:none;
-}
-let carrinho = [];
-let desconto = 0;
-
-function addItem(nome, preco){
-  carrinho.push({nome,preco});
-  atualizarCarrinho();
-}
-
-function atualizarCarrinho(){
-  let lista = document.getElementById("lista");
-  lista.innerHTML="";
-  carrinho.forEach(item=>{
-    lista.innerHTML += `<p>${item.nome} - R$${item.preco}</p>`;
-  });
-  calcularTotal();
-}
-
-function calcularTotal(){
-  let total = carrinho.reduce((soma,item)=>soma+item.preco,0);
-  let bairro = document.getElementById("bairro").value;
-
-  if(bairro == 0){
-    alert("Não entregamos em Engenheiro Pedreira.");
-    return;
-  }
-
-  if(bairro){
-    total += parseFloat(bairro);
-  }
-
-  total -= desconto;
-
-  document.getElementById("total").innerText = total.toFixed(2);
-}
-
-function aplicarCupom(){
-  let cupom = document.getElementById("cupom").value;
-
-  if(cupom == "ONMI10"){
-    desconto = 5;
-    alert("Cupom aplicado!");
-  }else{
-    alert("Cupom inválido");
-  }
-
-  calcularTotal();
-}
-
-function finalizarPedido(){
-  let hora = new Date().getHours();
-  let dia = new Date().getDay();
-
-  if((dia >=1 && dia <=6 && (hora<13 || hora>22)) ||
-     (dia==0 && (hora<13 || hora>17))){
-    alert("Estamos fechados no momento.");
-    return;
-  }
-
-  document.getElementById("pagamento").classList.remove("hidden");
-}
-
-function confirmarPagamento(){
-  alert("Pedido confirmado! 🍇");
-  carrinho=[];
-  atualizarCarrinho();
-  document.getElementById("pagamento").classList.add("hidden");
-}
-       {
-  "name": "Onmi Delivery",
-  "short_name": "Onmi",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#0f0f0f",
-  "theme_color": "#a020f0",
-  "icons": []
-}
-       self.addEventListener('install', e=>{
-  e.waitUntil(
-    caches.open('onmi').then(cache=>{
-      return cache.addAll([
-        '/',
-        '/index.html',
-        '/style.css',
-        '/script.js'
-      ]);
-    })
-  );
-});
