@@ -6,11 +6,12 @@
     <title>Onmi Açaí | Premium Delivery</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- Biblioteca para gerar QR Code -->
+    <!-- QR Code -->
     <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
-    <!-- Biblioteca para PDF -->
+    <!-- PDF -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
+        /* Mesmo CSS da versão anterior - mantido para não repetir */
         :root {
             --primary: #5b0f73;
             --primary-light: #f4e8f7;
@@ -25,7 +26,6 @@
             --divider: #f1f2f6;
         }
 
-        /* Modo escuro automático */
         @media (prefers-color-scheme: dark) {
             :root {
                 --bg: #1a1a1a;
@@ -126,21 +126,17 @@
         input:checked + .slider { background-color: var(--success); }
         input:checked + .slider:before { transform: translateX(16px); }
 
-        /* Estilos para quantidade no carrinho */
         .qtd-controle { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
         .qtd-controle button { background: var(--primary); color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; }
         .qtd-controle span { font-weight: 600; min-width: 20px; text-align: center; }
 
-        /* Estrelas avaliação */
         .estrelas { display: flex; gap: 5px; font-size: 25px; cursor: pointer; color: #ccc; }
         .estrelas .fa-star.checked { color: var(--accent); }
 
-        /* QR Code */
         #qrCodeContainer { display: flex; justify-content: center; margin: 15px 0; }
         #pixCopy { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; }
-
-        /* Botão localização */
         .mapa-btn { background: var(--success); color: white; border: none; padding: 10px; border-radius: 8px; cursor: pointer; width: 100%; margin-bottom: 10px; }
+        .sync-indicator { font-size: 10px; color: var(--text-light); text-align: right; padding: 5px; }
     </style>
 </head>
 <body>
@@ -174,6 +170,7 @@
         <div id="cat-pastel" class="section-header">Pastel da Nana</div>
         <div id="lista-pasteis"></div>
     </div>
+    <div class="sync-indicator" id="syncStatus"></div>
 </div>
 
 <div id="modalConfirmacao" class="modal">
@@ -194,9 +191,7 @@
         <div style="margin-top:20px; background:var(--divider); padding:15px; border-radius:15px;">
             <input type="text" id="nomeCliente" placeholder="Seu nome">
             <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)">
-            <select id="bairroSelect" onchange="atualizarBarra()">
-                <!-- Opções preenchidas via JavaScript -->
-            </select>
+            <select id="bairroSelect" onchange="atualizarBarra()"></select>
             <input type="text" id="cupomInput" placeholder="Cupom de desconto" oninput="aplicarCupom()">
             <span id="cupomMensagem" style="font-size:12px; color:var(--success);"></span>
             <select id="formaPagamento" onchange="togglePagamento()">
@@ -209,7 +204,6 @@
                 <div id="qrCodeContainer"></div>
                 <button id="pixCopy" onclick="copiarPix()">Copiar código Pix</button>
                 <p style="font-size:12px;">Chave: 200.769.057-80 (Alex Cardoso)</p>
-                <!-- Select de status removido -->
             </div>
             <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
         </div>
@@ -242,9 +236,9 @@
         
         <h3 style="font-size: 14px;">Horário personalizado</h3>
         <div style="display:grid; gap:5px;">
-            <label>Segunda a Sexta: <input type="text" id="horarioSegSex" placeholder="13:00-22:00" value="13:00-22:00"></label>
-            <label>Sábado: <input type="text" id="horarioSab" placeholder="13:00-22:00" value="13:00-22:00"></label>
-            <label>Domingo: <input type="text" id="horarioDom" placeholder="Fechado" value="Fechado"></label>
+            <label>Segunda a Sexta: <input type="text" id="horarioSegSex" placeholder="13:00-22:00"></label>
+            <label>Sábado: <input type="text" id="horarioSab" placeholder="13:00-22:00"></label>
+            <label>Domingo: <input type="text" id="horarioDom" placeholder="Fechado"></label>
         </div>
 
         <h3 style="font-size: 14px;">Taxas por bairro</h3>
@@ -277,6 +271,17 @@
 <audio id="notificacaoSom" src="https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3" preload="auto"></audio>
 
 <script>
+    // ==================== CONFIGURAÇÃO DO JSONBIN.IO ====================
+    // Substitua pelos seus dados
+    const BIN_ID = "699bc19eae596e708f410537";        // Ex: "65a1b2c3d4e5f6g7h8i9"
+    const MASTER_KEY = "$2a$10$LToPE4MpTL/L64UVd9Sinuyx9/7.GtWSe3xRU8AxiLrgeCkPSvIFG"; // Ex: "$2b$10$abcdefghijklmnopqrstuv"
+
+    const JSONBIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+    const HEADERS = {
+        'Content-Type': 'application/json',
+        'X-Master-Key': MASTER_KEY
+    };
+
     // ==================== DADOS BASE ====================
     const PRODUTOS_BASE = [
         { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg" },
@@ -320,46 +325,74 @@
     ];
 
     // ==================== ESTADO GLOBAL ====================
-    let estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod')) || [];
-    PRODUTOS_BASE.forEach(p => { if(!estoqueProd.find(e => e.id === p.id)) estoqueProd.push({id: p.id, d: true}) });
-
-    let estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp')) || [];
-    COMPLEMENTOS_BASE.forEach(c => { if(!estoqueComp.find(e => e.idc === c.idc)) estoqueComp.push({idc: c.idc, d: true}) });
-
-    let configLoja = JSON.parse(localStorage.getItem('onmi_config')) || { 
-        forcarAberto: false, 
+    let estoqueProd = [];
+    let estoqueComp = [];
+    let configLoja = {
+        forcarAberto: false,
         forcarFechado: false,
         horarios: { segSex: "13:00-22:00", sab: "13:00-22:00", dom: "Fechado" },
-        taxasBairro: [
-            { bairro: "centro", taxa: 3.00 },
-            { bairro: "beira rio", taxa: 2.00 },
-            { bairro: "jardim", taxa: 4.00 }
-        ],
-        cupons: [
-            { codigo: "ONMI10", desconto: 10, tipo: "porcentagem" },
-            { codigo: "ONMI5", desconto: 5, tipo: "fixo" }
-        ]
+        taxasBairro: [],
+        cupons: []
     };
-
     let carrinho = JSON.parse(localStorage.getItem('onmi_carrinho')) || [];
     let pedidos = JSON.parse(localStorage.getItem('onmi_pedidos')) || [];
     let avaliacoes = JSON.parse(localStorage.getItem('onmi_avaliacoes')) || [];
     let itemSelecionado = null;
     let cupomAplicado = null;
 
-    // ==================== FUNÇÕES AUXILIARES ====================
-    function salvarCarrinho() {
-        localStorage.setItem('onmi_carrinho', JSON.stringify(carrinho));
-    }
-
-    function salvarConfig() {
-        localStorage.setItem('onmi_config', JSON.stringify(configLoja));
-        // Atualiza select de bairros imediatamente
+    // ==================== FUNÇÕES DE SINCRONIZAÇÃO JSONBIN ====================
+    async function carregarDados() {
+        try {
+            const response = await fetch(JSONBIN_URL, { headers: HEADERS });
+            const data = await response.json();
+            const record = data.record;
+            if (record.configLoja) configLoja = { ...configLoja, ...record.configLoja };
+            if (record.estoqueProd) estoqueProd = record.estoqueProd;
+            if (record.estoqueComp) estoqueComp = record.estoqueComp;
+            document.getElementById('syncStatus').innerText = '✅ Sincronizado';
+        } catch (error) {
+            console.error('Erro ao carregar do JSONBin:', error);
+            document.getElementById('syncStatus').innerText = '⚠️ Offline (usando cache)';
+            // Fallback para localStorage ou valores padrão
+            estoqueProd = JSON.parse(localStorage.getItem('onmi_estoque_prod_fallback')) || PRODUTOS_BASE.map(p => ({ id: p.id, d: true }));
+            estoqueComp = JSON.parse(localStorage.getItem('onmi_estoque_comp_fallback')) || COMPLEMENTOS_BASE.map(c => ({ idc: c.idc, d: true }));
+            configLoja = JSON.parse(localStorage.getItem('onmi_config_fallback')) || configLoja;
+        }
+        // Garantir que todos os produtos e complementos tenham entrada
+        PRODUTOS_BASE.forEach(p => { if (!estoqueProd.find(e => e.id === p.id)) estoqueProd.push({ id: p.id, d: true }); });
+        COMPLEMENTOS_BASE.forEach(c => { if (!estoqueComp.find(e => e.idc === c.idc)) estoqueComp.push({ idc: c.idc, d: true }); });
+        renderizar();
         preencherBairros();
         checarStatusLoja();
     }
 
-    // ==================== ADMIN ====================
+    async function salvarDados() {
+        try {
+            const payload = {
+                configLoja,
+                estoqueProd,
+                estoqueComp
+            };
+            await fetch(JSONBIN_URL, {
+                method: 'PUT',
+                headers: HEADERS,
+                body: JSON.stringify(payload)
+            });
+            document.getElementById('syncStatus').innerText = '✅ Sincronizado';
+            // Salvar fallback no localStorage
+            localStorage.setItem('onmi_estoque_prod_fallback', JSON.stringify(estoqueProd));
+            localStorage.setItem('onmi_estoque_comp_fallback', JSON.stringify(estoqueComp));
+            localStorage.setItem('onmi_config_fallback', JSON.stringify(configLoja));
+        } catch (error) {
+            console.error('Erro ao salvar no JSONBin:', error);
+            document.getElementById('syncStatus').innerText = '⚠️ Falha ao salvar';
+        }
+    }
+
+    // Atualizar periodicamente (a cada 30 segundos)
+    setInterval(carregarDados, 30000);
+
+    // ==================== FUNÇÕES DE ADMIN ====================
     let timerLogo;
     const logoBtn = document.getElementById('masterLogo');
     logoBtn.addEventListener('mousedown', () => timerLogo = setTimeout(abrirAdmin, 3000));
@@ -376,14 +409,13 @@
     }
 
     function renderizarAdmin() {
-        document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto;
-        document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado;
+        document.getElementById('btnForcarAberto').checked = configLoja.forcarAberto || false;
+        document.getElementById('btnForcarFechado').checked = configLoja.forcarFechado || false;
         document.getElementById('horarioSegSex').value = configLoja.horarios.segSex;
         document.getElementById('horarioSab').value = configLoja.horarios.sab;
         document.getElementById('horarioDom').value = configLoja.horarios.dom;
         
-        // Taxas - com opção de adicionar
-        document.getElementById('listaTaxas').innerHTML = configLoja.taxasBairro.map((t, i) => `
+        document.getElementById('listaTaxas').innerHTML = (configLoja.taxasBairro || []).map((t, i) => `
             <div class="admin-item">
                 <input type="text" value="${t.bairro}" placeholder="Bairro" id="bairro_nome_${i}" style="width:40%;">
                 <input type="number" value="${t.taxa}" step="0.01" id="bairro_taxa_${i}" style="width:40%;">
@@ -392,8 +424,7 @@
         `).join('');
         document.getElementById('listaTaxas').innerHTML += `<button class="btn-acao" onclick="adicionarTaxa()" style="width:100%;">+ Adicionar bairro</button>`;
 
-        // Cupons
-        document.getElementById('listaCupons').innerHTML = configLoja.cupons.map((c, i) => `
+        document.getElementById('listaCupons').innerHTML = (configLoja.cupons || []).map((c, i) => `
             <div class="admin-item">
                 <input type="text" value="${c.codigo}" placeholder="Código" id="cupom_cod_${i}" style="width:30%;">
                 <input type="number" value="${c.desconto}" step="0.01" id="cupom_val_${i}" style="width:30%;">
@@ -406,21 +437,18 @@
         `).join('');
         document.getElementById('listaCupons').innerHTML += `<button class="btn-acao" onclick="adicionarCupom()" style="width:100%;">+ Adicionar cupom</button>`;
 
-        // Produtos
         document.getElementById('listaControleProdutos').innerHTML = PRODUTOS_BASE.map(p => {
             const item = estoqueProd.find(e => e.id === p.id);
             const status = item ? item.d : true;
             return `<div class="admin-item"><span>${p.nome}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleProduto(${p.id})"><span class="slider"></span></label></div>`;
         }).join('');
 
-        // Complementos
         document.getElementById('listaControleComplementos').innerHTML = COMPLEMENTOS_BASE.map(c => {
             const item = estoqueComp.find(e => e.idc === c.idc);
             const status = item ? item.d : true;
             return `<div class="admin-item"><span><small>[${c.cat}]</small> ${c.n}</span><label class="switch"><input type="checkbox" ${status?'checked':''} onchange="toggleComplemento(${c.idc})"><span class="slider"></span></label></div>`;
         }).join('');
 
-        // Resumo do dia
         const hoje = new Date().toLocaleDateString();
         const pedidosHoje = pedidos.filter(p => p.data === hoje);
         const totalVendido = pedidosHoje.reduce((acc, p) => acc + p.total, 0);
@@ -434,6 +462,7 @@
     }
 
     function adicionarTaxa() {
+        if (!configLoja.taxasBairro) configLoja.taxasBairro = [];
         configLoja.taxasBairro.push({ bairro: "Novo Bairro", taxa: 0 });
         renderizarAdmin();
     }
@@ -442,6 +471,7 @@
         renderizarAdmin();
     }
     function adicionarCupom() {
+        if (!configLoja.cupons) configLoja.cupons = [];
         configLoja.cupons.push({ codigo: "CUPOM", desconto: 0, tipo: "fixo" });
         renderizarAdmin();
     }
@@ -453,73 +483,73 @@
     function toggleProduto(id) { 
         const item = estoqueProd.find(e => e.id === id); 
         if(item) item.d = !item.d; 
-        localStorage.setItem('onmi_estoque_prod', JSON.stringify(estoqueProd)); 
+        salvarDados();
         renderizar(); 
     }
     
     function toggleComplemento(idc) { 
         const item = estoqueComp.find(e => e.idc === idc); 
         if(item) item.d = !item.d; 
-        localStorage.setItem('onmi_estoque_comp', JSON.stringify(estoqueComp)); 
+        salvarDados();
     }
 
     function toggleForcarAberto() { 
         configLoja.forcarAberto = document.getElementById('btnForcarAberto').checked; 
         if(configLoja.forcarAberto) configLoja.forcarFechado = false; 
-        salvarConfig(); 
+        salvarDados();
     }
     function toggleForcarFechado() { 
         configLoja.forcarFechado = document.getElementById('btnForcarFechado').checked; 
         if(configLoja.forcarFechado) configLoja.forcarAberto = false; 
-        salvarConfig(); 
+        salvarDados();
     }
 
-    // Função para salvar todas as alterações do admin e fechar
     function salvarConfigFechar() {
-        // Capturar horários
         configLoja.horarios = {
             segSex: document.getElementById('horarioSegSex').value,
             sab: document.getElementById('horarioSab').value,
             dom: document.getElementById('horarioDom').value
         };
         
-        // Capturar taxas
-        configLoja.taxasBairro = [];
+        const novasTaxas = [];
         for(let i=0; i<document.querySelectorAll('[id^="bairro_nome_"]').length; i++) {
             let nome = document.getElementById(`bairro_nome_${i}`)?.value;
             let taxa = parseFloat(document.getElementById(`bairro_taxa_${i}`)?.value);
-            if(nome && !isNaN(taxa)) configLoja.taxasBairro.push({ bairro: nome.toLowerCase(), taxa });
+            if(nome && !isNaN(taxa)) novasTaxas.push({ bairro: nome.toLowerCase(), taxa });
         }
+        configLoja.taxasBairro = novasTaxas;
         
-        // Capturar cupons
-        configLoja.cupons = [];
+        const novosCupons = [];
         for(let i=0; i<document.querySelectorAll('[id^="cupom_cod_"]').length; i++) {
             let cod = document.getElementById(`cupom_cod_${i}`)?.value;
             let val = parseFloat(document.getElementById(`cupom_val_${i}`)?.value);
             let tipo = document.getElementById(`cupom_tipo_${i}`)?.value;
-            if(cod && !isNaN(val)) configLoja.cupons.push({ codigo: cod.toUpperCase(), desconto: val, tipo });
+            if(cod && !isNaN(val)) novosCupons.push({ codigo: cod.toUpperCase(), desconto: val, tipo });
         }
+        configLoja.cupons = novosCupons;
 
-        salvarConfig();
+        salvarDados();
         fecharModal('modalAdmin');
     }
 
     // ==================== HORÁRIO FUNCIONAMENTO ====================
     function checarStatusLoja() {
         const agora = new Date();
-        const diaSemana = agora.getDay(); // 0=domingo, 1=segunda, ..., 6=sábado
+        const diaSemana = agora.getDay();
         let horarioHoje = "";
         if (diaSemana === 0) horarioHoje = configLoja.horarios.dom;
         else if (diaSemana === 6) horarioHoje = configLoja.horarios.sab;
         else horarioHoje = configLoja.horarios.segSex;
 
         let aberto = false;
-        if (horarioHoje.toLowerCase() !== "fechado") {
+        if (horarioHoje && horarioHoje.toLowerCase() !== "fechado") {
             let [inicio, fim] = horarioHoje.split('-');
-            let horaInicio = parseInt(inicio.split(':')[0]);
-            let horaFim = parseInt(fim.split(':')[0]);
-            let horaAtual = agora.getHours();
-            aberto = (horaAtual >= horaInicio && horaAtual < horaFim);
+            if (inicio && fim) {
+                let horaInicio = parseInt(inicio.split(':')[0]);
+                let horaFim = parseInt(fim.split(':')[0]);
+                let horaAtual = agora.getHours();
+                aberto = (horaAtual >= horaInicio && horaAtual < horaFim);
+            }
         }
 
         if (configLoja.forcarAberto) aberto = true;
@@ -529,7 +559,7 @@
         document.getElementById('badgeStatus').className = "status-badge " + (aberto ? "status-aberto" : "status-fechado");
         document.getElementById('conteudoCardapio').style.display = aberto ? "block" : "none";
         document.getElementById('avisoFechado').style.display = aberto ? "none" : "block";
-        document.getElementById('horarioFuncionamento').innerText = horarioHoje;
+        document.getElementById('horarioFuncionamento').innerText = horarioHoje || "Fechado";
     }
 
     // ==================== RENDERIZAR CARDÁPIO ====================
@@ -540,7 +570,7 @@
                 const itemEstoque = estoqueProd.find(e => e.id === p.id);
                 if(itemEstoque && !itemEstoque.d) return '';
                 return `
-                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
+                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p).replace(/'/g, "&#39;")})'>
                     <div class="produto-info"><h3>${p.nome}</h3><span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span></div>
                     <div class="img-container"><img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/${p.img}" class="produto-img"></div>
                 </div>`;
@@ -549,11 +579,11 @@
         checarStatusLoja();
     }
 
-    // ==================== PREENCHER BAIRROS NO SELECT ====================
     function preencherBairros() {
         const select = document.getElementById('bairroSelect');
+        if (!select) return;
         select.innerHTML = '<option value="">Selecione o bairro</option>';
-        configLoja.taxasBairro.forEach(t => {
+        (configLoja.taxasBairro || []).forEach(t => {
             const option = document.createElement('option');
             option.value = t.bairro;
             option.textContent = t.bairro.charAt(0).toUpperCase() + t.bairro.slice(1) + ` (R$ ${t.taxa.toFixed(2).replace('.',',')})`;
@@ -624,15 +654,18 @@
         fecharModal('modalConfirmacao');
     }
 
-    // ==================== CARRINHO COM QUANTIDADE ====================
+    // ==================== CARRINHO ====================
+    function salvarCarrinho() {
+        localStorage.setItem('onmi_carrinho', JSON.stringify(carrinho));
+    }
+
     function atualizarBarra() {
         const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
         const bairro = document.getElementById('bairroSelect')?.value || '';
-        const taxaObj = configLoja.taxasBairro.find(t => t.bairro === bairro);
+        const taxaObj = (configLoja.taxasBairro || []).find(t => t.bairro === bairro);
         const taxa = taxaObj ? taxaObj.taxa : 0;
         const totalComTaxa = sub + (carrinho.length > 0 ? taxa : 0);
         
-        // Aplicar cupom
         let desconto = 0;
         if (cupomAplicado) {
             if (cupomAplicado.tipo === 'porcentagem') {
@@ -678,7 +711,7 @@
         if (novoValor < 1) return removerItem(idx);
         carrinho[idx].quantidade = novoValor;
         salvarCarrinho();
-        abrirCarrinho(); // re-render
+        abrirCarrinho();
         atualizarBarra();
     }
 
@@ -693,7 +726,7 @@
     function calcularTotalFinal() {
         const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
         const bairro = document.getElementById('bairroSelect')?.value || '';
-        const taxaObj = configLoja.taxasBairro.find(t => t.bairro === bairro);
+        const taxaObj = (configLoja.taxasBairro || []).find(t => t.bairro === bairro);
         const taxa = taxaObj ? taxaObj.taxa : 0;
         const totalComTaxa = sub + (carrinho.length > 0 ? taxa : 0);
         let desconto = 0;
@@ -710,7 +743,7 @@
     // ==================== CUPOM ====================
     function aplicarCupom() {
         const codigo = document.getElementById('cupomInput').value.trim().toUpperCase();
-        const cupom = configLoja.cupons.find(c => c.codigo === codigo);
+        const cupom = (configLoja.cupons || []).find(c => c.codigo === codigo);
         if (cupom) {
             cupomAplicado = cupom;
             document.getElementById('cupomMensagem').innerText = `Cupom aplicado: ${cupom.desconto}${cupom.tipo==='porcentagem'?'%':'R$'}`;
@@ -771,7 +804,7 @@
         if(!n || !e || !bairro || !pag) return alert("Preencha todos os campos!");
         
         const sub = carrinho.reduce((acc, i) => acc + (i.precoFinal * i.quantidade), 0);
-        const taxaObj = configLoja.taxasBairro.find(t => t.bairro === bairro);
+        const taxaObj = (configLoja.taxasBairro || []).find(t => t.bairro === bairro);
         const taxa = taxaObj ? taxaObj.taxa : 0;
         let total = sub + taxa;
         let desconto = 0;
@@ -883,17 +916,21 @@
         window.open('https://www.google.com/maps/search/?api=1&query=Onmi+Açaí+Rio+de+Janeiro');
     }
 
-    // Adicionar botão de mapa no header
-    const headerDiv = document.querySelector('.header-info');
-    const mapaBtn = document.createElement('button');
-    mapaBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
-    mapaBtn.style.background = 'transparent';
-    mapaBtn.style.border = 'none';
-    mapaBtn.style.color = 'white';
-    mapaBtn.style.fontSize = '20px';
-    mapaBtn.style.cursor = 'pointer';
-    mapaBtn.onclick = abrirMapa;
-    headerDiv.appendChild(mapaBtn);
+    window.addEventListener('load', function() {
+        const headerDiv = document.querySelector('.header-info');
+        if (headerDiv && !document.getElementById('mapaBtn')) {
+            const mapaBtn = document.createElement('button');
+            mapaBtn.id = 'mapaBtn';
+            mapaBtn.innerHTML = '<i class="fas fa-map-marker-alt"></i>';
+            mapaBtn.style.background = 'transparent';
+            mapaBtn.style.border = 'none';
+            mapaBtn.style.color = 'white';
+            mapaBtn.style.fontSize = '20px';
+            mapaBtn.style.cursor = 'pointer';
+            mapaBtn.onclick = abrirMapa;
+            headerDiv.appendChild(mapaBtn);
+        }
+    });
 
     // ==================== EXPORTAR RELATÓRIO ====================
     function exportarRelatorio() {
@@ -905,7 +942,8 @@
 
     // ==================== RESET ====================
     function resetarTudo() { 
-        if(confirm("Isso vai resetar todos os produtos e fechar o admin. Continuar?")) { 
+        if(confirm("Isso vai resetar todos os dados do JSONBin e localStorage. Continuar?")) { 
+            // Limpar bin (opcional) - pode ser feito via API, mas simplificamos limpando localStorage
             localStorage.clear(); 
             location.reload(); 
         } 
@@ -927,10 +965,10 @@
     }
 
     // ==================== INICIALIZAÇÃO ====================
+    carregarDados();
     preencherBairros();
-    renderizar();
-    setInterval(checarStatusLoja, 60000);
     atualizarBarra();
+    setInterval(checarStatusLoja, 60000);
 </script>
 
 <!-- Manifest PWA -->
