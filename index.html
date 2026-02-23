@@ -1,315 +1,67 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Onmi Açaí | Premium Delivery</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <style>
-        :root {
-            --primary: #5b0f73;
-            --primary-light: #f4e8f7;
-            --accent: #ffc107;
-            --success: #27ae60;
-            --bg: #f8f9fa;
-            --text: #2d3436;
-            --text-light: #636e72;
-            --white: #ffffff;
-            --shadow: 0 4px 12px rgba(0,0,0,0.08);
-            --divider: #f1f2f6;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
-        
-        body { 
-            margin: 0; 
-            font-family: 'Poppins', sans-serif; 
-            background: var(--bg); 
-            color: var(--text);
-            padding-bottom: 100px;
-        }
-
-        header { 
-            background: var(--primary); 
-            padding: 15px 20px; 
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            position: sticky; top: 0; z-index: 1100;
-        }
-
-        .header-info { display: flex; align-items: center; gap: 12px; }
-        .logo-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--white); background: var(--white); }
-        .store-name { color: white; font-weight: 700; font-size: 1rem; }
-
-        .status-badge { background: #afffcf22; color: #afffcf; font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; border: 1px solid #afffcf44; }
-
-        .nav-categories { background: var(--white); padding: 12px 0; position: sticky; top: 72px; z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow-x: auto; white-space: nowrap; display: flex; gap: 8px; padding-left: 15px; scrollbar-width: none; }
-        .nav-categories::-webkit-scrollbar { display: none; }
-
-        .cat-item { padding: 6px 16px; background: var(--divider); border-radius: 18px; font-size: 13px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; }
-        .cat-item.active { background: var(--primary); color: white; }
-
-        .container { max-width: 600px; margin: 0 auto; padding: 10px 15px; }
-        .section-header { font-weight: 700; font-size: 0.9rem; color: #7f8c8d; margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 1px; padding-top: 100px; margin-top: -80px; }
-
-        .produto-card { display: flex; background: var(--white); margin-bottom: 12px; padding: 15px; border-radius: 16px; box-shadow: var(--shadow); border: 1px solid transparent; align-items: center; transition: 0.2s; }
-        .produto-card:active { transform: scale(0.98); border-color: var(--primary-light); }
-
-        .produto-info { flex: 1; }
-        .produto-info h3 { margin: 0; font-size: 15px; font-weight: 600; color: var(--text); }
-        .produto-info p { margin: 4px 0 0; font-size: 11px; color: var(--text-light); line-height: 1.4; }
-        .preco { color: var(--primary); font-weight: 700; font-size: 16px; display: block; margin-top: 4px; }
-        
-        .img-container { width: 85px; height: 85px; border-radius: 12px; overflow: hidden; margin-left: 15px; background: #f9f9f9; }
-        .produto-img { width: 100%; height: 100%; object-fit: cover; }
-
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; align-items: flex-end; backdrop-filter: blur(4px); }
-        .modal-content { background: var(--white); width: 100%; border-radius: 25px 25px 0 0; padding-bottom: 30px; max-height: 90vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        .secao-titulo-box { background: #f1f2f6; padding: 12px 18px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 5; }
-        .secao-info-text { display: flex; flex-direction: column; }
-        .secao-nome { font-size: 14px; font-weight: 700; color: #2d3436; }
-        .secao-sub { font-size: 11px; color: #636e72; }
-
-        .opcao-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--divider); cursor: pointer; }
-        .opcao-nome { font-size: 14px; color: var(--text); font-weight: 400; }
-
-        .btn-acao { background: var(--primary); color: white; border: none; width: 90%; margin: 20px auto; display: block; padding: 16px; border-radius: 14px; font-size: 15px; font-weight: 700; }
-        .footer-carrinho { position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%); width: 92%; background: var(--primary); color: white; padding: 14px 20px; border-radius: 12px; display: none; justify-content: space-between; align-items: center; z-index: 1500; box-shadow: 0 10px 30px rgba(91, 15, 115, 0.3); }
-
-        input[type="text"], input[type="number"], select { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; }
-        .remover-btn { color: #e74c3c; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onmi Delivery</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
 </head>
+
 <body>
 
 <header>
-    <div class="header-info">
-        <img src="https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/logo.png" class="logo-img">
-        <span class="store-name">Onmi Açaí</span>
-    </div>
-    <span class="status-badge">Aberto</span>
+  <h1>ONMI DELIVERY</h1>
+  <p>Peça seu Açaí 🍇</p>
 </header>
 
-<div class="nav-categories" id="category-menu">
-    <div class="cat-item active" onclick="scrollToCategory('cat-copo', this)">Açaí no Copo</div>
-    <div class="cat-item" onclick="scrollToCategory('cat-garrafa', this)">Açaí na Garrafa</div>
-    <div class="cat-item" onclick="scrollToCategory('cat-pastel', this)">Pastel da Nana</div>
-</div>
+<section class="produtos">
+  <h2>Escolha seu tamanho</h2>
 
-<div class="container" id="menu-content">
-    <div id="cat-copo" class="section-header">Açaí no Copo</div>
-    <div id="lista-copos"></div>
+  <div class="produto" onclick="addItem('300ml',7)">
+    300ml - R$7
+  </div>
 
-    <div id="cat-garrafa" class="section-header">Açaí na Garrafa</div>
-    <div id="lista-garrafas"></div>
+  <div class="produto" onclick="addItem('400ml',10)">
+    400ml - R$10
+  </div>
 
-    <div id="cat-pastel" class="section-header">Pastel da Nana</div>
-    <div id="lista-pasteis"></div>
-</div>
+  <div class="produto" onclick="addItem('500ml',12)">
+    500ml - R$12
+  </div>
 
-<div id="modalConfirmacao" class="modal">
-    <div class="modal-content">
-        <div style="padding:20px;">
-            <h2 id="nomeProdModal" style="margin:0; font-size:17px; font-weight:700;">Adicionar Item</h2>
-            <p id="descProdModal" style="font-size:13px; color:#666; margin-top:8px;"></p>
-        </div>
-        <div id="opcionais-container"></div>
-        <button class="btn-acao" onclick="adicionarAoCarrinho()">Adicionar ao Pedido</button>
-        <p onclick="fecharModal('modalConfirmacao')" style="text-align:center; color:#999; font-size:13px; cursor:pointer;">Cancelar</p>
-    </div>
-</div>
+  <div class="produto" onclick="addItem('700ml',16)">
+    700ml - R$16
+  </div>
+</section>
 
-<div id="modalCarrinho" class="modal">
-    <div class="modal-content" style="padding: 20px;">
-        <h2 style="font-size:18px; margin-bottom:15px; color:var(--primary);"><i class="fas fa-shopping-basket"></i> Resumo</h2>
-        <div id="itensNoCarrinho"></div>
-        <div style="margin-top:20px; background:#f9f9f9; padding:15px; border-radius:15px;">
-            <input type="text" id="nomeCliente" placeholder="Seu nome">
-            <input type="text" id="enderecoCliente" placeholder="Endereço (Rua, Nº, Bairro)" oninput="atualizarBarra()">
-            <select id="formaPagamento" onchange="togglePagamento()">
-                <option value="">Forma de Pagamento</option>
-                <option value="Pix">Pix</option>
-                <option value="Cartão">Cartão</option>
-                <option value="Dinheiro">Dinheiro</option>
-            </select>
-            <div id="areaPix" style="display:none; font-size:12px; background:#fff; padding:12px; border:1px solid #eee; border-radius:10px; margin-bottom:10px;">
-                <strong>Alex Cardoso Sousa</strong><br>Pix: 200.769.057-80
-            </div>
-            <div id="areaTroco" style="display:none;"><input type="number" id="trocoPara" placeholder="Troco para quanto?"></div>
-        </div>
-        <button class="btn-acao" onclick="finalizarPedido()" style="background:var(--success);">Finalizar no WhatsApp</button>
-    </div>
-</div>
+<section class="carrinho">
+  <h2>Carrinho</h2>
+  <div id="lista"></div>
 
-<div id="barraCarrinho" class="footer-carrinho" onclick="abrirCarrinho()">
-    <span><i class="fas fa-shopping-bag"></i> <span id="qtdItens">0</span> itens</span>
-    <div style="text-align: right;">
-        <span id="labelTaxa" style="display: block; font-size: 9px; opacity: 0.8;"></span>
-        <span id="totalFlutuante" style="font-weight:800;">R$ 0,00</span>
-    </div>
-</div>
+  <label>Bairro:</label>
+  <select id="bairro" onchange="calcularTotal()">
+    <option value="">Selecione</option>
+    <option value="2">Beira Rio - R$2</option>
+    <option value="3">Outros Bairros - R$3</option>
+    <option value="0">Engenheiro Pedreira (Não entrega)</option>
+  </select>
 
-<script>
-    // ==========================================
-    // --- CENTRAL DE ESTOQUE ---
-    // ==========================================
-    const PRODUTOS = [
-        { id: 1, cat: "copo", nome: "Copo 250ml", preco: 5.00, img: "copo250.jpg", d: true },
-        { id: 2, cat: "copo", nome: "Copo 300ml", preco: 8.00, img: "copo300.jpg", d: true },
-        { id: 3, cat: "copo", nome: "Copo 400ml", preco: 11.00, img: "copo400.jpg", d: true },
-        { id: 4, cat: "copo", nome: "Copo 500ml", preco: 13.00, img: "copo500.jpg", d: true },
-        { id: 5, cat: "copo", nome: "Copo 700ml", preco: 16.00, img: "copo700.jpg", d: true },
-        { id: 6, cat: "garrafa", nome: "Garrafa 300ml", preco: 9.00, img: "garrafa300.jpg", d: true },
-        { id: 7, cat: "garrafa", nome: "Garrafa 500ml", preco: 12.00, img: "garrafa500.jpg", d: true },
-        // PASTÉIS (Ative ou Desative aqui em 'd')
-        { 
-            id: 8, cat: "pastel", nome: "Pastel Tradicional", preco: 7.00, d: true,
-            desc: "Sabores: Queijo, Carne Moída, Calabresa ou Frango. (Informe o sabor no WhatsApp)", 
-            img: "Pastel Tradicional.jpg" 
-        },
-        { 
-            id: 9, cat: "pastel", nome: "Pastel Especial", preco: 8.00, d: true,
-            desc: "Sabores: Frango c/ Catupiry, Frango c/ Queijo, ou Carne c/ Queijo.", 
-            img: "Pastel Especial.jpg" 
-        }
-    ];
+  <input type="text" id="cupom" placeholder="Cupom de desconto">
+  <button onclick="aplicarCupom()">Aplicar Cupom</button>
 
-    const OPCOES_ACAI = {
-        copo: [
-            { t: "Complementos (Grátis)", l: 3, o: [{n:"Granola", d:true}, {n:"Aveia", d:true}, {n:"Leite em pó", d:true}, {n:"Paçoca", d:true}] },
-            { t: "Caldas", l: 1, o: [{n:"Uva", d:true}, {n:"Morango", d:true}, {n:"Leite condensado", d:true}] }
-        ],
-        garrafa: [
-            { t: "Adicionais", l: 2, o: [{n:"Mousse de Maracujá", p:2, d:true}, {n:"Nutella", p:2, d:true}] }
-        ]
-    };
+  <h3>Total: R$ <span id="total">0</span></h3>
 
-    let carrinho = [];
-    let itemSelecionado = null;
+  <button class="finalizar" onclick="finalizarPedido()">Finalizar Pedido</button>
+</section>
 
-    function calcularTaxaEntrega() {
-        const e = document.getElementById('enderecoCliente').value.toLowerCase();
-        return (e.includes("beira rio") || e.includes("beirario")) ? 2.00 : 3.00;
-    }
+<section id="pagamento" class="hidden">
+  <h2>Pagamento via Pix</h2>
+  <img src="pix.png" width="250">
+  <p>Chave Pix: 200.769.057-80</p>
+  <button onclick="confirmarPagamento()">Já Paguei</button>
+</section>
 
-    function renderizar() {
-        const cats = ['copo', 'garrafa', 'pastel'];
-        cats.forEach(c => {
-            const lista = document.getElementById(`lista-${c === 'copo' ? 'copos' : c === 'garrafa' ? 'garrafas' : 'pasteis'}`);
-            const itens = PRODUTOS.filter(p => p.cat === c && p.d);
-            lista.innerHTML = itens.map(p => `
-                <div class="produto-card" onclick='abrirModal(${JSON.stringify(p)})'>
-                    <div class="produto-info">
-                        <h3>${p.nome}</h3>
-                        ${p.desc ? `<p>${p.desc}</p>` : ''}
-                        <span class="preco">R$ ${p.preco.toFixed(2).replace('.',',')}</span>
-                    </div>
-                    <div class="img-container">
-                        <img src="${p.img.startsWith('http') ? p.img : 'https://raw.githubusercontent.com/alxcardosox-creator/onmi-acai/main/'+p.img}" class="produto-img">
-                    </div>
-                </div>`).join('');
-            document.getElementById(`cat-${c}`).style.display = itens.length ? 'block' : 'none';
-        });
-    }
-
-    function abrirModal(p) {
-        itemSelecionado = p;
-        document.getElementById('nomeProdModal').innerText = p.nome;
-        document.getElementById('descProdModal').innerText = p.desc || "Personalize seu item abaixo:";
-        const container = document.getElementById('opcionais-container');
-        container.innerHTML = "";
-
-        if(p.cat !== 'pastel' && OPCOES_ACAI[p.cat]) {
-            container.innerHTML = OPCOES_ACAI[p.cat].map((sec, idx) => `
-                <div class="secao-titulo-box">
-                    <span class="secao-nome">${sec.t}</span>
-                </div>
-                ${sec.o.filter(o => o.d).map(o => `
-                    <label class="opcao-item">
-                        <span class="opcao-nome">${o.n} ${o.p ? '+R$'+o.p : ''}</span>
-                        <input type="${sec.l===1?'radio':'checkbox'}" name="sec-${idx}" class="extra-item" data-preco="${o.p||0}" value="${o.n}">
-                    </label>`).join('')}`).join('');
-        }
-        document.getElementById('modalConfirmacao').style.display = 'flex';
-    }
-
-    function adicionarAoCarrinho() {
-        const selecionados = Array.from(document.querySelectorAll('.extra-item:checked'));
-        const nomes = selecionados.map(el => el.value);
-        const precoExtra = selecionados.reduce((t, el) => t + parseFloat(el.dataset.preco), 0);
-        
-        carrinho.push({ 
-            nome: itemSelecionado.nome, 
-            precoFinal: itemSelecionado.preco + precoExtra, 
-            detalhes: nomes.length > 0 ? nomes.join(', ') : (itemSelecionado.cat === 'pastel' ? 'Sabor a combinar' : 'Tradicional')
-        });
-        
-        atualizarBarra();
-        fecharModal('modalConfirmacao');
-    }
-
-    function atualizarBarra() {
-        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        const taxa = calcularTaxaEntrega();
-        const total = sub + (carrinho.length > 0 ? taxa : 0);
-        document.getElementById('barraCarrinho').style.display = carrinho.length > 0 ? 'flex' : 'none';
-        document.getElementById('qtdItens').innerText = carrinho.length;
-        document.getElementById('totalFlutuante').innerText = `R$ ${total.toFixed(2).replace('.',',')}`;
-        document.getElementById('labelTaxa').innerText = `+ Entrega: R$ ${taxa.toFixed(2).replace('.',',')}`;
-    }
-
-    function abrirCarrinho() {
-        const lista = document.getElementById('itensNoCarrinho');
-        lista.innerHTML = carrinho.map((i, idx) => `
-            <div style="padding:10px 0; border-bottom:1px solid #eee; display:flex; justify-content:space-between;">
-                <div><strong>${i.nome}</strong><br><small>${i.detalhes}</small><br><span class="remover-btn" onclick="removerItem(${idx})">Remover</span></div>
-                <strong>R$ ${i.precoFinal.toFixed(2).replace('.',',')}</strong>
-            </div>`).join('');
-        document.getElementById('modalCarrinho').style.display = 'flex';
-    }
-
-    function removerItem(idx) {
-        carrinho.splice(idx, 1);
-        carrinho.length > 0 ? abrirCarrinho() : fecharModal('modalCarrinho');
-        atualizarBarra();
-    }
-
-    function togglePagamento() {
-        const p = document.getElementById('formaPagamento').value;
-        document.getElementById('areaPix').style.display = p === 'Pix' ? 'block' : 'none';
-        document.getElementById('areaTroco').style.display = p === 'Dinheiro' ? 'block' : 'none';
-    }
-
-    function finalizarPedido() {
-        const n = document.getElementById('nomeCliente').value;
-        const e = document.getElementById('enderecoCliente').value;
-        const p = document.getElementById('formaPagamento').value;
-        if(!n || !e || !p) return alert("Preencha os dados de entrega!");
-
-        const taxa = calcularTaxaEntrega();
-        const sub = carrinho.reduce((acc, i) => acc + i.precoFinal, 0);
-        
-        let msg = `*🟣 NOVO PEDIDO - ONMI AÇAÍ*%0A--------------------------%0A`;
-        msg += `*Cliente:* ${n}%0A*Endereço:* ${e}%0A*Pagamento:* ${p}%0A--------------------------%0A`;
-        carrinho.forEach(i => msg += `✅ *${i.nome}*%0A _${i.detalhes}_%0A%0A`);
-        msg += `--------------------------%0A*TOTAL: R$ ${(sub+taxa).toFixed(2).replace('.',',')}*`;
-        
-        window.open(`https://wa.me/5521988626495?text=${msg}`);
-    }
-
-    function fecharModal(id) { document.getElementById(id).style.display = 'none'; }
-    function scrollToCategory(id, el) {
-        document.querySelectorAll('.cat-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    renderizar();
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
