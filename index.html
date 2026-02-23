@@ -421,35 +421,37 @@
             ];
         }
         if (complementos.length === 0) {
-            complementos = [
-                { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', idCategoria: 1, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 201, sec: 'Complementos', n: 'Granola', idCategoria: 1, p: 0, ativo: true },
-                { idc: 202, sec: 'Complementos', n: 'Aveia', idCategoria: 1, p: 0, ativo: true },
-                { idc: 203, sec: 'Complementos', n: 'Sucrilhos', idCategoria: 1, p: 0, ativo: true },
-                { idc: 204, sec: 'Complementos', n: 'Granulado', idCategoria: 1, p: 0, ativo: true },
-                { idc: 208, sec: 'Complementos', n: 'Leite em pó', idCategoria: 1, p: 0, ativo: true },
-                { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', idCategoria: 1, p: 0, ativo: true },
-                { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', idCategoria: 1, p: 0, ativo: true },
-                { idc: 403, sec: 'Caldas', n: 'Leite Condensado', idCategoria: 1, p: 0, ativo: true },
-                { idc: 501, sec: 'Especiais', n: 'Nutella', idCategoria: 1, p: 3, ativo: true },
-                { idc: 701, sec: 'Sabor do Pastel', n: 'Carne', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 703, sec: 'Sabor do Pastel', n: 'Queijo', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 704, sec: 'Sabor do Pastel', n: 'Calabresa', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 706, sec: 'Sabor do Pastel', n: 'Misto', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Carne c/ Queijo', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Queijo', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Catupiry', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa c/ Queijo', idCategoria: 3, unico: true, obrigar: true, p: 0, ativo: true },
-                { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', idCategoria: 2, p: 0, ativo: true },
-                { idc: 602, sec: 'Adicionais', n: 'Nutella', idCategoria: 2, p: 3.00, ativo: true }
-            ];
-        }
+    complementos = [
+        { idc: 101, sec: 'Como deseja os Complementos?', n: 'Só em cima', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 102, sec: 'Como deseja os Complementos?', n: 'Só no meio', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 103, sec: 'Como deseja os Complementos?', n: 'Só em baixo', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 104, sec: 'Como deseja os Complementos?', n: 'No Meio e em Cima', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 105, sec: 'Como deseja os Complementos?', n: 'Sem Complementos', cat: 'copo', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 201, sec: 'Complementos', n: 'Granola', cat: 'copo', p: 0, ativo: true },
+        { idc: 202, sec: 'Complementos', n: 'Aveia', cat: 'copo', p: 0, ativo: true },
+        { idc: 203, sec: 'Complementos', n: 'Sucrilhos', cat: 'copo', p: 0, ativo: true },
+        { idc: 204, sec: 'Complementos', n: 'Granulado', cat: 'copo', p: 0, ativo: true },
+        { idc: 208, sec: 'Complementos', n: 'Leite em pó', cat: 'copo', p: 0, ativo: true },
+        { idc: 301, sec: 'Deseja Frutas?', n: 'Morango', cat: 'copo', p: 1.50, ativo: true }, // Morango (fruta)
+        { idc: 302, sec: 'Deseja Frutas?', n: 'Banana', cat: 'copo', p: 0, ativo: true },
+        { idc: 403, sec: 'Caldas', n: 'Leite Condensado', cat: 'copo', p: 0, ativo: true },
+        { idc: 901, sec: 'Caldas', n: 'Chocolate', cat: 'copo', p: 2.00, ativo: true },      // Nova calda chocolate
+        { idc: 902, sec: 'Caldas', n: 'Tutti Frutti', cat: 'copo', p: 2.00, ativo: true },   // Nova calda tutti frutti
+        { idc: 501, sec: 'Especiais', n: 'Nutella', cat: 'copo', p: 3, ativo: true },
+        { idc: 701, sec: 'Sabor do Pastel', n: 'Carne', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 702, sec: 'Sabor do Pastel', n: 'Frango', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 703, sec: 'Sabor do Pastel', n: 'Queijo', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 704, sec: 'Sabor do Pastel', n: 'Calabresa', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 705, sec: 'Sabor do Pastel', n: 'Pizza', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 706, sec: 'Sabor do Pastel', n: 'Misto', cat: 'pastel_t', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 801, sec: 'Sabor do Pastel Especial', n: 'Carne c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 802, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 803, sec: 'Sabor do Pastel Especial', n: 'Frango c/ Catupiry', cat: 'pastel_e', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 804, sec: 'Sabor do Pastel Especial', n: 'Calabresa c/ Queijo', cat: 'pastel_e', unico: true, obrigar: true, p: 0, ativo: true },
+        { idc: 601, sec: 'Adicionais', n: 'Leite Condensado', cat: 'garrafa', p: 0, ativo: true },
+        { idc: 602, sec: 'Adicionais', n: 'Nutella', cat: 'garrafa', p: 3.00, ativo: true }
+    ];
+}
         // Garantir campos
         categorias = categorias.map(c => ({ ...c, ativo: c.ativo !== false }));
         produtos = produtos.map(p => ({ ...p, ativo: p.ativo !== false, destaque: p.destaque || false, estoque: p.estoque !== undefined ? p.estoque : 999, ordem: p.ordem || 0 }));
